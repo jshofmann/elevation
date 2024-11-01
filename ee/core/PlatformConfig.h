@@ -1,0 +1,128 @@
+// Elevation Engine
+//
+// Copyright (c) 2024 Azimuth Studios
+
+#pragma once
+
+// Define this to enable eeDebug and eeLog printouts in Retail builds
+// (Note that eeLog just redirects to eeDebug in this configuration,
+// no log files are created because in the Retail configuration the
+// game's frequently operating from a read-only file system.)
+//#define BUILD_ENABLE_EEDEBUG_IN_RETAIL
+
+///////////////////////////////////////////////////////////////////////////////
+// Windows configuration
+//
+
+#if defined( BUILD_PC )
+
+#  define DIRECTINPUT_VERSION 0x0800
+
+#  if defined( BUILD_PROFILE )
+
+//   Enable extra D3D9 debugging in debug builds if using the debug DirectX
+//   runtime. This makes D3D objects work well in the debugger watch window,
+//   but slows down performance slightly.
+#    if defined( BUILD_DX9 )
+#      if !defined( D3D_DEBUG_INFO )
+#        define D3D_DEBUG_INFO
+#      endif
+#    endif
+
+//   RAD's Telemetry is available for multiple platforms,
+//   but we only have a license for Windows
+//#    define BUILD_RAD_TELEMETRY 1
+
+//   Enable this to include support for PureDev's MemPro memory profiler
+//   (http://www.puredevsoftware.com/mempro/index.htm)
+//#    define BUILD_MEMPRO 1
+
+//   Enable this to include support for the Tracy profiler
+//   (https://github.com/wolfpld/tracy)
+//   Not 'BUILD_TRACY' because Tracy requires that this specific token be used
+//   and defining a BUILD_TRACY that just aliases TRACY_ENABLE seems redundant
+//#    define TRACY_ENABLE 1
+
+//   Enable this to include instrumentation data when the Superluminal
+//   profiler is used (http://www.superluminal.eu). Note that it is
+//   not required in order to use Superluminal, it just adds some extra
+//   labels and higher-level events.
+//#    define BUILD_SUPERLUMINAL 1
+
+//   FramePro is not supported when /clr is used, as it requires <atomic>
+//   and that header file triggers fatal error C1189 when /clr is set:
+//   "<atomic> is not supported when compiling with /clr or /clr:pure."
+#    if !defined( __CLR_VER )
+
+//     Enable this to include support for PureDev's FramePro profiler
+//     (http://www.puredevsoftware.com/framepro/index.htm)
+//#      define BUILD_FRAMEPRO 1
+
+#    endif // #if !defined( __CLR_VER )
+
+#  endif // #if defined( BUILD_PROFILE )
+
+// Use of Dear Imgui (https://github.com/ocornut/imgui) is now supported outside of Retail builds
+#if !defined( BUILD_RETAIL )
+#  define BUILD_ENABLE_IMGUI
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Xbox One configuration
+//
+
+#elif defined( BUILD_XB1 )
+
+#  if defined( BUILD_PROFILE )
+#    define USE_PIX 1 // required by the PIX API
+#  endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Xbox Series S/X (aka Scarlett) configuration
+//
+
+#elif defined( BUILD_XSX )
+
+#  if defined( BUILD_PROFILE )
+#    define USE_PIX 1 // required by the PIX API
+#  endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Nintendo Switch (aka NX) configuration
+//
+
+#elif defined( BUILD_NX )
+
+#  if !defined( BUILD_RETAIL ) || defined( BUILD_ENABLE_EEDEBUG_IN_RETAIL )
+#    define NN_ENABLE_LOG // Allow use of NN_LOG in NN_SDK_BUILD_RELEASE builds
+#  endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Playstation 5 (aka Prospero) configuration
+//
+
+#elif defined( BUILD_PS5 )
+
+// When using the Debug or Develop build configs
+#  if defined( BUILD_DEBUG )
+#    define SCE_AGC_DEBUG             // Enable Agc asserts (with a small perf cost)
+#    define SCE_AGC_CHECK_ERROR_CODES // Enable use of [[nodiscard]] attributes
+#  endif
+
+#endif // platform elif sequence
+
+///////////////////////////////////////////////////////////////////////////////
+// Retail configuration
+//
+
+#if defined( BUILD_RETAIL )
+
+#  define NTELEMETRY		// make sure that RAD's Telemetry is a no-op in Retail builds
+
+#endif // #if defined( BUILD_RETAIL )
+
+// We use keyboards/chatpads everywhere in development configurations;
+// keyboard/mouse controls are supported on the PC and Stadia only.
+#if !defined( BUILD_RETAIL ) || defined( BUILD_PC )
+#  define BUILD_ENABLE_KEYBOARD
+#endif
