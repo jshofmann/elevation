@@ -68,13 +68,22 @@
     <ClInclude Include="..\..\..\ee\utility\HashUtils.h">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\ee\io\FileResult.h">
-      <Filter>Header Files\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\ee\io\FileStatus.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ee\io\FileSystem.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\Common.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\FilePath.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\InputStream.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\OutputStream.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
   </ItemGroup>

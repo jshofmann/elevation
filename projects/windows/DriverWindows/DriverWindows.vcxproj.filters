@@ -15,6 +15,12 @@
     <Filter Include="Source Files\core">
       <UniqueIdentifier>{5f7643cd-9709-4ffc-b14d-6ca77fa4ddd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\io">
+      <UniqueIdentifier>{894d97da-354f-4272-8002-0d0390be138e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\io">
+      <UniqueIdentifier>{9e1b819a-3f68-46f0-8aff-8713971b7c4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -28,6 +34,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\drivers\windows\core\WinUtil.h">
       <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\drivers\windows\io\WinFileInputStream.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\drivers\windows\io\WinFileOutputStream.h">
+      <Filter>Header Files\io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +57,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\windows\core\WinUtil.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\windows\io\WinFileInputStream.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\windows\io\WinFileOutputStream.cpp">
+      <Filter>Source Files\io</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

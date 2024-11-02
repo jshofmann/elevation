@@ -154,9 +154,12 @@
     <ClInclude Include="..\..\..\ee\core\StdIncludes.h" />
     <ClInclude Include="..\..\..\ee\core\StdMacros.h" />
     <ClInclude Include="..\..\..\ee\core\System.h" />
-    <ClInclude Include="..\..\..\ee\io\FileResult.h" />
+    <ClInclude Include="..\..\..\ee\io\Common.h" />
+    <ClInclude Include="..\..\..\ee\io\FilePath.h" />
     <ClInclude Include="..\..\..\ee\io\FileStatus.h" />
     <ClInclude Include="..\..\..\ee\io\FileSystem.h" />
+    <ClInclude Include="..\..\..\ee\io\InputStream.h" />
+    <ClInclude Include="..\..\..\ee\io\OutputStream.h" />
     <ClInclude Include="..\..\..\ee\utility\HashUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
