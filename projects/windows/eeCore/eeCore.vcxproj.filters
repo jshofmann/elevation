@@ -27,6 +27,18 @@
     <Filter Include="Source Files\utility">
       <UniqueIdentifier>{1d06765a-e95a-4688-820c-81ffd139bc74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\image">
+      <UniqueIdentifier>{f0de6969-effc-4e85-a7cb-c66b2ea426ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{d30ac630-bc63-430b-99e3-62abdea35725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image">
+      <UniqueIdentifier>{d2e09bee-47d5-468d-aeae-8e94fd6df7b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{7047f0c7-e002-4da9-9331-e0db271d2e25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -86,6 +98,39 @@
     <ClInclude Include="..\..\..\ee\io\OutputStream.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\BMPReader.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\BMPSupport.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\PNGWriter.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\TGAReader.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\TGASupport.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\image\TGAWriter.h">
+      <Filter>Header Files\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\math\AABB.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\math\Math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\math\Perlin.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\math\Ray.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\math\vec3.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -96,6 +141,24 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ee\utility\HashUtils.cpp">
       <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\image\BMPReader.cpp">
+      <Filter>Source Files\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\image\PNGWriter.cpp">
+      <Filter>Source Files\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\image\TGAReader.cpp">
+      <Filter>Source Files\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\image\TGAWriter.cpp">
+      <Filter>Source Files\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\math\AABB.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\math\Perlin.cpp">
+      <Filter>Source Files\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
