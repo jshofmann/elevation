@@ -4,6 +4,8 @@
 
 #include "Traceable.h"
 
+using namespace ee;
+
 // Called "hittable_list" in the "Ray Tracing in One Weekend" book
 class Scene : public Traceable
 {

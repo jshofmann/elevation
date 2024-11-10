@@ -2,6 +2,8 @@
 
 #include "Perlin.h"
 
+using namespace ee;
+
 static float interpolate( vec3 c[ 2 ][ 2 ][ 2 ], float u, float v, float w )
 {
 	// Use Hermite interpolation to reduce the amount of Mach banding

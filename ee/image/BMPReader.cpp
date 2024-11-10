@@ -2,6 +2,8 @@
 
 #include "BMPReader.h"
 
+using namespace ee;
+
 BMPReader::BMPReader()
 	: mPixelData( NULL )
 {

@@ -3,7 +3,10 @@
 #include <stdint.h>
 
 #include <ee/math/AABB.h>
+
 #include "Traceable.h"
+
+using namespace ee;
 
 class BVHNode : public Traceable
 {

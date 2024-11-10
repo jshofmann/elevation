@@ -2,6 +2,8 @@
 
 #include "TGAReader.h"
 
+using namespace ee;
+
 TGAReader::TGAReader()
 	: mImageSize( 0 )
 	, mPixelData( NULL )

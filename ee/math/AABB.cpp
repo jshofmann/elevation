@@ -5,9 +5,11 @@
 #include <ee/math/AABB.h>
 #include <ee/math/Ray.h>
 
+using namespace ee;
+
 bool AABB::hit( const Ray& r, float tmin, float tmax ) const
 {
-#if 0 // simple, clear, but slow
+#if 0 // Reference implementation: simple, clear, but slow
 
 	// iterate over the x, y, and z members of vec3
 	for( int i = 0; i < 3; ++i )

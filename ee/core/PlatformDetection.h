@@ -109,7 +109,7 @@
 // Compiler configuration
 //
 
-// !!! FIXME: Turn off all deprecated CRT / Windows SDK function warnings
+// Turn off all deprecated CRT / Windows SDK function warnings
 #if defined( BUILD_PC ) || defined( BUILD_XB1 ) || defined( BUILD_XSX )
 #  if !defined( _CRT_SECURE_NO_DEPRECATE )
 #    define _CRT_SECURE_NO_DEPRECATE 1
@@ -117,6 +117,7 @@
 #  if !defined( _CRT_SECURE_NO_WARNINGS )
 #    define _CRT_SECURE_NO_WARNINGS 1
 #  endif
+#  define _CRT_RAND_S // Define the rand_s function in the CRT
 #  if !defined( _WINSOCK_DEPRECATED_NO_WARNINGS )
 #    define _WINSOCK_DEPRECATED_NO_WARNINGS 1
 #  endif

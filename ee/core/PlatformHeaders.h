@@ -41,20 +41,20 @@
 // See <windows.h> for the full list of available NOxxx tokens.
 
 #  define NOMINMAX					// Don't #define macros named min and max
-#  define _CRT_RAND_S				// Define the rand_s function in the CRT
-
-#  if !defined( _WINSOCKAPI_ )
-#    define _WINSOCKAPI_			// Prevent inclusion of winsock.h in windows.h
-#    define UNDEF_WINSOCKAPI
-#  endif
-
-#  define NOGDI
+//#  define NOGDI
 #  define NODRAWTEXT
 #  define NOBITMAP
 #  define NOMCX						// Include <mcx.h> if you need this
 #  define NOSERVICE					// Include <winsvc.h> if you need this
 #  define NOHELP					// WinHelp is deprecated
 #  define NOCOMM					// Exclude the serial communication API
+
+#  define _USE_MATH_DEFINES			// Define M_PI, etc in <math.h>
+
+#  if !defined( _WINSOCKAPI_ )
+#    define _WINSOCKAPI_			// Prevent inclusion of winsock.h in windows.h
+#    define UNDEF_WINSOCKAPI
+#  endif
 
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN		// Exclude rarely-used Windows features
@@ -71,10 +71,11 @@
 
 #elif defined( BUILD_XB1 ) || defined( BUILD_XSX )
 
-#  define NOMINMAX	// Define std::min() and std::max() functions rather than min() and max() macros
+#  define NOMINMAX				// Define std::min() and std::max() functions rather than min() and max() macros
+#  define _USE_MATH_DEFINES		// Define M_PI, etc in <math.h>
 
 #  ifndef WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN		// Exclude rarely-used Windows features
+#    define WIN32_LEAN_AND_MEAN	// Exclude rarely-used Windows features
 #  endif
 #  define VC_EXTRALEAN
 
@@ -82,6 +83,7 @@
 
 #elif defined( BUILD_LINUX ) || defined( BUILD_NX ) || defined( BUILD_PS4 ) || defined( BUILD_PS5 )
 
-#  include <stddef.h>	// defines ptrdiff_t, NULL, and other items
+#  define _USE_MATH_DEFINES	// Define M_PI, etc in <math.h>
+#  include <stddef.h>		// defines ptrdiff_t, NULL, and other items
 
 #endif // #elif defined( POSIX-based platforms )

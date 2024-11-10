@@ -9,6 +9,8 @@
 #include "Camera.h"
 #include "Scene.h"
 
+using namespace ee;
+
 class PathTracer
 {
 public:

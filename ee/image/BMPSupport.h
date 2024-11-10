@@ -10,6 +10,8 @@
 	#pragma pack( 1 )
 #endif
 
+namespace ee
+{
 	// Note: All values are specified in little-endian format
 
 	// Adapted from https://msdn.microsoft.com/en-us/library/cc250415.aspx
@@ -79,6 +81,8 @@
 		RGBQuad          bmiColors[ 16 ]; // support all biBitCounts except 8
 	}
 	BitmapInfo;
+
+} // namespace ee
 
 #if defined( COMPILER_MSVC )
 	#pragma pack( pop, p )

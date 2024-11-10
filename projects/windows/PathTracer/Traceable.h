@@ -1,9 +1,11 @@
 #pragma once
 
 #include <ee/math/Ray.h>
+#include <ee/math/AABB.h>
+
+using namespace ee;
 
 class Material;
-class AABB;
 
 struct HitRecord
 {

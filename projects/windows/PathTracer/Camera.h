@@ -6,6 +6,8 @@
 #include <ee/math/vec3.h>
 #include <ee/math/Ray.h>
 
+using namespace ee;
+
 class Camera
 {
 public:

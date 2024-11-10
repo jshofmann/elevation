@@ -3,6 +3,8 @@
 #include <ee/math/vec3.h>
 #include <ee/math/Perlin.h>
 
+using namespace ee;
+
 class Texture
 {
 public:

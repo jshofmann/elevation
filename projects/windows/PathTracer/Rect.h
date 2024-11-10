@@ -1,9 +1,12 @@
 #pragma once
 
+#include <ee/math/AABB.h>
+
 #include "Traceable.h"
 
+using namespace ee;
+
 class Material;
-class AABB;
 
 class xyRect : public Traceable
 {

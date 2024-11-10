@@ -7,6 +7,8 @@
 #include <ee/utility/HashUtils.h>
 #include <ee/core/Debug.h>
 
+using namespace ee;
+
 // Note: This is a very simple and limited PNG writer. It will encode a single
 // uncompressed image into an uncompressed deflate block. Don't use it for
 // something you intend to embed in a web page, etc - it's just meant for us to

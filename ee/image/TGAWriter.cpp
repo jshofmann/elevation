@@ -4,7 +4,10 @@
 
 #include "TGAWriter.h"
 #include "TGASupport.h"
+
 #include <ee/core/Debug.h>
+
+using namespace ee;
 
 bool TGAWriter::write( const uint8_t* pixels, uint16_t width, uint16_t height, uint8_t bytesPerPixel, const char* filename )
 {

@@ -2,6 +2,8 @@
 
 #include "Traceable.h"
 
+using namespace ee;
+
 class Sphere : public Traceable
 {
 public:

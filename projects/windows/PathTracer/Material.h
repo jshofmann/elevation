@@ -6,6 +6,8 @@
 #include "Traceable.h"
 #include "Texture.h"
 
+using namespace ee;
+
 class Material
 {
 public:
