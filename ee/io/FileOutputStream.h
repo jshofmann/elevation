@@ -8,23 +8,23 @@
 #include <ee/io/File.h>
 
 #if defined( BUILD_PC )
-#include <drivers/windows/io/WinFileInputStream.h>
+#include <drivers/windows/io/WinFileOutputStream.h>
 #else // assume the POSIX interface is supported
-#include <drivers/posix/io/PosixFileInputStream.h>
+#include <drivers/posix/io/PosixFileOutputStream.h>
 #endif
 
 namespace ee
 {
 #if defined( BUILD_PC )
-	using FileInputStream = WinFileInputStream;
+	using FileOutputStream = WinFileOutputStream;
 #else // assume the POSIX interface is supported
-	using FileInputStream = PosixFileInputStream;
+	using FileOutputStream = PosixFileOutputStream;
 #endif
 
-	// Use these functions to instantiate the appropriate InputStream
+	// Use these functions to instantiate the appropriate OutputStream
 	// for the System you're running on. They'll be implemented in a driver.
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const char* filename );
+	std::unique_ptr<FileOutputStream> MakeFileOutputStream( const char* filename );
 
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const File& file );
+	std::unique_ptr<FileOutputStream> MakeFileOutputStream( const File& file );
 
 } // namespace ee

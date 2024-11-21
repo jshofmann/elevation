@@ -160,6 +160,12 @@
     <ClCompile Include="..\..\..\ee\math\Perlin.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\File.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\FileStatus.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\ee\utility\CRC16.inl">

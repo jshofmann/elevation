@@ -14,7 +14,7 @@ using namespace ee;
 // something you intend to embed in a web page, etc - it's just meant for us to
 // be able to paste screenshots and other generated images into Slack chats.
 
-bool PNGWriter::write( const uint8_t* pixels, uint16_t width, uint16_t height, uint8_t bytesPerPixel, const char* filename )
+bool PNGWriter::Write( const uint8_t* pixels, uint16_t width, uint16_t height, uint8_t bytesPerPixel, const char* filename )
 {
 	if( ( pixels == NULL ) || ( filename == NULL ) )
 	{

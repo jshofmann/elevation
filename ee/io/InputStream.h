@@ -13,13 +13,19 @@ namespace ee
 	class InputStream
 	{
 	public:
-		// Note: Do not attempt to use the stream after Release is called!
+		// Note: Do not attempt to use the stream after Close is called!
 		// For files, sockets, etc this will close the stream source.
-		virtual void Release( void ) = 0;
+		virtual void Close( void ) = 0;
+
+		// Return true if the stream is usable - i.e for files the file exists
+		// (or could be created) and can be read (or written) to, for memory
+		// the memory has been assigned or allocated.
+		virtual bool Available( void ) const = 0;
 
 		// Returns the size in bytes of the stream, if such a concept is well
-		// defined. For files, this is the size of the file in bytes.
-		virtual size_t GetAvailable( void ) = 0;
+		// defined. For files, this is the size of the file in bytes;
+		// for memory, the number of bytes allocated or assigned.
+		virtual size_t GetSize( void ) = 0;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;
@@ -82,7 +88,7 @@ namespace ee
 		{
 			if( stream != nullptr )
 			{
-				stream->Release();
+				stream->Close();
 			}
 		}
 	};

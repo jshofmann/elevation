@@ -36,7 +36,7 @@ namespace ee
 			, ImageType( IMAGE_TYPE_NO_IMAGE_DATA )
 			, ColormapOrigin( 0 )
 			, ColormapLength( 0 )
-			, ColormapWidth( 0 )
+			, ColormapEntrySize( 0 )
 			, XOrigin( 0 )
 			, YOrigin( 0 )
 			, ImageWidth( 0 )
@@ -51,13 +51,13 @@ namespace ee
 		uint8_t		ImageType;			// From the above enum
 		uint16_t	ColormapOrigin;		// 0
 		uint16_t	ColormapLength; 	// 0
-		uint8_t		ColormapWidth;		// 0
+		uint8_t		ColormapEntrySize;	// bytes, 0
 		uint16_t	XOrigin;			// pixels, usually 0
 		uint16_t	YOrigin;			// pixels, usually 0
 		uint16_t	ImageWidth;			// pixels
 		uint16_t	ImageHeight;		// pixels
 		uint8_t		BitsPerPixel;
-		uint8_t		ImageDescriptor;	// 0x20 defines a top-left origin
+		uint8_t		ImageDescriptor;	// 0x20 defines a top-left origin; 0 is bottom-left
 
 	}; // class TGAHeader
 

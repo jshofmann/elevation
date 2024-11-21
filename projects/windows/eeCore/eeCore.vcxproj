@@ -184,6 +184,8 @@
     <ClCompile Include="..\..\..\ee\image\PNGWriter.cpp" />
     <ClCompile Include="..\..\..\ee\image\TGAReader.cpp" />
     <ClCompile Include="..\..\..\ee\image\TGAWriter.cpp" />
+    <ClCompile Include="..\..\..\ee\io\File.cpp" />
+    <ClCompile Include="..\..\..\ee\io\FileStatus.cpp" />
     <ClCompile Include="..\..\..\ee\math\AABB.cpp" />
     <ClCompile Include="..\..\..\ee\math\Perlin.cpp" />
     <ClCompile Include="..\..\..\ee\utility\HashUtils.cpp" />

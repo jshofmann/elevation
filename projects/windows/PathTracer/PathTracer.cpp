@@ -67,14 +67,14 @@ void PathTracer::setCompleteCallback( CompleteCallback callback, void* data )
 
 void PathTracer::saveImage( const char* filename ) const
 {
-	TGAWriter::write( mPixels, mWidth, mHeight, mBytesPerPixel, filename );
+	TGAWriter::Write( mPixels, mWidth, mHeight, mBytesPerPixel, filename );
 }
 
 void PathTracer::startTrace( void )
 {
 #if 1
 
-#if 0
+#if 1
 	vec3 eye( 23.0f, 2.0f, 3.0f );
 	vec3 lookat( 0.0f, 0.0f, 0.0f );
 	vec3 up( 0.0f, 1.0f, 0.0f );
