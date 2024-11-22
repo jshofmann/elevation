@@ -47,6 +47,11 @@ namespace ee
 			return mType;
 		}
 
+		void SetType( Type type ) noexcept
+		{
+			mType = type;
+		}
+
 		bool IsDirectory( void ) const noexcept
 		{
 			return mType == Type::kDirectory;
@@ -67,6 +72,11 @@ namespace ee
 			return mSize;
 		}
 
+		void SetSize( size_t size ) noexcept
+		{
+			mSize = size;
+		}
+
 		bool Exists( void ) const noexcept
 		{
 			return ( mFlags & Flags::kExists ) != 0 ? true : false;
@@ -82,11 +92,27 @@ namespace ee
 			return ( mFlags & Flags::kHidden ) != 0 ? true : false;
 		}
 
+		void SetFlags( uint8_t flags )
+		{
+			mFlags = flags;
+		}
+
+		time_t GetLastModified( void ) const noexcept
+		{
+			return mLastModified;
+		}
+
+		void SetLastModified( time_t time ) noexcept
+		{
+			mLastModified = time;
+		}
+
 	private:
 		std::string	mAbsolutePath;
 		Type		mType = Type::kNone;
-		size_t		mSize = 0;
 		uint8_t		mFlags = 0;
+		size_t		mSize = 0;
+		time_t		mLastModified = 0;
 
 	}; // class FileStatus
 

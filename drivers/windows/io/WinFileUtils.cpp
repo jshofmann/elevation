@@ -13,6 +13,16 @@ using namespace ee;
 
 namespace ee
 {
+	namespace
+	{
+		time_t FileTimeToUnixTime( LPFILETIME fileTime )
+		{
+			LONGLONG tmp = LONGLONG( fileTime->dwHighDateTime ) << 32;
+			tmp = tmp + fileTime->dwLowDateTime - 116444736000000000;
+			return time_t( tmp / 10000000L );
+		}
+	}
+
 	namespace WinFileUtils
 	{
 		bool GetFileAttributes( const File& file, FileStatus& status )
@@ -36,38 +46,49 @@ namespace ee
 			WIN32_FILE_ATTRIBUTE_DATA attributes;
 			if( GetFileAttributesEx( status.GetAbsolutePath().c_str(), GetFileExInfoStandard, &attributes ) == FALSE )
 			{
-#if 0
 				// Report anything that's not a simple 'file not found' error
 				DWORD error = GetLastError();
 				if( ( error != ERROR_FILE_NOT_FOUND ) && ( error != ERROR_PATH_NOT_FOUND ) )
 				{
-					eeDebug( "WinFileUtils::GetFileAttributes: GetFileAttributesEx( %s ) returned error 0x%08x", fa.AbsolutePath.c_str(), GetLastError() );
+					eeDebug( "WinFileUtils::GetFileAttributes: GetFileAttributesEx( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
 				}
 
-				fa.Flags.mFlags = 0;
-				fa.Modified = 0;
-				fa.Size = 0;
+				status.SetType( FileStatus::Type::kNone );
+				status.SetFlags( 0 );
+				status.SetLastModified( 0 );
+				status.SetSize( 0 );
 			}
 			else
 			{
-				fa.Flags.setFlag( FileAttributes::Flags::EXISTS, true );
-				fa.Flags.setFlag( FileAttributes::Flags::DIRECTORY, ( attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 );
-				fa.Flags.setFlag( FileAttributes::Flags::READONLY, ( attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY ) != 0 );
-				fa.Flags.setFlag( FileAttributes::Flags::HIDDEN, ( attributes.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ) != 0 );
+				if( ( attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 )
+				{
+					status.SetType( FileStatus::Type::kDirectory );
+				}
+
+				uint8_t flags = FileStatus::Flags::kExists;
+
+				if( ( attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY ) != 0 )
+				{
+					flags |= FileStatus::Flags::kReadOnly;
+				}
+
+				if( ( attributes.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ) != 0 )
+				{
+					flags |= FileStatus::Flags::kHidden;
+				}
 
 				FILETIME localWrite;
 				if( FileTimeToLocalFileTime( &attributes.ftLastWriteTime, &localWrite ) )
 				{
-					fa.Modified = FileTimeToUnixTime( &localWrite );
+					status.SetLastModified( FileTimeToUnixTime( &localWrite ) );
 				}
 				else
 				{
-					eeDebug( "WinFileUtils::GetFileAttributes: FileTimeToLocalFileTime( %s ) returned error 0x%08x", fa.AbsolutePath.c_str(), GetLastError() );
-					fa.Modified = FileTimeToUnixTime( &attributes.ftLastWriteTime );
+					eeDebug( "WinFileUtils::GetFileAttributes: FileTimeToLocalFileTime( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
+					status.SetLastModified( FileTimeToUnixTime( &attributes.ftLastWriteTime ) );
 				}
 
-				fa.Size = ( UInt64( attributes.nFileSizeHigh ) << 32 ) | attributes.nFileSizeLow;
-#endif
+				status.SetSize( ( size_t( attributes.nFileSizeHigh ) << 32 ) | attributes.nFileSizeLow );
 			}
 
 			return true;
