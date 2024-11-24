@@ -39,11 +39,14 @@ namespace ee
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) override final { return true; }
 
-		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
+		// Note: we're using uint32_t, not size_t, for our offset and length
+		// parameters because the Windows SDK uses DWORD (ie uint32_t) values
+		// for those parameters in SetFilePointer() and ReadFile().
+		virtual bool Seek( uint32_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
 		virtual size_t GetCurrentOffset( void ) override final;
 
-		virtual FileResult Read( void* buffer, size_t length ) override final;
+		virtual FileResult Read( void* buffer, uint32_t length ) override final;
 
 	private:
 		File	mFile;

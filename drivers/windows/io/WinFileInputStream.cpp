@@ -69,7 +69,7 @@ size_t WinFileInputStream::GetSize( void )
 	return 0;
 }
 
-bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
+bool WinFileInputStream::Seek( uint32_t offset, SeekOrigin origin )
 {
 	return false;
 }
@@ -79,7 +79,7 @@ size_t WinFileInputStream::GetCurrentOffset( void )
 	return 0;
 }
 
-FileResult WinFileInputStream::Read( void* buffer, size_t length )
+FileResult WinFileInputStream::Read( void* buffer, uint32_t length )
 {
 	return FileResult::kOther;
 }

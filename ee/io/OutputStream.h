@@ -25,11 +25,15 @@ namespace ee
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;
 
-		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
+		// Note: we're using uint32_t, not size_t, for our offset and length
+		// parameters because the Windows SDK uses DWORD (ie uint32_t) values
+		// for those parameters in SetFilePointer() and WriteFile().
+		virtual bool Seek( uint32_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
 
 		virtual size_t GetCurrentOffset( void ) = 0;
 
-		virtual FileResult Write( const void* buffer, size_t length ) = 0;
+		// Returns the number of bytes written
+		virtual uint32_t Write( const void* buffer, uint32_t length ) = 0;
 		virtual void Flush( void ) {}
 
 		// Implement operator << for each primitive type we support
