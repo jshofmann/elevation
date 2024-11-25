@@ -14,7 +14,7 @@ bool WinCheck::check( HRESULT result, const char* function, const char* caller, 
 {
 	if( result != S_OK )
 	{
-		eeDebug( "%s: %s returned error 0x%08x at %s line %d: %s", caller, function, result, file, line, WinUtil::getErrorString( result ).c_str() );
+		eeDebug( "%s: %s returned error 0x%08x at %s line %d: %s", caller, function, result, file, line, WinUtil::GetErrorString( result ).c_str() );
 
 		return false;
 	}
@@ -29,7 +29,7 @@ bool WinCheck::check( BOOL result, const char* function, const char* caller, con
 		DWORD error = GetLastError();
 		eeUnusedVariable( error );
 
-		eeDebug( "%s: %s returned error %d at %s line %d: %s", caller, function, error, file, line, WinUtil::getErrorString( error ).c_str() );
+		eeDebug( "%s: %s returned error %d at %s line %d: %s", caller, function, error, file, line, WinUtil::GetErrorString( error ).c_str() );
 
 		return false;
 	}
@@ -44,7 +44,7 @@ bool WinCheck::checkInt( int result, const char* function, const char* caller, c
 		DWORD error = GetLastError();
 		eeUnusedVariable( error );
 
-		eeDebug( "%s: %s returned error 0x%08x at %s line %d: %s", caller, function, error, file, line, WinUtil::getErrorString( error ).c_str() );
+		eeDebug( "%s: %s returned error 0x%08x at %s line %d: %s", caller, function, error, file, line, WinUtil::GetErrorString( error ).c_str() );
 
 		return false;
 	}

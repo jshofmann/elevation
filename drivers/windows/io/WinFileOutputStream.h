@@ -40,6 +40,7 @@ namespace ee
 		// for those parameters in SetFilePointer() and WriteFile().
 		virtual bool Seek( uint32_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
+		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) override final;
 
 		// Returns the number of bytes written

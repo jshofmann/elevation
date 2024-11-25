@@ -13,6 +13,8 @@ namespace ee
 	{
 		bool GetFileAttributes( const File& file, FileStatus& status );
 
+		DWORD GetMoveMethod( SeekOrigin origin );
+
 	} // namespace WinFileUtils
 
 } // namespace ee

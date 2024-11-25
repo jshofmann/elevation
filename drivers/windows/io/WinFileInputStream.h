@@ -34,7 +34,7 @@ namespace ee
 
 		// Returns the size in bytes of the stream, if such a concept is well
 		// defined. For files, this is the size of the file in bytes.
-		virtual size_t GetSize( void ) override final;
+		virtual size_t GetSize( void ) const override final;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) override final { return true; }
@@ -44,14 +44,25 @@ namespace ee
 		// for those parameters in SetFilePointer() and ReadFile().
 		virtual bool Seek( uint32_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
+		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) override final;
 
-		virtual FileResult Read( void* buffer, uint32_t length ) override final;
+		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead ) override final;
 
 	private:
 		File	mFile;
 		HANDLE	mHandle;
 
 	}; // class WinFileInputStream
+
+	inline bool WinFileInputStream::Available( void ) const
+	{
+		return ( mHandle != INVALID_HANDLE_VALUE );
+	}
+
+	inline size_t WinFileInputStream::GetSize( void ) const
+	{
+		return mFile.GetFileStatus().GetSize();
+	}
 
 } // namespace ee

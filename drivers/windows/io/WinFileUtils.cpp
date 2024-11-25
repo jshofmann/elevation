@@ -94,7 +94,16 @@ namespace ee
 			return true;
 		}
 
-	} // namespace WinFileUtils
+		DWORD GetMoveMethod( SeekOrigin origin )
+		{
+			switch( origin )
+			{
+			case SeekOrigin::kFromStart:	return FILE_BEGIN;
+			case SeekOrigin::kFromCurrent:	return FILE_CURRENT;
+			case SeekOrigin::kFromEnd:		return FILE_END;
+			}
+		}
 
+	} // namespace WinFileUtils
 
 } // namespace ee

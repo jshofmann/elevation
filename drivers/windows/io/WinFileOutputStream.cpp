@@ -9,6 +9,7 @@
 #include <ee/io/FileOutputStream.h>
 
 #include <drivers/windows/core/WinCheck.h>
+#include <drivers/windows/core/WinUtil.h>
 
 #include "WinFileOutputStream.h"
 #include "WinFileUtils.h"
@@ -28,19 +29,6 @@ namespace ee
 	}
 
 } // namespace ee
-
-namespace
-{
-	static DWORD GetMoveMethod( SeekOrigin origin )
-	{
-		switch( origin )
-		{
-		case SeekOrigin::kFromStart:	return FILE_BEGIN;
-		case SeekOrigin::kFromCurrent:	return FILE_CURRENT;
-		case SeekOrigin::kFromEnd:		return FILE_END;
-		}
-	}
-}
 
 WinFileOutputStream::WinFileOutputStream( const char* filename )
 	: mFile( filename )
@@ -67,6 +55,14 @@ bool WinFileOutputStream::Open( void )
 {
 	mHandle = CreateFile( mFile.GetFilename(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
 
+	if( mHandle == INVALID_HANDLE_VALUE )
+	{
+		DWORD error = GetLastError();
+		eeUnusedVariable( error );
+
+		eeDebug( "WinFileOutputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile.GetFilename(), error, WinUtil::GetErrorString( error ).c_str() );
+	}
+
 	return ( mHandle != INVALID_HANDLE_VALUE );
 }
 
@@ -74,7 +70,7 @@ void WinFileOutputStream::Close( void )
 {
 	if( mHandle != INVALID_HANDLE_VALUE )
 	{
-		CloseHandle( mHandle );
+		eeCheckBool( CloseHandle( mHandle ) );
 		mHandle = INVALID_HANDLE_VALUE;
 	}
 }
@@ -84,7 +80,7 @@ bool WinFileOutputStream::Seek( uint32_t offset, SeekOrigin origin )
 	if( !Available() )
 		return false;
 
-	DWORD result = SetFilePointer( mHandle, offset, NULL, GetMoveMethod( origin ) );
+	DWORD result = SetFilePointer( mHandle, offset, NULL, WinFileUtils::GetMoveMethod( origin ) );
 
 	return ( result != INVALID_SET_FILE_POINTER );
 }
