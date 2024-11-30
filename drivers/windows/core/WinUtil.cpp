@@ -48,6 +48,16 @@ bool WinUtil::IsGPUDebuggerAttached( void )
 	return IsRenderDocAttached() || IsPIXAttached();
 }
 
+LARGE_INTEGER WinUtil::ToLARGE_INTEGER( const size_t size )
+{
+	return { .QuadPart = LONGLONG( size ) };
+}
+
+size_t WinUtil::ToSize( const LARGE_INTEGER li )
+{
+	return size_t( li.QuadPart );
+}
+
 // You will usually want to pass in the results of GetLastError()
 std::string WinUtil::GetErrorString( DWORD error )
 {

@@ -18,6 +18,9 @@ namespace ee
 		bool IsRenderDocAttached( void );
 		bool IsGPUDebuggerAttached( void );
 
+		LARGE_INTEGER ToLARGE_INTEGER( const size_t size );
+		size_t ToSize( const LARGE_INTEGER li );
+
 		// You will usually want to pass in the results of GetLastError() here
 		std::string GetErrorString( DWORD error );
 

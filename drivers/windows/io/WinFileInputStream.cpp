@@ -75,29 +75,27 @@ void WinFileInputStream::Close( void )
 	}
 }
 
-bool WinFileInputStream::Seek( uint32_t offset, SeekOrigin origin )
+bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 {
 	if( !Available() )
 		return false;
 
-	DWORD result = SetFilePointer( mHandle, offset, NULL, WinFileUtils::GetMoveMethod( origin ) );
-
-	return ( result != INVALID_SET_FILE_POINTER );
+	return eeCheckBool( SetFilePointerEx( mHandle, WinUtil::ToLARGE_INTEGER( offset ), NULL, WinFileUtils::GetMoveMethod( origin ) ) );
 }
 
-size_t WinFileInputStream::GetCurrentOffset( void )
+size_t WinFileInputStream::GetCurrentOffset( void ) const
 {
 	if( !Available() )
 		return -1;
 
-	// The Windows SDK equivalent of ftell() is SetFilePointer()'s result
-	LONG offsetHigh;
-	DWORD offset = SetFilePointer( mHandle, 0, &offsetHigh, FILE_CURRENT );
-
-	if( offset == INVALID_SET_FILE_POINTER )
+	// The Windows SDK equivalent of ftell() is SetFilePointerEx()'s lpNewFilePointer out parameter
+	LARGE_INTEGER pointer;
+	if( !eeCheckBool( SetFilePointerEx( mHandle, { 0, 0 }, &pointer, FILE_CURRENT ) ) )
+	{
 		return -1;
+	}
 
-	return size_t( size_t( offsetHigh ) << 32 | offset );
+	return WinUtil::ToSize( pointer );
 }
 
 FileResult WinFileInputStream::Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead )

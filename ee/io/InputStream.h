@@ -30,13 +30,10 @@ namespace ee
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;
 
-		// Note: we're using uint32_t, not size_t, for our offset and bytesToRead
-		// parameters because the Windows SDK uses DWORD (ie uint32_t) values
-		// for those parameters in SetFilePointer() and ReadFile().
-		virtual bool Seek( uint32_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
+		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
 
 		// Known as 'ftell' in the POSIX API
-		virtual size_t GetCurrentOffset( void ) = 0;
+		virtual size_t GetCurrentOffset( void ) const = 0;
 
 		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead = nullptr ) = 0;
 

@@ -131,6 +131,9 @@
     <ClInclude Include="..\..\..\ee\math\vec3.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\BufferedInputStream.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -164,6 +167,9 @@
       <Filter>Source Files\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ee\io\FileStatus.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp">
       <Filter>Source Files\io</Filter>
     </ClCompile>
   </ItemGroup>

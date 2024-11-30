@@ -164,6 +164,7 @@
     <ClInclude Include="..\..\..\ee\image\TGAReader.h" />
     <ClInclude Include="..\..\..\ee\image\TGASupport.h" />
     <ClInclude Include="..\..\..\ee\image\TGAWriter.h" />
+    <ClInclude Include="..\..\..\ee\io\BufferedInputStream.h" />
     <ClInclude Include="..\..\..\ee\io\Common.h" />
     <ClInclude Include="..\..\..\ee\io\FilePath.h" />
     <ClInclude Include="..\..\..\ee\io\FileStatus.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="..\..\..\ee\image\PNGWriter.cpp" />
     <ClCompile Include="..\..\..\ee\image\TGAReader.cpp" />
     <ClCompile Include="..\..\..\ee\image\TGAWriter.cpp" />
+    <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp" />
     <ClCompile Include="..\..\..\ee\io\File.cpp" />
     <ClCompile Include="..\..\..\ee\io\FileStatus.cpp" />
     <ClCompile Include="..\..\..\ee\math\AABB.cpp" />
