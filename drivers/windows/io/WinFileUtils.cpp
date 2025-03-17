@@ -102,6 +102,8 @@ namespace ee
 			case SeekOrigin::kFromCurrent:	return FILE_CURRENT;
 			case SeekOrigin::kFromEnd:		return FILE_END;
 			}
+
+			return FILE_CURRENT;
 		}
 
 	} // namespace WinFileUtils

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <EEGlobalsIncluded>true</EEGlobalsIncluded>
+    <EEProjectRoot>$(MSBuildThisFileDirectory)</EEProjectRoot>
+    <EEPublishRoot>$(EEProjectRoot)\bin\</EEPublishRoot>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutDir>$(EEProjectRoot)build\$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(EEProjectRoot)build\$(Platform)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BuildMacro Include="EEProjectRoot">
+      <Value>$(EEProjectRoot)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="EEPublishRoot">
+      <Value>$(EEPublishRoot)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
