@@ -12,7 +12,7 @@
 
 using namespace ee;
 
-RECT WinUtil::getWindowDimensions( HWND hwnd, uint16_t& width, uint16_t& height )
+RECT WinUtil::GetWindowDimensions( HWND hwnd, uint16_t& width, uint16_t& height )
 {
 	RECT rect;
 	if( !eeCheckBool( GetClientRect( hwnd, &rect ) ) )
@@ -32,24 +32,34 @@ RECT WinUtil::getWindowDimensions( HWND hwnd, uint16_t& width, uint16_t& height 
 	return rect;
 }
 
-bool WinUtil::isRenderDocAttached( void )
+bool WinUtil::IsRenderDocAttached( void )
 {
 	return ( GetModuleHandleA( "renderdoc.dll" ) != NULL );
 }
 
-bool WinUtil::isPIXAttached( void )
+bool WinUtil::IsPIXAttached( void )
 {
 	return ( ( GetModuleHandleA( "WinPixCaptureReplay.dll" ) != NULL ) ||
 			 ( GetModuleHandleA( "WinPixGpuCapturer.dll" ) != NULL ) );
 }
 
-bool WinUtil::isGPUDebuggerAttached( void )
+bool WinUtil::IsGPUDebuggerAttached( void )
 {
-	return isRenderDocAttached() || isPIXAttached();
+	return IsRenderDocAttached() || IsPIXAttached();
+}
+
+LARGE_INTEGER WinUtil::ToLARGE_INTEGER( const size_t size )
+{
+	return { .QuadPart = LONGLONG( size ) };
+}
+
+size_t WinUtil::ToSize( const LARGE_INTEGER li )
+{
+	return size_t( li.QuadPart );
 }
 
 // You will usually want to pass in the results of GetLastError()
-std::string WinUtil::getErrorString( DWORD error )
+std::string WinUtil::GetErrorString( DWORD error )
 {
     LPVOID message;
     FormatMessage (

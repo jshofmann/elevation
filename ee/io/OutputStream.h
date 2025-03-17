@@ -13,22 +13,25 @@ namespace ee
 	class OutputStream
 	{
 	public:
-		// Note: Do not attempt to use the stream after Release is called!
+		// Note: Do not attempt to use the stream after Close is called!
 		// For files, sockets, etc this will close the stream destination.
-		virtual void Release( void ) = 0;
+		virtual void Close( void ) = 0;
 
-		// Returns the size in bytes of the stream, if such a concept is well
-		// defined. For files, this is the size of the file in bytes.
-		virtual size_t GetAvailable( void ) = 0;
+		// Return true if the stream is usable - i.e for files the file exists
+		// (or could be created) and can be read (or written) to, for memory
+		// the memory has been assigned or allocated.
+		virtual bool Available( void ) const = 0;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
 
+		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) = 0;
 
-		virtual FileResult Write( const void* buffer, size_t length ) = 0;
+		// Returns the number of bytes written
+		virtual uint32_t Write( const void* buffer, uint32_t length ) = 0;
 		virtual void Flush( void ) {}
 
 		// Implement operator << for each primitive type we support
@@ -82,7 +85,7 @@ namespace ee
 		{
 			if( stream != nullptr )
 			{
-				stream->Release();
+				stream->Close();
 			}
 		}
 	};

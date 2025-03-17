@@ -152,6 +152,7 @@
     <ClInclude Include="..\..\..\drivers\windows\core\WinUtil.h" />
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileInputStream.h" />
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileOutputStream.h" />
+    <ClInclude Include="..\..\..\drivers\windows\io\WinFileUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +162,7 @@
     <ClCompile Include="..\..\..\drivers\windows\core\WinUtil.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileInputStream.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileOutputStream.cpp" />
+    <ClCompile Include="..\..\..\drivers\windows\io\WinFileUtils.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

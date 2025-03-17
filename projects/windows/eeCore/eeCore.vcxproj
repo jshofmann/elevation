@@ -79,6 +79,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -97,6 +98,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -115,6 +117,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,6 +136,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -154,17 +158,38 @@
     <ClInclude Include="..\..\..\ee\core\StdIncludes.h" />
     <ClInclude Include="..\..\..\ee\core\StdMacros.h" />
     <ClInclude Include="..\..\..\ee\core\System.h" />
+    <ClInclude Include="..\..\..\ee\image\BMPReader.h" />
+    <ClInclude Include="..\..\..\ee\image\BMPSupport.h" />
+    <ClInclude Include="..\..\..\ee\image\PNGWriter.h" />
+    <ClInclude Include="..\..\..\ee\image\TGAReader.h" />
+    <ClInclude Include="..\..\..\ee\image\TGASupport.h" />
+    <ClInclude Include="..\..\..\ee\image\TGAWriter.h" />
+    <ClInclude Include="..\..\..\ee\io\BufferedInputStream.h" />
     <ClInclude Include="..\..\..\ee\io\Common.h" />
     <ClInclude Include="..\..\..\ee\io\FilePath.h" />
     <ClInclude Include="..\..\..\ee\io\FileStatus.h" />
     <ClInclude Include="..\..\..\ee\io\FileSystem.h" />
     <ClInclude Include="..\..\..\ee\io\InputStream.h" />
     <ClInclude Include="..\..\..\ee\io\OutputStream.h" />
+    <ClInclude Include="..\..\..\ee\math\AABB.h" />
+    <ClInclude Include="..\..\..\ee\math\Math.h" />
+    <ClInclude Include="..\..\..\ee\math\Perlin.h" />
+    <ClInclude Include="..\..\..\ee\math\Ray.h" />
+    <ClInclude Include="..\..\..\ee\math\vec3.h" />
     <ClInclude Include="..\..\..\ee\utility\HashUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\ee\core\Assert.cpp" />
+    <ClCompile Include="..\..\..\ee\image\BMPReader.cpp" />
+    <ClCompile Include="..\..\..\ee\image\PNGWriter.cpp" />
+    <ClCompile Include="..\..\..\ee\image\TGAReader.cpp" />
+    <ClCompile Include="..\..\..\ee\image\TGAWriter.cpp" />
+    <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp" />
+    <ClCompile Include="..\..\..\ee\io\File.cpp" />
+    <ClCompile Include="..\..\..\ee\io\FileStatus.cpp" />
+    <ClCompile Include="..\..\..\ee\math\AABB.cpp" />
+    <ClCompile Include="..\..\..\ee\math\Perlin.cpp" />
     <ClCompile Include="..\..\..\ee\utility\HashUtils.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

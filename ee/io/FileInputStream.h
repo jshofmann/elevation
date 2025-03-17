@@ -5,13 +5,26 @@
 #pragma once
 
 #include <ee/core/PlatformDetection.h>
+#include <ee/io/File.h>
 
-#if defined( PLATFORM_WINDOWS )
-
-using FileInputStream = WinFileInputStream;
-
+#if defined( BUILD_PC )
+#include <drivers/windows/io/WinFileInputStream.h>
 #else // assume the POSIX interface is supported
-
-using FileInputStream = PosixFileInputStream;
-
+#include <drivers/posix/io/PosixFileInputStream.h>
 #endif
+
+namespace ee
+{
+#if defined( BUILD_PC )
+	using FileInputStream = WinFileInputStream;
+#else // assume the POSIX interface is supported
+	using FileInputStream = PosixFileInputStream;
+#endif
+
+	// Use these functions to instantiate the appropriate InputStream
+	// for the System you're running on. They'll be implemented in a driver.
+	std::unique_ptr<FileInputStream> MakeFileInputStream( const char* filename );
+
+	std::unique_ptr<FileInputStream> MakeFileInputStream( const File& file );
+
+} // namespace ee

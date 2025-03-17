@@ -13,22 +13,29 @@ namespace ee
 	class InputStream
 	{
 	public:
-		// Note: Do not attempt to use the stream after Release is called!
+		// Note: Do not attempt to use the stream after Close is called!
 		// For files, sockets, etc this will close the stream source.
-		virtual void Release( void ) = 0;
+		virtual void Close( void ) = 0;
+
+		// Return true if the stream is usable - i.e for files the file exists
+		// (or could be created) and can be read (or written) to, for memory
+		// the memory has been assigned or allocated.
+		virtual bool Available( void ) const = 0;
 
 		// Returns the size in bytes of the stream, if such a concept is well
-		// defined. For files, this is the size of the file in bytes.
-		virtual size_t GetAvailable( void ) = 0;
+		// defined. For files, this is the size of the file in bytes;
+		// for memory, the number of bytes allocated or assigned.
+		virtual size_t GetSize( void ) const = 0;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
 
-		virtual size_t GetCurrentOffset( void ) = 0;
+		// Known as 'ftell' in the POSIX API
+		virtual size_t GetCurrentOffset( void ) const = 0;
 
-		virtual FileResult Read( void* buffer, size_t length ) = 0;
+		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead = nullptr ) = 0;
 
 		// Implement operator >> each primitive type we support
 		template< class T >
@@ -82,7 +89,7 @@ namespace ee
 		{
 			if( stream != nullptr )
 			{
-				stream->Release();
+				stream->Close();
 			}
 		}
 	};
