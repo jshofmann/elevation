@@ -93,7 +93,6 @@
   <ItemGroup>
     <ClInclude Include="BVH.h" />
     <ClInclude Include="HitTable.h" />
-    <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PathTracer.h" />
     <ClInclude Include="pch.h" />

@@ -1,5 +1,4 @@
 // PathTracer.cpp : Defines the entry point for the application.
-//
 
 #include "pch.h"
 
@@ -10,7 +9,7 @@
 
 #include <ee/core/Debug.h>
 
-#include "Main.h"
+#include "resource.h"
 #include "PathTracer.h"
 #include "ProgressBar.h"
 
