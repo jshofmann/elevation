@@ -14,16 +14,16 @@ using namespace ee;
 class PathTracer
 {
 public:
-	typedef void( *ProgressCallback )( uint16_t step, void* data ); // step is in [0, 100]
-	typedef void( *CompleteCallback )( const PathTracer& tracer, void* data );
+	typedef void( *ProgressCallback )( uint16_t step, const void* data ); // step is in [0, 100]
+	typedef void( *CompleteCallback )( const PathTracer& tracer, const void* data );
 
 	PathTracer();
 	~PathTracer();
 
 	bool initialize( uint16_t width, uint16_t height );
 
-	void setProgressCallback( ProgressCallback callback, void* data );
-	void setCompleteCallback( CompleteCallback callback, void* data );
+	void setProgressCallback( ProgressCallback callback, const void* data );
+	void setCompleteCallback( CompleteCallback callback, const void* data );
 
 	inline void getDimensions( uint16_t& width, uint16_t& height ) const;
 	inline uint8_t getBytesPerPixel( void ) const;
@@ -37,7 +37,7 @@ public:
 	void startTrace( void );
 
 	// Single-threaded brute force tracer loop, will block the GUI
-	void trace( std::atomic_uint32_t& progressCounter );
+	void trace( void );
 
 private:
 	void stepTrace( uint16_t x, uint16_t y );
@@ -57,10 +57,10 @@ private:
 	std::atomic_uint32_t	mProgressCounter;
 
 	ProgressCallback		mProgressCallback;
-	void*					mProgressCallbackData;
+	const void*				mProgressCallbackData;
 
 	CompleteCallback		mCompleteCallback;
-	void*					mCompleteCallbackData;
+	const void*				mCompleteCallbackData;
 
 }; // class PathTracer
 

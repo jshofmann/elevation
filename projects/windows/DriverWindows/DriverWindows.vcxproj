@@ -83,19 +83,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\drivers\windows\core\WinApplication.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinCheck.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinSystem.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinUtil.h" />
+    <ClInclude Include="..\..\..\drivers\windows\core\WinWindow.h" />
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileInputStream.h" />
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileOutputStream.h" />
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\drivers\windows\core\WinApplication.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinCheck.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinDebug.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinSystem.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinUtil.cpp" />
+    <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileInputStream.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileOutputStream.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileUtils.cpp" />

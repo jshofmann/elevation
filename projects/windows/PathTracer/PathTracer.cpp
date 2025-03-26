@@ -53,13 +53,13 @@ bool PathTracer::initialize( uint16_t width, uint16_t height )
 	return mPixels != nullptr;
 }
 
-void PathTracer::setProgressCallback( ProgressCallback callback, void* data )
+void PathTracer::setProgressCallback( ProgressCallback callback, const void* data )
 {
 	mProgressCallback = callback;
 	mProgressCallbackData = data;
 }
 
-void PathTracer::setCompleteCallback( CompleteCallback callback, void* data )
+void PathTracer::setCompleteCallback( CompleteCallback callback, const void* data )
 {
 	mCompleteCallback = callback;
 	mCompleteCallbackData = data;
@@ -153,7 +153,7 @@ void PathTracer::startTrace( void )
 	mProgressCounter.store( 0 );
 }
 
-void PathTracer::trace( std::atomic_uint32_t& progressCounter )
+void PathTracer::trace( void )
 {
 	const unsigned int threadCount = std::thread::hardware_concurrency();
 	std::vector< std::thread > threads( threadCount );

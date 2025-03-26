@@ -8,41 +8,69 @@
 #include <commctrl.h>
 
 #include <ee/core/Debug.h>
+#include <drivers/Windows/core/WinApplication.h>
+#include <drivers/Windows/core/WinWindow.h>
 
 #include "resource.h"
 #include "PathTracer.h"
 #include "ProgressBar.h"
 
-#define MAX_LOADSTRING 100
-
-// Global Variables:
-HINSTANCE	gInstance = NULL;					// current instance
-CHAR		szTitle[ MAX_LOADSTRING ];			// The title bar text
-CHAR		szWindowClass[ MAX_LOADSTRING ];	// the main window class name
-HWND		gHwnd = NULL;
-HBITMAP		gBitmap = NULL;
-BOOL		gContinue = TRUE;
-HACCEL		gAccelTable = NULL;
-
-static void AdjustWindowDimensions( uint16_t& width, uint16_t& height, DWORD dwWindowStyle )
+class PathTracerApplication : public WinApplication
 {
-	// Adjust the width and height to account for the title bar and borders
-	RECT rect;
-	rect.left = 0;
-	rect.top = 0;
-	rect.right = width - 1;
-	rect.bottom = height - 1;
+public:
+	// Application interface implementation
 
-	if( AdjustWindowRect( &rect, dwWindowStyle, FALSE ) == TRUE )
+	virtual const char* GetName( void ) const override final { return "PathTracer"; }
+
+	virtual int Main( int argCount, const char* args[] ) override final;
+
+	virtual bool Initialize( void ) override final
 	{
-		LONG windowWidth = rect.right - rect.left + 1;
-		LONG windowHeight = rect.bottom - rect.top + 1;
-
-//		eeDebug( "Win32Window::adjustWindowDimensions: Adjusting %d x %d to %d x %d\n", width, height, windowWidth, windowHeight );
-
-		width = ( windowWidth < 0 ) ? 0 : ( windowWidth > 65535 ) ? 65535 : static_cast< uint16_t >( windowWidth );
-		height = ( windowHeight < 0 ) ? 0 : ( windowHeight > 65535 ) ? 65535 : static_cast< uint16_t >( windowHeight );
+		mRunning = true;
+//		return mTracer.initialize( 1280,720 );
+		return mTracer.initialize( 400, 200 );
 	}
+
+	// PathTracerApplication member functions
+
+	PathTracer& GetTracer( void )
+	{
+		return mTracer;
+	}
+
+	const PathTracer& GetTracer( void ) const
+	{
+		return mTracer;
+	}
+
+	ProgressBar& GetProgressBar( void )
+	{
+		return mProgressBar;
+	}
+
+	HBITMAP GetBitmap( void ) const
+	{
+		return mBitmap;
+	}
+
+	void SetBitmap( HBITMAP bitmap )
+	{
+		mBitmap = bitmap;
+	}
+
+private:
+	PathTracer mTracer;
+	ProgressBar mProgressBar;
+	HBITMAP mBitmap = NULL;
+
+}; // class PathTracerApplication
+
+// Because this object represents the running application (ie .exe file)
+// a Meyer singleton is an appropriate pattern to use here
+Application& Application::GetInstance( void )
+{
+	static PathTracerApplication application;
+	return application;
 }
 
 // Message handler for about box
@@ -77,45 +105,43 @@ static INT_PTR CALLBACK About( HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 //
 //	PURPOSE: Processes messages for the main window.
 //
-//	WM_COMMAND	- process the application menu
-//	WM_PAINT	- Paint the main window
-//	WM_DESTROY	- post a quit message and return
-//
-//
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	switch( message )
 	{
 	case WM_CREATE:
 	{
-		CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* >( lParam );
-		PathTracer* tracer = reinterpret_cast< PathTracer* >( pCreate->lpCreateParams );
+		CREATESTRUCT* create = reinterpret_cast< CREATESTRUCT* >( lParam );
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( create->lpCreateParams );
 
 		// Store the pointer in the instance data of the window so it can
 		// be retrieved by using GetWindowLongPtr( hWnd, GWLP_USERDATA )
-        SetWindowLongPtr( hWnd, GWLP_USERDATA, LONG_PTR( tracer ) );
+        SetWindowLongPtr( hWnd, GWLP_USERDATA, LONG_PTR( application ) );
 	}
 	break;
 
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD( wParam );
+		int wmEvent = HIWORD( wParam );
 
 		// Parse the menu selections:
 		switch( wmId )
 		{
 		case IDM_SAVE:
 		{
-			PathTracer* tracer = reinterpret_cast< PathTracer* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+			PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 			// !!! should open a file chooser here...
-			tracer->saveImage( "image.tga" );
+			application->GetTracer().saveImage( "image.tga" );
 		}
 		break;
 
 		case IDM_ABOUT:
 		{
-			DialogBox( gInstance, MAKEINTRESOURCE( IDD_ABOUTBOX ), hWnd, About );
+			PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+			DialogBox( application->GetHInstance(), MAKEINTRESOURCE( IDD_ABOUTBOX ), hWnd, About );
 		}
 		break;
 
@@ -133,21 +159,27 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_CLOSE:
 	{
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+		application->Exit();
 		DestroyWindow( hWnd );
-		gContinue = FALSE;
 	}
 	break;
 
 	case WM_PAINT:
 	{
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+		HBITMAP hbitmap = application->GetBitmap();
+
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint( hWnd, &ps );
 
 		HDC hdcMem = CreateCompatibleDC( hdc );
-		HGDIOBJ oldBitmap = SelectObject( hdcMem, gBitmap );
+		HGDIOBJ oldBitmap = SelectObject( hdcMem, hbitmap );
 
 		BITMAP bitmap;
-		GetObject( gBitmap, sizeof( BITMAP ), &bitmap );
+		GetObject( hbitmap, sizeof( BITMAP ), &bitmap );
 
 		BitBlt( hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY );
 
@@ -160,8 +192,10 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_DESTROY:
 	{
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+		application->Exit();
 		PostQuitMessage( 0 );
-		gContinue = FALSE;
 	}
 	break;
 
@@ -172,33 +206,12 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	return 0;
 }
 
-//
-//	FUNCTION: MyRegisterClass()
-//
-//	PURPOSE: Registers the window class.
-//
-static ATOM MyRegisterClass( HINSTANCE hInstance )
+static void CopyBitmap( PathTracerApplication& application )
 {
-	WNDCLASSEX wcex;
+	HWND hwnd = application.GetApplicationWindow().GetHWND();
 
-	wcex.cbSize			= sizeof( WNDCLASSEX );
-	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc	= WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon( hInstance, MAKEINTRESOURCE( IDI_PATHTRACER ) );
-	wcex.hCursor		= LoadCursor( nullptr, IDC_ARROW );
-	wcex.hbrBackground	= HBRUSH( COLOR_WINDOW + 1 );
-	wcex.lpszMenuName	= MAKEINTRESOURCE( IDC_PATHTRACER );
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon( wcex.hInstance, MAKEINTRESOURCE( IDI_SMALL ) );
+	const PathTracer& tracer = application.GetTracer();
 
-	return RegisterClassEx( &wcex );
-}
-
-static void CopyBitmap( const PathTracer& tracer )
-{
 	uint16_t width, height;
 	tracer.getDimensions( width, height );
 
@@ -224,110 +237,74 @@ static void CopyBitmap( const PathTracer& tracer )
 	info.bmiColors[ 0 ].rgbRed = 0;
 	info.bmiColors[ 0 ].rgbReserved = 0;
 
-	HDC dc = GetDC( gHwnd );
+	HDC dc = GetDC( hwnd );
 
 	const uint8_t* pixels = tracer.getPixels();
 
 	void* bits;
-	gBitmap = CreateDIBSection( dc, &info, DIB_RGB_COLORS, &bits, nullptr, 0 );
+	HBITMAP bitmap = CreateDIBSection( dc, &info, DIB_RGB_COLORS, &bits, nullptr, 0 );
 
 	uint32_t pixelsSize = width * height * bytesPerPixel;
 	memcpy( bits, pixels, pixelsSize );
 
-	ReleaseDC( gHwnd, dc );
+	application.SetBitmap( bitmap );
+
+	ReleaseDC( hwnd, dc );
 }
 
-//
-//	 FUNCTION: InitInstance( HINSTANCE, int )
-//
-//	 PURPOSE: Saves instance handle and creates main window
-//
-//	 COMMENTS:
-//
-//		  In this function, we save the instance handle in a global variable and
-//		  create and display the main program window.
-//
-static BOOL InitInstance( HINSTANCE hInstance, int nCmdShow, PathTracer* tracer )
+static void TracerCompleteCallback( const PathTracer& tracer, const void* data )
 {
-	gInstance = hInstance; // Store instance handle in our global variable
+	if( data == nullptr )
+		return;
+		
+	// data is const void* because PathTracer won't touch it;
+	// the const_cast here is safe
+	PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( const_cast< void * >( data ) );
 
-	uint16_t width, height;
-	tracer->getDimensions( width, height );
-
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW;
-
-	AdjustWindowDimensions( width, height, dwStyle );
-
-	gHwnd = CreateWindow(
-		szWindowClass, szTitle, dwStyle,
-		CW_USEDEFAULT, 0,		// x, y
-		width, height,
-		NULL, NULL,				// hWndParent, hMenu
-		hInstance,
-		reinterpret_cast< LPVOID >( tracer ) );
-	if( gHwnd == nullptr )
-	{
-		return FALSE;
-	}
-
-	ShowWindow( gHwnd, nCmdShow );
-	UpdateWindow( gHwnd );
-
-	return TRUE;
-}
-
-static bool PumpMessages( void )
-{
-	MSG msg;
-	while( PeekMessage( &msg, gHwnd, 0, 0, PM_NOREMOVE ) )
-	{
-		// !?!? The BOOL that GetMessage() returns can be
-		// TRUE, FALSE, or -1. Go Microsoft!
-		BOOL hasMessage = GetMessage( &msg, gHwnd, 0, 0 );
-		if( hasMessage != FALSE )
-		{
-			if( hasMessage == -1 )
-			{
-				return false;
-			}
-			else
-			{
-				TranslateMessage( &msg );
-				DispatchMessage( &msg );
-			}
-		}
-
-		if( !TranslateAccelerator( msg.hwnd, gAccelTable, &msg ) )
-		{
-			TranslateMessage( &msg );
-			DispatchMessage( &msg );
-		}
-
-	} // while( PeekMessage( &msg, gHwnd, 0, 0, PM_NOREMOVE ) )
-
-	return true;
-}
-
-static void TracerCompleteCallback( const PathTracer& tracer, void* data )
-{
 	// Copy the results to the HBITMAP
-	CopyBitmap( tracer );
+	CopyBitmap( *application );
 
 	// Make sure that they're visible
-	InvalidateRect( gHwnd, NULL, TRUE );
+	InvalidateRect( application->GetApplicationWindow().GetHWND(), NULL, TRUE );
 
-	if( data != nullptr )
-	{
-		reinterpret_cast< ProgressBar* >( data )->close();
-	}
+	application->GetProgressBar().close();
 }
 
-static void TracerProgressCallback( uint16_t step, void* data )
+static void TracerProgressCallback( uint16_t step, const void* data )
 {
 	if( data != nullptr )
 	{
-		reinterpret_cast< ProgressBar* >( data )->setPosition( step );
+		// data is const void* because PathTracer won't touch it;
+		// the const_cast here is safe
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( const_cast< void * >( data ) );
+
+		application->GetProgressBar().setPosition( step );
 	}
+}
+
+int PathTracerApplication::Main( int argCount, const char* args[] )
+{
+	mProgressBar.open( mApplicationWindow.GetHWND(), 100, 1, "PathTracer progress" );
+
+	mTracer.setProgressCallback( TracerProgressCallback, this );
+	mTracer.setCompleteCallback( TracerCompleteCallback, this );
+
+	mTracer.startTrace();
+
+	// Spawn the tracing threads
+	mTracer.trace();
+
+	// Main loop:
+	while( mRunning )
+	{
+		if( !Update() )
+		{
+			break;
+		}
+
+	} // while( mRunning )
+
+	return 0;
 }
 
 int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
@@ -338,56 +315,65 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER( hPrevInstance );
 	UNREFERENCED_PARAMETER( lpCmdLine );
 
-	// Initialize global strings
+	static constexpr size_t MAX_LOADSTRING = 100;
+
+	CHAR szTitle[ MAX_LOADSTRING ];			// The title bar text
+	CHAR szWindowClass[ MAX_LOADSTRING ];	// the main window class name
 	LoadString( hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING );
 	LoadString( hInstance, IDC_PATHTRACER, szWindowClass, MAX_LOADSTRING );
-	MyRegisterClass( hInstance );
 
-	// The common controls library must be initialized in order
-	// to use a Windows progress bar.
+	// The common controls library must be initialized
+	// in order to use a Windows progress bar.
 	INITCOMMONCONTROLSEX init;
 	memset( &init, 0, sizeof( INITCOMMONCONTROLSEX ) );
 	init.dwSize = sizeof( INITCOMMONCONTROLSEX );
 	init.dwICC = ICC_PROGRESS_CLASS;
 	InitCommonControlsEx( &init );
 
-	PathTracer tracer;
+	WNDCLASSEX wcex;
 
-//	if( !tracer.initialize( 1280, 720 ) )
-	if( !tracer.initialize( 400, 200 ) )
+	wcex.cbSize			= sizeof( WNDCLASSEX );
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS;
+	wcex.lpfnWndProc	= WndProc;
+	wcex.cbClsExtra		= 0;
+	wcex.cbWndExtra		= 0;
+	wcex.hInstance		= hInstance;
+	wcex.hIcon			= LoadIcon( hInstance, MAKEINTRESOURCE( IDI_PATHTRACER ) );
+	wcex.hCursor		= LoadCursor( nullptr, IDC_ARROW );
+	wcex.hbrBackground	= HBRUSH( COLOR_WINDOW + 1 );
+	wcex.lpszMenuName	= MAKEINTRESOURCE( IDC_PATHTRACER );
+	wcex.lpszClassName	= szWindowClass;
+	wcex.hIconSm		= LoadIcon( hInstance, MAKEINTRESOURCE( IDI_SMALL ) );
+
+	ATOM wndclass = RegisterClassEx( &wcex );
+
+	PathTracerApplication& application = static_cast< PathTracerApplication& >( Application::GetInstance() );
+	application.SetHInstance( hInstance );
+
+	HACCEL table = LoadAccelerators( hInstance, MAKEINTRESOURCE( IDC_PATHTRACER ) );
+	if( table != nullptr )
 	{
-		return FALSE;
+		application.SetAccelTable( table );
 	}
 
-	// Perform application initialization:
-	if( !InitInstance( hInstance, nCmdShow, &tracer ) )
+	if( !application.Initialize() )
 	{
-		return FALSE;
+		return -1;
 	}
 
-	gAccelTable = LoadAccelerators( hInstance, MAKEINTRESOURCE( IDC_PATHTRACER ) );
+	uint16_t width, height;
+	application.GetTracer().getDimensions( width, height );
 
-	tracer.startTrace();
+	WinWindow& window = application.GetApplicationWindow();
 
-	ProgressBar progress;
-	progress.open( gHwnd, 100, 1, "PathTracer progress" );
+	window.SetWindowClassName( szWindowClass );
+	window.SetWindowTitle( szTitle );
+	window.SetWindowProc( WndProc );
 
-	tracer.setProgressCallback( TracerProgressCallback, &progress );
-	tracer.setCompleteCallback( TracerCompleteCallback, &progress );
-
-	// Spawn the tracing threads
-	std::atomic_uint32_t progressCounter( 0 );
-	tracer.trace( progressCounter );
-
-	// Main loop:
-	while( gContinue )
+	if( !window.CreateHWND( width, height, Application::kDisplayWindowed, &application ) )
 	{
-		if( !PumpMessages() )
-		{
-			break;
-		}
+		return -1;
+	}
 
-	} // while( gContinue )
-
-	return 0;
+	return application.Main( 0, nullptr );
 }

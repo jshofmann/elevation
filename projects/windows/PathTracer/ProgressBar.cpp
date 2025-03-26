@@ -4,8 +4,6 @@
 
 #include "ProgressBar.h"
 
-extern HINSTANCE gInstance;
-
 ProgressBar::ProgressBar()
 	: mProgressBar( NULL )
 {
@@ -66,7 +64,7 @@ void ProgressBar::open( HWND parent, uint16_t range, uint16_t step, const char* 
 								 rect.left, rect.top, barWidth, barHeight,
 								 parent,
 								 (HMENU) NULL,
-								 gInstance,
+								 GetModuleHandle( NULL ),
 								 NULL );
 	if( mProgressBar == NULL )
 	{

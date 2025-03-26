@@ -44,6 +44,12 @@
     <ClInclude Include="..\..\..\drivers\windows\io\WinFileUtils.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\drivers\windows\core\WinApplication.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\drivers\windows\core\WinWindow.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -69,6 +75,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileUtils.cpp">
       <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\windows\core\WinApplication.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
