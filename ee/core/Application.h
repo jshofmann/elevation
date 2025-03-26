@@ -1,3 +1,7 @@
+// Elevation Engine
+//
+// Copyright (c) 2025 Azimuth Studios
+
 #pragma once
 
 namespace ee

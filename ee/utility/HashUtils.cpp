@@ -182,6 +182,10 @@ namespace eeCRCTableGenerator
 		case 64: strcpy_s( typeString, "uint64_t" ); break;
 		}
 
+		fprintf( file, "// Elevation Engine\n" );
+		fprintf( file, "//\n" );
+		fprintf( file, "// Copyright (c) 2025 Azimuth Studios\n\n" );
+
 		fprintf( file, "#pragma once\n\n" );
 		fprintf( file, "//\n// Generated CRC%d data table; see HashUtils.cpp\n", bitcount );
 		fprintf( file, "//\n\n" );

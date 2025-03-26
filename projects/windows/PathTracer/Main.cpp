@@ -1,4 +1,6 @@
-// PathTracer.cpp : Defines the entry point for the application.
+// PathTracer application - part of Elevation Engine
+//
+// Copyright (c) 2025 Azimuth Studios
 
 #include "pch.h"
 

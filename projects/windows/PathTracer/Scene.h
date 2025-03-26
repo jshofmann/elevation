@@ -1,3 +1,7 @@
+// PathTracer application - part of Elevation Engine
+//
+// Copyright (c) 2025 Azimuth Studios
+
 #pragma once
 
 #include <stdint.h>

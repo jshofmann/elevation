@@ -1,10 +1,6 @@
 // Elevation Engine
 //
 // Copyright (c) 2024 Azimuth Studios
-// All Rights Reserved.
-//
-// Azimuth Studios, Logan, UT
-// http://www.azimuthstudios.com
 
 #pragma once
 

@@ -1,4 +1,6 @@
-// pch.cpp: source file corresponding to the pre-compiled header
+// Elevation Engine
+//
+// Copyright (c) 2025 Azimuth Studios
 
 #include "pch.h"
 
