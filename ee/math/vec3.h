@@ -42,9 +42,9 @@ namespace ee
 		inline vec3& operator = ( const vec3& s );
 
 		// values is assumed to have 3 elements
-		inline void set( const float* values );
-		inline void set( float x, float y, float z );
-		inline void set( const vec3& vec );
+		inline void Set( const float* values );
+		inline void Set( float x, float y, float z );
+		inline void Set( const vec3& vec );
 
 		inline float& operator [] ( int index );
 		inline const float& operator [] ( int index ) const;
@@ -75,27 +75,27 @@ namespace ee
 
 		// vector operations++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-		inline vec3& normalize( void );
-		inline vec3 getNormalized( void ) const;
+		inline vec3& Normalize( void );
+		inline vec3 GetNormalized( void ) const;
 
-		inline float dot( const vec3& vec ) const;
-		inline void cross( const vec3& vec, vec3& vout ) const;
+		inline float Dot( const vec3& vec ) const;
+		inline void Cross( const vec3& vec, vec3& vout ) const;
 
-		// Reflects this vector off a Plane normal
-		inline vec3& reflect( const vec3& normal );
+		// Reflects this vector off a plane normal
+		inline vec3& Reflect( const vec3& normal );
 
-		inline float magnitude( void ) const;
-		inline float magnitudeSquared( void ) const;
+		inline float Magnitude( void ) const;
+		inline float MagnitudeSquared( void ) const;
 
-		inline float length( void ) const;
-		inline float lengthSquared( void ) const;
+		inline float Length( void ) const;
+		inline float LengthSquared( void ) const;
 
-		inline float distanceTo( const vec3& vec ) const;
-		inline float distanceToSquared( const vec3& vec ) const;
+		inline float DistanceTo( const vec3& vec ) const;
+		inline float DistanceToSquared( const vec3& vec ) const;
 
 		// Returns true if the vector is essentially zero
 		// (within a custom tolerance you can specify)
-		inline bool isZero( float compareVal = 0.0001f ) const;
+		inline bool IsZero( float tolerance = 0.0001f ) const;
 
 	}; // class vec3
 
@@ -119,18 +119,18 @@ namespace ee
 		return *this;
 	}
 
-	inline void vec3::set( const float* values )
+	inline void vec3::Set( const float* values )
 	{
 		// values is assumed to have 3 elements
 		x = values[ 0 ]; y = values[ 1 ]; z = values[ 2 ];
 	}
 
-	inline void vec3::set( float _x, float _y, float _z )
+	inline void vec3::Set( float _x, float _y, float _z )
 	{
 		x = _x; y = _y; z = _z;
 	}
 
-	inline void vec3::set( const vec3& vec )
+	inline void vec3::Set( const vec3& vec )
 	{
 		x = vec.x; y = vec.y; z = vec.z;
 	}
@@ -308,20 +308,20 @@ namespace ee
 	inline vec3 Cross( const vec3& v1, const vec3& v2 )
 	{
 		vec3 cp;
-		v1.cross( v2, cp );
+		v1.Cross( v2, cp );
 		return cp;
 	}
 
 	inline float Dot( const vec3& v1, const vec3& v2 )
 	{
-		return v1.dot( v2 );
+		return v1.Dot( v2 );
 	}
 
 // vector operations++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	inline vec3& vec3::normalize( void )
+	inline vec3& vec3::Normalize( void )
 	{
-		float mag = magnitude();
+		float mag = Magnitude();
 		if( mag != float( 0 ) )
 		{
 			float invMag = float( 1 ) / mag;
@@ -331,70 +331,70 @@ namespace ee
 		return *this;
 	}
 
-	inline vec3 vec3::getNormalized( void ) const
+	inline vec3 vec3::GetNormalized( void ) const
 	{
-		return vec3( x, y, z ).normalize();
+		return vec3( x, y, z ).Normalize();
 	}
 
-	inline vec3& vec3::reflect( const vec3& normal )
+	inline vec3& vec3::Reflect( const vec3& normal )
 	{
 		// Implements vector reflection where the incident vector
-		// I = I - ( 2 * dot( N, I ) * N )
-		float scalar = normal.dot( *this );
+		// I = I - ( 2 * Dot( N, I ) * N )
+		float scalar = normal.Dot( *this );
 
-		// so dot( N, L ) * N creates a vector in the direction of N
+		// so Dot( N, L ) * N creates a vector in the direction of N
 		*this -= 2 * scalar * normal;
 
 		return *this;
 	}
 
-	inline float vec3::dot( const vec3& vec ) const
+	inline float vec3::Dot( const vec3& vec ) const
 	{
 		return ( x * vec.x + y * vec.y + z * vec.z );
 	}
 
-	inline void vec3::cross( const vec3& vec, vec3& vout ) const
+	inline void vec3::Cross( const vec3& vec, vec3& vout ) const
 	{
-		vout.set( y * vec.z - z * vec.y,
+		vout.Set( y * vec.z - z * vec.y,
 				  z * vec.x - x * vec.z,
 				  x * vec.y - y * vec.x );
 	}
 
-	inline float vec3::magnitude( void ) const
+	inline float vec3::Magnitude( void ) const
 	{
 		return sqrtf( x * x + y * y + z * z );
 	}
 
-	inline float vec3::magnitudeSquared( void ) const
+	inline float vec3::MagnitudeSquared( void ) const
 	{
 		return ( x * x + y * y + z * z );
 	}
 
-	inline float vec3::length( void ) const
+	inline float vec3::Length( void ) const
 	{
 		return sqrtf( x * x + y * y + z * z );
 	}
 
-	inline float vec3::lengthSquared( void ) const
+	inline float vec3::LengthSquared( void ) const
 	{
 		return ( x * x + y * y + z * z );
 	}
 
-	inline float vec3::distanceTo( const vec3& vec ) const
+	inline float vec3::DistanceTo( const vec3& vec ) const
 	{
 		vec3 diff = *this - vec;
-		return diff.length();
+		return diff.Length();
 	}
 
-	inline float vec3::distanceToSquared( const vec3& vec ) const
+	inline float vec3::DistanceToSquared( const vec3& vec ) const
 	{
 		vec3 diff = *this - vec;
-		return diff.lengthSquared();
+		return diff.LengthSquared();
 	}
 
-	inline bool vec3::isZero( float compareVal ) const
+	inline bool vec3::IsZero( float tolerance ) const
 	{
-		return fabs( x ) <= compareVal && fabs( y ) <= compareVal && fabs( z ) <= compareVal;
+		return fabs( x ) <= tolerance && fabs( y ) <= tolerance && fabs( z ) <= tolerance;
 	}
 
 } // namespace ee

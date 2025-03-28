@@ -14,11 +14,11 @@ namespace ee
 		Ray() {}
 		Ray( const vec3& origin, const vec3& direction, float time = 0.0f );
 
-		inline const vec3& getOrigin( void ) const;
-		inline const vec3& getDirection( void ) const;
-		inline float getTime( void ) const;
+		inline const vec3& GetOrigin( void ) const;
+		inline const vec3& GetDirection( void ) const;
+		inline float GetTime( void ) const;
 
-		inline vec3 pointAtParameter( float t ) const;
+		inline vec3 PointAtParameter( float t ) const;
 
 	private:
 		vec3	mOrigin;
@@ -34,22 +34,22 @@ namespace ee
 	{
 	}
 
-	inline const vec3& Ray::getOrigin( void ) const
+	inline const vec3& Ray::GetOrigin( void ) const
 	{
 		return mOrigin;
 	}
 
-	inline const vec3& Ray::getDirection( void ) const
+	inline const vec3& Ray::GetDirection( void ) const
 	{
 		return mDirection;
 	}
 
-	inline float Ray::getTime( void ) const
+	inline float Ray::GetTime( void ) const
 	{
 		return mTime;
 	}
 
-	inline vec3 Ray::pointAtParameter( float t ) const
+	inline vec3 Ray::PointAtParameter( float t ) const
 	{
 		return mOrigin + t * mDirection;
 	}

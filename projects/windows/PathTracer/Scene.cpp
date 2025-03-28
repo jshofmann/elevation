@@ -10,12 +10,12 @@
 #include <ee/math/Math.h>
 
 // This function takes ownership of the Traceable objects in list
-bool Scene::initialize( Traceable** list, uint32_t listSize )
+bool Scene::Initialize( Traceable** list, uint32_t listSize )
 {
 	if( ( list == nullptr ) || ( listSize == 0 ) )
 		return false;
 
-	shutdown();
+	Shutdown();
 
 	mListSize = listSize;
 
@@ -28,7 +28,7 @@ bool Scene::initialize( Traceable** list, uint32_t listSize )
 	return true;
 }
 
-void Scene::shutdown( void )
+void Scene::Shutdown( void )
 {
 	if( mList == nullptr )
 		return; // already shut down
@@ -41,7 +41,7 @@ void Scene::shutdown( void )
 	delete[] mList;
 }
 
-bool Scene::hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const
+bool Scene::Hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const
 {
 	HitRecord tempRecord;
 	bool hitAnything = false;
@@ -49,7 +49,7 @@ bool Scene::hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const
 
 	for( uint32_t i = 0; i < mListSize; ++i )
 	{
-		if( mList[ i ]->hit( r, t_min, closest, tempRecord ) )
+		if( mList[ i ]->Hit( r, t_min, closest, tempRecord ) )
 		{
 			hitAnything = true;
 			closest = tempRecord.t;
@@ -60,7 +60,7 @@ bool Scene::hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const
 	return hitAnything;
 }
 
-bool Scene::getBoundingBox( float t0, float t1, AABB& box ) const
+bool Scene::GetBoundingBox( float t0, float t1, AABB& box ) const
 {
 	if( mListSize == 0 )
 	{
@@ -68,7 +68,7 @@ bool Scene::getBoundingBox( float t0, float t1, AABB& box ) const
 	}
 
 	AABB temp;
-	bool hasBox = mList[ 0 ]->getBoundingBox( t0, t1, temp );
+	bool hasBox = mList[ 0 ]->GetBoundingBox( t0, t1, temp );
 	if( !hasBox )
 	{
 		return false;
@@ -82,9 +82,9 @@ bool Scene::getBoundingBox( float t0, float t1, AABB& box ) const
 	{
 		for( uint32_t i = 1; i < mListSize; ++i )
 		{
-			if( mList[ i ]->getBoundingBox( t0, t1, temp ) )
+			if( mList[ i ]->GetBoundingBox( t0, t1, temp ) )
 			{
-				box = enclose( box, temp );
+				box = Enclose( box, temp );
 			}
 			else
 			{

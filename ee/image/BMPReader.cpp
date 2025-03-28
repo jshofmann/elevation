@@ -18,7 +18,7 @@ BMPReader::BMPReader()
 // Assumes that data contains the contents of a .bmp format file.
 // This function will not copy the data array given to it; this data
 // must remain valid until the BMPReader instance is destroyed.
-bool BMPReader::set( const void* data, uint32_t dataSizeInBytes )
+bool BMPReader::Set( const void* data, uint32_t dataSizeInBytes )
 {
 	// 54 == sizeof( BITMAPFILEHEADER ) + sizeof( BITMAPINFOHEADER );
 	// if data's size is smaller than that this cannot be a BMP file
@@ -39,7 +39,7 @@ bool BMPReader::set( const void* data, uint32_t dataSizeInBytes )
 	return true;
 }
 
-uint32_t BMPReader::getImageSize( void ) const
+uint32_t BMPReader::GetImageSize( void ) const
 {
 	// If BITMAPINFOHEADER::biSizeImage is negative, the sign bit is the
 	// flag indicating that the origin is in the top-left corner.

@@ -24,31 +24,31 @@ public:
 	PathTracer();
 	~PathTracer();
 
-	bool initialize( uint16_t width, uint16_t height );
+	bool Initialize( uint16_t width, uint16_t height );
 
-	void setProgressCallback( ProgressCallback callback, const void* data );
-	void setCompleteCallback( CompleteCallback callback, const void* data );
+	void SetProgressCallback( ProgressCallback callback, const void* data );
+	void SetCompleteCallback( CompleteCallback callback, const void* data );
 
-	inline void getDimensions( uint16_t& width, uint16_t& height ) const;
-	inline uint8_t getBytesPerPixel( void ) const;
+	inline void GetDimensions( uint16_t& width, uint16_t& height ) const;
+	inline uint8_t GetBytesPerPixel( void ) const;
 
-	inline const uint8_t* getPixels( void ) const;
+	inline const uint8_t* GetPixels( void ) const;
 
-	void saveImage( const char* filename ) const;
+	void SaveImage( const char* filename ) const;
 
 	// To run the path tracer, call startTrace() to initialize the scene
 	// and then trace() to run the actual path tracing loops
-	void startTrace( void );
+	void StartTrace( void );
 
 	// Single-threaded brute force tracer loop, will block the GUI
-	void trace( void );
+	void Trace( void );
 
 private:
-	void stepTrace( uint16_t x, uint16_t y );
-	vec3 getColor( const Ray& r, Scene& scene, int depth ) const;
+	void StepTrace( uint16_t x, uint16_t y );
+	vec3 GetColor( const Ray& r, Scene& scene, int depth ) const;
 
-	Scene* createRandomScene( void ) const;
-	Scene* createTwoPerlinSpheres( void ) const;
+	Scene* CreateRandomScene( void ) const;
+	Scene* CreateTwoPerlinSpheres( void ) const;
 
 	uint32_t				mSampleCount;
 	uint16_t				mWidth, mHeight; // in pixels
@@ -68,18 +68,18 @@ private:
 
 }; // class PathTracer
 
-inline void PathTracer::getDimensions( uint16_t& width, uint16_t& height ) const
+inline void PathTracer::GetDimensions( uint16_t& width, uint16_t& height ) const
 {
 	width = mWidth;
 	height = mHeight;
 }
 
-inline uint8_t PathTracer::getBytesPerPixel( void ) const
+inline uint8_t PathTracer::GetBytesPerPixel( void ) const
 {
 	return mBytesPerPixel;
 }
 
-inline const uint8_t* PathTracer::getPixels( void ) const
+inline const uint8_t* PathTracer::GetPixels( void ) const
 {
 	return mPixels;
 }

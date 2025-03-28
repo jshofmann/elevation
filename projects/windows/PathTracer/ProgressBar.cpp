@@ -15,14 +15,14 @@ ProgressBar::ProgressBar()
 
 ProgressBar::~ProgressBar()
 {
-	close();
+	Close();
 }
 
-void ProgressBar::open( HWND parent, uint16_t range, uint16_t step, const char* title )
+void ProgressBar::Open( HWND parent, uint16_t range, uint16_t step, const char* title )
 {
 	if( mProgressBar != NULL )
 	{
-		close();
+		Close();
 	}
 
 	uint16_t parentWidth, parentHeight;
@@ -82,7 +82,7 @@ void ProgressBar::open( HWND parent, uint16_t range, uint16_t step, const char* 
 	SendMessage( mProgressBar, PBM_SETSTEP, (WPARAM) step, 0 );
 }
 
-void ProgressBar::close( void )
+void ProgressBar::Close( void )
 {
 	if( mProgressBar != NULL )
 	{
@@ -91,7 +91,7 @@ void ProgressBar::close( void )
 	}
 }
 
-void ProgressBar::step( void )
+void ProgressBar::Step( void )
 {
 	if( mProgressBar != NULL )
 	{
@@ -99,7 +99,7 @@ void ProgressBar::step( void )
 	}
 }
 
-void ProgressBar::setPosition( uint16_t position )
+void ProgressBar::SetPosition( uint16_t position )
 {
 	if( mProgressBar != NULL )
 	{

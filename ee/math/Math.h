@@ -32,7 +32,7 @@ namespace ee
 			// [ 0, 1 ] -> [ -1, 1 ]
 			p = 2.0f * vec3( RandomFloat(), RandomFloat(), RandomFloat() ) - vec3( 1.0f, 1.0f, 1.0f );
 		}
-		while( p.lengthSquared() >= 1.0f );
+		while( p.LengthSquared() >= 1.0f );
 
 		return p;
 	}
@@ -57,7 +57,7 @@ namespace ee
 
 	inline bool Refract( const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted )
 	{
-		vec3 uv = v.getNormalized();
+		vec3 uv = v.GetNormalized();
 		float dt = Dot( uv, n );
 		float discriminant = 1.0f - ni_over_nt * ni_over_nt * ( 1.0f - dt * dt );
 		if( discriminant > 0.0f )

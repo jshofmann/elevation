@@ -12,9 +12,9 @@ namespace ee
 	class Perlin
 	{
 	public:
-		float noise( const vec3& p ) const;
+		float Noise( const vec3& p ) const;
 
-		float turbulence( const vec3& p, int depth = 7 ) const;
+		float Turbulence( const vec3& p, int depth = 7 ) const;
 
 	private:
 

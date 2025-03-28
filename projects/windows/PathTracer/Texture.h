@@ -12,7 +12,7 @@ using namespace ee;
 class Texture
 {
 public:
-	virtual vec3 getValue( float u, float v, const vec3& p ) const = 0;
+	virtual vec3 GetValue( float u, float v, const vec3& p ) const = 0;
 
 }; // class Texture
 
@@ -29,7 +29,7 @@ public:
 
 	// Texture interface implementation
 
-	virtual vec3 getValue( float u, float v, const vec3& p ) const
+	virtual vec3 GetValue( float u, float v, const vec3& p ) const
 	{
 		return mColor;
 	}
@@ -69,16 +69,16 @@ public:
 
 	// Texture interface implementation
 
-	virtual vec3 getValue( float u, float v, const vec3& p ) const
+	virtual vec3 GetValue( float u, float v, const vec3& p ) const
 	{
 		float sines = sin( 10 * p.x ) * sin( 10 * p.y ) * sin( 10 * p.z );
 		if( sines < 0.0f )
 		{
-			return mOdd->getValue( u, v, p );
+			return mOdd->GetValue( u, v, p );
 		}
 		else
 		{
-			return mEven->getValue( u, v, p );
+			return mEven->GetValue( u, v, p );
 		}
 	}
 
@@ -101,10 +101,10 @@ public:
 
 	// Texture interface implementation
 
-	virtual vec3 getValue( float u, float v, const vec3& p ) const
+	virtual vec3 GetValue( float u, float v, const vec3& p ) const
 	{
 //		return vec3( 1.0f, 1.0f, 1.0f ) * mNoise.noise( mScale * p );
-		return vec3( 1.0f, 1.0f, 1.0f ) * 0.5f * ( 1.0f + sinf( mScale * p.z + 10.0f * mNoise.turbulence( p ) ) );
+		return vec3( 1.0f, 1.0f, 1.0f ) * 0.5f * ( 1.0f + sinf( mScale * p.z + 10.0f * mNoise.Turbulence( p ) ) );
 	}
 
 private:
@@ -137,7 +137,7 @@ public:
 
 	// Texture interface implementation
 
-	virtual vec3 getValue( float u, float v, const vec3& p ) const;
+	virtual vec3 GetValue( float u, float v, const vec3& p ) const;
 
 private:
 	uint16_t mWidth, mHeight, mBytesPerPixel;

@@ -19,17 +19,17 @@ public:
 
 	// Traceable interface implementation
 
-	virtual bool hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const;
+	virtual bool Hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const;
 
-	virtual bool getBoundingBox( float t0, float t1, AABB& box ) const;
+	virtual bool GetBoundingBox( float t0, float t1, AABB& box ) const;
 
 	// Scene member functions
 
 	// This function takes ownership of the Traceable objects in list
-	bool initialize( Traceable** list, uint32_t listSize );
-	void shutdown( void );
+	bool Initialize( Traceable** list, uint32_t listSize );
+	void Shutdown( void );
 
-	uint32_t getListSize( void ) const;
+	uint32_t GetListSize( void ) const;
 
 private:
 	Traceable**	mList;
@@ -45,10 +45,10 @@ inline Scene::Scene()
 
 inline Scene::~Scene()
 {
-	shutdown();
+	Shutdown();
 }
 
-inline uint32_t Scene::getListSize( void ) const
+inline uint32_t Scene::GetListSize( void ) const
 {
 	return mListSize;
 }

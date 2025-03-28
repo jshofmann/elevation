@@ -29,8 +29,8 @@ public:
 	virtual bool Initialize( void ) override final
 	{
 		mRunning = true;
-//		return mTracer.initialize( 1280,720 );
-		return mTracer.initialize( 400, 200 );
+//		return mTracer.Initialize( 1280,720 );
+		return mTracer.Initialize( 400, 200 );
 	}
 
 	// PathTracerApplication member functions
@@ -135,7 +135,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 			PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 			// !!! should open a file chooser here...
-			application->GetTracer().saveImage( "image.tga" );
+			application->GetTracer().SaveImage( "image.tga" );
 		}
 		break;
 
@@ -215,9 +215,9 @@ static void CopyBitmap( PathTracerApplication& application )
 	const PathTracer& tracer = application.GetTracer();
 
 	uint16_t width, height;
-	tracer.getDimensions( width, height );
+	tracer.GetDimensions( width, height );
 
-	uint8_t bytesPerPixel = tracer.getBytesPerPixel();
+	uint8_t bytesPerPixel = tracer.GetBytesPerPixel();
 
 	BITMAPINFO info;
 	ZeroMemory( &info, sizeof( info ) );
@@ -241,7 +241,7 @@ static void CopyBitmap( PathTracerApplication& application )
 
 	HDC dc = GetDC( hwnd );
 
-	const uint8_t* pixels = tracer.getPixels();
+	const uint8_t* pixels = tracer.GetPixels();
 
 	void* bits;
 	HBITMAP bitmap = CreateDIBSection( dc, &info, DIB_RGB_COLORS, &bits, nullptr, 0 );
@@ -269,7 +269,7 @@ static void TracerCompleteCallback( const PathTracer& tracer, const void* data )
 	// Make sure that they're visible
 	InvalidateRect( application->GetApplicationWindow().GetHWND(), NULL, TRUE );
 
-	application->GetProgressBar().close();
+	application->GetProgressBar().Close();
 }
 
 static void TracerProgressCallback( uint16_t step, const void* data )
@@ -280,21 +280,21 @@ static void TracerProgressCallback( uint16_t step, const void* data )
 		// the const_cast here is safe
 		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( const_cast< void * >( data ) );
 
-		application->GetProgressBar().setPosition( step );
+		application->GetProgressBar().SetPosition( step );
 	}
 }
 
 int PathTracerApplication::Main( int argCount, const char* args[] )
 {
-	mProgressBar.open( mApplicationWindow.GetHWND(), 100, 1, "PathTracer progress" );
+	mProgressBar.Open( mApplicationWindow.GetHWND(), 100, 1, "PathTracer progress" );
 
-	mTracer.setProgressCallback( TracerProgressCallback, this );
-	mTracer.setCompleteCallback( TracerCompleteCallback, this );
+	mTracer.SetProgressCallback( TracerProgressCallback, this );
+	mTracer.SetCompleteCallback( TracerCompleteCallback, this );
 
-	mTracer.startTrace();
+	mTracer.StartTrace();
 
 	// Spawn the tracing threads
-	mTracer.trace();
+	mTracer.Trace();
 
 	// Main loop:
 	while( mRunning )
@@ -364,7 +364,7 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 	}
 
 	uint16_t width, height;
-	application.GetTracer().getDimensions( width, height );
+	application.GetTracer().GetDimensions( width, height );
 
 	WinWindow& window = application.GetApplicationWindow();
 

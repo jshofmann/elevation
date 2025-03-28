@@ -26,7 +26,7 @@ public:
 			float aperture, float focalDistance,
 			float t0 = 0.0f, float t1 = 0.0f );
 
-	Ray getRay( float u, float v ) const;
+	Ray GetRay( float u, float v ) const;
 
 private:
 	vec3 mOrigin;
@@ -66,8 +66,8 @@ inline Camera::Camera( vec3 eye, vec3 lookat, vec3 up,
 	float halfWidth = aspectRatio * halfHeight;
 
 	// build an orthonormal basis from the eye parameters
-	mW = ( eye - lookat ).getNormalized();
-	mU = Cross( up, mW ).getNormalized();
+	mW = ( eye - lookat ).GetNormalized();
+	mU = Cross( up, mW ).GetNormalized();
 	mV = Cross( mW, mU );
 
 	mLowerLeftCorner = eye - halfWidth * focalDistance * mU
@@ -79,7 +79,7 @@ inline Camera::Camera( vec3 eye, vec3 lookat, vec3 up,
 	mLensRadius = aperture / 2.0f;
 }
 
-inline Ray Camera::getRay( float s, float t ) const
+inline Ray Camera::GetRay( float s, float t ) const
 {
 	if( mLensRadius == 0.0f )
 	{

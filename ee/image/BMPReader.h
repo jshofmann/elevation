@@ -18,20 +18,20 @@ namespace ee
 		// Assumes that data contains the contents of a .bmp format file.
 		// This function will not copy the data array given to it; this data
 		// must remain valid until the BMPReader instance is destroyed.
-		bool set( const void* data, uint32_t dataSizeInBytes );
+		bool Set( const void* data, uint32_t dataSizeInBytes );
 
-		uint32_t getImageSize( void ) const;
+		uint32_t GetImageSize( void ) const;
 
-		inline int getWidth( void ) const { return mInfoHeader.biWidth; }
-		inline int getHeight( void ) const { return mInfoHeader.biHeight; }
-		inline uint16_t getBitCount( void ) const { return mInfoHeader.biBitCount; }
+		inline int GetWidth( void ) const { return mInfoHeader.biWidth; }
+		inline int GetHeight( void ) const { return mInfoHeader.biHeight; }
+		inline uint16_t GetBitCount( void ) const { return mInfoHeader.biBitCount; }
 
-		inline uint32_t getCompression( void ) const { return mInfoHeader.biCompression; }
+		inline uint32_t GetCompression( void ) const { return mInfoHeader.biCompression; }
 
 		// If false, the origin is in the bottom left corner
-		inline bool hasTopLeftOrigin( void ) const { return mInfoHeader.biSizeImage < 0; }
+		inline bool HasTopLeftOrigin( void ) const { return mInfoHeader.biSizeImage < 0; }
 
-		inline const uint8_t* getPixelData( void ) const { return mPixelData; }
+		inline const uint8_t* GetPixelData( void ) const { return mPixelData; }
 
 	private:
 		BitmapFileHeader	mFileHeader;

@@ -8,7 +8,7 @@
 
 using namespace ee;
 
-static float interpolate( vec3 c[ 2 ][ 2 ][ 2 ], float u, float v, float w )
+static float Interpolate( vec3 c[ 2 ][ 2 ][ 2 ], float u, float v, float w )
 {
 	// Use Hermite interpolation to reduce the amount of Mach banding
 	float uu = u * u * ( 3.0f - 2.0f * u );
@@ -33,7 +33,7 @@ static float interpolate( vec3 c[ 2 ][ 2 ][ 2 ], float u, float v, float w )
 	return accumulator;
 }
 
-float Perlin::noise( const vec3& p ) const
+float Perlin::Noise( const vec3& p ) const
 {
 	float u = p.x - floorf( p.x );
 	float v = p.y - floorf( p.y );
@@ -55,17 +55,17 @@ float Perlin::noise( const vec3& p ) const
 			}
 		}
 	}
-	return interpolate( c, u, v, w );
+	return Interpolate( c, u, v, w );
 }
 
-float Perlin::turbulence( const vec3& p, int depth /* = 7 */ ) const
+float Perlin::Turbulence( const vec3& p, int depth /* = 7 */ ) const
 {
 	float accumulator = 0.0f;
 	vec3 temp = p;
 	float weight = 1.0f;
 	for( int i = 0; i < depth; ++i )
 	{
-		accumulator += weight * noise( temp );
+		accumulator += weight * Noise( temp );
 		weight *= 0.5f;
 		temp *= 2.0f;
 	}
@@ -83,7 +83,7 @@ static vec3* PerlinGenerate( void )
 	{
 		p[ i ] = vec3( 2.0f * RandomFloat() - 1.0f,
 					   2.0f * RandomFloat() - 1.0f,
-					   2.0f * RandomFloat() - 1.0f ).getNormalized();
+					   2.0f * RandomFloat() - 1.0f ).GetNormalized();
 	}
 
 	return p;

@@ -15,10 +15,10 @@ using namespace ee;
 class Material
 {
 public:
-	virtual bool scatter( const Ray& ray, const HitRecord& hit,
+	virtual bool Scatter( const Ray& ray, const HitRecord& hit,
 						  vec3& attenuation, Ray& scattered ) const = 0;
 
-	virtual vec3 emitted( float u, float v, const vec3& p ) const
+	virtual vec3 Emitted( float u, float v, const vec3& p ) const
 	{
 		return vec3( 0.0f, 0.0f, 0.0f );
 	}
@@ -46,12 +46,12 @@ public:
 
 	// Material interface implementation
 
-	virtual bool scatter( const Ray& ray, const HitRecord& hit,
+	virtual bool Scatter( const Ray& ray, const HitRecord& hit,
 						  vec3& attenuation, Ray& scattered ) const
 	{
 		vec3 target = hit.p + hit.normal + RandomInUnitSphere();
-		scattered = Ray( hit.p, target - hit.p, ray.getTime() );
-		attenuation = mAlbedo->getValue( 0.0f, 0.0f, hit.p );
+		scattered = Ray( hit.p, target - hit.p, ray.GetTime() );
+		attenuation = mAlbedo->GetValue( 0.0f, 0.0f, hit.p );
 		return true;
 	}
 
@@ -74,13 +74,13 @@ public:
 
 	// Material interface implementation
 
-	virtual bool scatter( const Ray& ray, const HitRecord& hit,
+	virtual bool Scatter( const Ray& ray, const HitRecord& hit,
 						  vec3& attenuation, Ray& scattered ) const
 	{
-		vec3 reflected = Reflect( ray.getDirection().getNormalized(), hit.normal );
+		vec3 reflected = Reflect( ray.GetDirection().GetNormalized(), hit.normal );
 		scattered = Ray( hit.p, reflected + mFuzziness * RandomInUnitSphere() );
 		attenuation = mAlbedo;
-		return Dot( scattered.getDirection(), hit.normal ) > 0.0f;
+		return Dot( scattered.GetDirection(), hit.normal ) > 0.0f;
 	}
 
 private:
@@ -99,7 +99,7 @@ public:
 
 	// Material interface implementation
 
-	virtual bool scatter( const Ray& ray, const HitRecord& hit,
+	virtual bool Scatter( const Ray& ray, const HitRecord& hit,
 						  vec3& attenuation, Ray& scattered ) const;
 
 private:
@@ -115,15 +115,15 @@ public:
 
 	// Material interface implementation
 
-	virtual bool scatter( const Ray& ray, const HitRecord& hit,
+	virtual bool Scatter( const Ray& ray, const HitRecord& hit,
 						  vec3& attenuation, Ray& scattered ) const
 	{
 		return false;
 	}
 
-	virtual vec3 emitted( float u, float v, const vec3& p ) const
+	virtual vec3 Emitted( float u, float v, const vec3& p ) const
 	{
-		return mEmitter->getValue( u, v, p );
+		return mEmitter->GetValue( u, v, p );
 	}
 
 private:

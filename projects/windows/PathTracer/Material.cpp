@@ -6,10 +6,10 @@
 
 #include "Material.h"
 
-bool Glass::scatter( const Ray& ray, const HitRecord& hit,
+bool Glass::Scatter( const Ray& ray, const HitRecord& hit,
 					 vec3& attenuation, Ray& scattered ) const
 {
-	vec3 reflected = Reflect( ray.getDirection(), hit.normal );
+	vec3 reflected = Reflect( ray.GetDirection(), hit.normal );
 
 	// Glass absorbs nothing
 	attenuation = vec3( 1.0f, 1.0f, 1.0f );
@@ -17,23 +17,23 @@ bool Glass::scatter( const Ray& ray, const HitRecord& hit,
 	vec3 outwardNormal;
 	float ni_over_nt, cosine;
 
-	if( Dot( ray.getDirection(), hit.normal ) > 0.0f )
+	if( Dot( ray.GetDirection(), hit.normal ) > 0.0f )
 	{
 		outwardNormal = -hit.normal;
 		ni_over_nt = mRefractIndex;
-		cosine = mRefractIndex * Dot( ray.getDirection(), hit.normal ) / ray.getDirection().length();
+		cosine = mRefractIndex * Dot( ray.GetDirection(), hit.normal ) / ray.GetDirection().Length();
 	}
 	else
 	{
 		outwardNormal = hit.normal;
 		ni_over_nt = 1.0f / mRefractIndex;
-		cosine = -Dot( ray.getDirection(), hit.normal ) / ray.getDirection().length();
+		cosine = -Dot( ray.GetDirection(), hit.normal ) / ray.GetDirection().Length();
 	}
 
 	float reflectProbability;
 	vec3 refracted;
 
-	if( Refract( ray.getDirection(), outwardNormal, ni_over_nt, refracted ) )
+	if( Refract( ray.GetDirection(), outwardNormal, ni_over_nt, refracted ) )
 	{
 		reflectProbability = Schlick( cosine, mRefractIndex );
 	}

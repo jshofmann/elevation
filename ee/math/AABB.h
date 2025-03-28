@@ -26,17 +26,17 @@ namespace ee
 		{
 		}
 
-		inline const vec3& getMin( void ) const
+		inline const vec3& GetMin( void ) const
 		{
 			return mMin;
 		}
 
-		inline const vec3& getMax( void ) const
+		inline const vec3& GetMax( void ) const
 		{
 			return mMax;
 		}
 
-		bool hit( const Ray& r, float tmin, float tmax ) const;
+		bool Hit( const Ray& r, float tmin, float tmax ) const;
 
 	private:
 		vec3 mMin;
@@ -46,14 +46,14 @@ namespace ee
 
 	// Return the union of the two axis-aligned bounding boxes
 	// ("union" is a C++ reserved keyword, of course)
-	inline AABB enclose( const AABB& box0, const AABB& box1 )
+	inline AABB Enclose( const AABB& box0, const AABB& box1 )
 	{
 		// "min" and "max" are of course #defined by Microsoft....
-		vec3 mins( eeMin( box0.getMin().x, box1.getMin().x ), eeMin( box0.getMin().y, box1.getMin().y ),
-				   eeMin( box0.getMin().z, box1.getMin().z ) );
+		vec3 mins( eeMin( box0.GetMin().x, box1.GetMin().x ), eeMin( box0.GetMin().y, box1.GetMin().y ),
+				   eeMin( box0.GetMin().z, box1.GetMin().z ) );
 
-		vec3 maxs( eeMax( box0.getMax().x, box1.getMax().x ), eeMax( box0.getMax().y, box1.getMax().y ),
-				   eeMax( box0.getMax().z, box1.getMax().z ) );
+		vec3 maxs( eeMax( box0.GetMax().x, box1.GetMax().x ), eeMax( box0.GetMax().y, box1.GetMax().y ),
+				   eeMax( box0.GetMax().z, box1.GetMax().z ) );
 
 		return AABB( mins, maxs );
 	}

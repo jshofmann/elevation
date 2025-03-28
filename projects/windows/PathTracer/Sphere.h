@@ -44,13 +44,13 @@ public:
 
 	// Traceable interface implementation
 
-	virtual bool hit( const Ray& r, float tmin, float tmax, HitRecord& hit ) const;
+	virtual bool Hit( const Ray& r, float tmin, float tmax, HitRecord& hit ) const;
 
-	virtual bool getBoundingBox( float t0, float t1, AABB& box ) const;
+	virtual bool GetBoundingBox( float t0, float t1, AABB& box ) const;
 
 	// Sphere member functions
 
-	vec3 getCenter( float time ) const
+	vec3 GetCenter( float time ) const
 	{
 		if( mTime0 == mTime1 ) // avoid divide-by-zero...
 		{

@@ -20,9 +20,9 @@ public:
 
 	// Traceable interface implementation
 
-	virtual bool hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const;
+	virtual bool Hit( const Ray& r, float t_min, float t_max, HitRecord& rec ) const;
 
-	virtual bool getBoundingBox( float t0, float t1, AABB& box ) const;
+	virtual bool GetBoundingBox( float t0, float t1, AABB& box ) const;
 
 private:
 	Traceable*	mLeft;
@@ -37,7 +37,7 @@ inline BVHNode::BVHNode()
 {
 }
 
-inline bool BVHNode::getBoundingBox( float t0, float t1, AABB& box ) const
+inline bool BVHNode::GetBoundingBox( float t0, float t1, AABB& box ) const
 {
 	box = mBounds;
 	return true;

@@ -11,18 +11,18 @@
 
 using namespace ee;
 
-bool AABB::hit( const Ray& r, float tmin, float tmax ) const
+bool AABB::Hit( const Ray& r, float tmin, float tmax ) const
 {
 #if 0 // Reference implementation: simple, clear, but slow
 
 	// iterate over the x, y, and z members of vec3
 	for( int i = 0; i < 3; ++i )
 	{
-		float t0 = ffmin( ( mMin[ i ] - r.getOrigin()[ i ] ) / r.getDirection()[ i ],
-						  ( mMax[ i ] - r.getOrigin()[ i ] ) / r.getDirection()[ i ] );
+		float t0 = ffmin( ( mMin[ i ] - r.GetOrigin()[ i ] ) / r.GetDirection()[ i ],
+						  ( mMax[ i ] - r.GetOrigin()[ i ] ) / r.GetDirection()[ i ] );
 
-		float t1 = ffmax( ( mMin[ i ] - r.getOrigin()[ i ] ) / r.getDirection()[ i ],
-						  ( mMax[ i ] - r.getOrigin()[ i ] ) / r.getDirection()[ i ] );
+		float t1 = ffmax( ( mMin[ i ] - r.GetOrigin()[ i ] ) / r.GetDirection()[ i ],
+						  ( mMax[ i ] - r.GetOrigin()[ i ] ) / r.GetDirection()[ i ] );
 
 		tmin = ffmax( t0, tmin );
 		tmax = ffmin( t1, tmax );
@@ -37,9 +37,9 @@ bool AABB::hit( const Ray& r, float tmin, float tmax ) const
 	// iterate over the x, y, and z members of vec3
 	for( int i = 0; i < 3; ++i )
 	{
-		float invD = 1.0f / r.getDirection()[ i ];
-		float t0 = ( getMin()[ i ] - r.getOrigin()[ i ] ) * invD;
-		float t1 = ( getMax()[ i ] - r.getOrigin()[ i ] ) * invD;
+		float invD = 1.0f / r.GetDirection()[ i ];
+		float t0 = ( GetMin()[ i ] - r.GetOrigin()[ i ] ) * invD;
+		float t1 = ( GetMax()[ i ] - r.GetOrigin()[ i ] ) * invD;
 		if( invD < 0.0f )
 		{
 			// Ensure that the interval endpoints are in increasing order

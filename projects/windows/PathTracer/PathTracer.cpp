@@ -46,7 +46,7 @@ PathTracer::~PathTracer()
 	}
 }
 
-bool PathTracer::initialize( uint16_t width, uint16_t height )
+bool PathTracer::Initialize( uint16_t width, uint16_t height )
 {
 	mWidth = width;
 	mHeight = height;
@@ -57,24 +57,24 @@ bool PathTracer::initialize( uint16_t width, uint16_t height )
 	return mPixels != nullptr;
 }
 
-void PathTracer::setProgressCallback( ProgressCallback callback, const void* data )
+void PathTracer::SetProgressCallback( ProgressCallback callback, const void* data )
 {
 	mProgressCallback = callback;
 	mProgressCallbackData = data;
 }
 
-void PathTracer::setCompleteCallback( CompleteCallback callback, const void* data )
+void PathTracer::SetCompleteCallback( CompleteCallback callback, const void* data )
 {
 	mCompleteCallback = callback;
 	mCompleteCallbackData = data;
 }
 
-void PathTracer::saveImage( const char* filename ) const
+void PathTracer::SaveImage( const char* filename ) const
 {
 	TGAWriter::Write( mPixels, mWidth, mHeight, mBytesPerPixel, filename );
 }
 
-void PathTracer::startTrace( void )
+void PathTracer::StartTrace( void )
 {
 #if 1
 
@@ -84,10 +84,10 @@ void PathTracer::startTrace( void )
 	vec3 up( 0.0f, 1.0f, 0.0f );
 	float verticalFOV = 20.0f; // degrees
 	float aspect = float( mWidth ) / float( mHeight );
-	float focalDistance = 10.0f; // ( eye - lookat ).length();
+	float focalDistance = 10.0f; // ( eye - lookat ).Length();
 	float aperture = 0.1f;
 
-	mScene = createTwoPerlinSpheres();
+	mScene = CreateTwoPerlinSpheres();
 #else
 	vec3 eye( 13.0f, 2.0f, 3.0f );
 	vec3 lookat( 0.0f, 0.0f, 0.0f );
@@ -97,7 +97,7 @@ void PathTracer::startTrace( void )
 	float focalDistance = 10.0f;
 	float aperture = 0.0f;
 
-	mScene = createRandomScene();
+	mScene = CreateRandomScene();
 
 #endif
 
@@ -118,7 +118,7 @@ void PathTracer::startTrace( void )
 	vec3 lookat( 0.0f, 0.0f, -1.0f );
 	vec3 up( 0.0f, 1.0f, 0.0f );
 	float aspect = float( mWidth ) / float( mHeight );
-	float focalDistance = ( eye - lookat ).length();
+	float focalDistance = ( eye - lookat ).Length();
 	float aperture = 2.0f;
 
 	mCamera  = new Camera( eye, lookat, up, 90.0f, aspect, aperture, focalDistance );
@@ -141,7 +141,7 @@ void PathTracer::startTrace( void )
 	vec3 lookat( 0.0f, 0.0f, -1.0f );
 	vec3 up( 0.0f, 1.0f, 0.0f );
 	float aspect = float( mWidth ) / float( mHeight );
-	float focalDistance = ( eye - lookat ).length();
+	float focalDistance = ( eye - lookat ).Length();
 	float aperture = 1.0f / 2.0f;
 
 	mCamera  = new Camera( eye, lookat, up, 20.0f, aspect, aperture, focalDistance );
@@ -157,7 +157,7 @@ void PathTracer::startTrace( void )
 	mProgressCounter.store( 0 );
 }
 
-void PathTracer::trace( void )
+void PathTracer::Trace( void )
 {
 	const unsigned int threadCount = std::thread::hardware_concurrency();
 	std::vector< std::thread > threads( threadCount );
@@ -172,7 +172,7 @@ void PathTracer::trace( void )
 			{
 				for( uint16_t x = 0; x < mWidth; ++x )
 				{
-					stepTrace( x, y );
+					StepTrace( x, y );
 					mProgressCounter++;
 				}
 			}
@@ -205,7 +205,7 @@ void PathTracer::trace( void )
 	}
 }
 
-void PathTracer::stepTrace( uint16_t x, uint16_t y )
+void PathTracer::StepTrace( uint16_t x, uint16_t y )
 {
 	vec3 color( 0.0f, 0.0f, 0.0f );
 
@@ -214,8 +214,8 @@ void PathTracer::stepTrace( uint16_t x, uint16_t y )
 		float u = float( x + RandomFloat() ) / float( mWidth );
 		float v = float( y + RandomFloat() ) / float( mHeight );
 
-		Ray ray = mCamera->getRay( u, v );
-		color += getColor( ray, *mScene, 0 );
+		Ray ray = mCamera->GetRay( u, v );
+		color += GetColor( ray, *mScene, 0 );
 	}
 
 	color /= float( mSampleCount );
@@ -240,18 +240,18 @@ void PathTracer::stepTrace( uint16_t x, uint16_t y )
 	mPixels[ rowOffset + pixelOffset + 2 ] = r;
 }
 
-vec3 PathTracer::getColor( const Ray& r, Scene& scene, int depth ) const
+vec3 PathTracer::GetColor( const Ray& r, Scene& scene, int depth ) const
 {
 	// 0.001f : Reject rays that are too close to 0 to fix shadow acne
 	HitRecord hit;
-	if( scene.hit( r, 0.001f, FLT_MAX, hit ) )
+	if( scene.Hit( r, 0.001f, FLT_MAX, hit ) )
 	{
 		Ray scattered;
 		vec3 attenuation;
-		vec3 emitted = hit.material->emitted( hit.u, hit.v, hit.p );
-		if( depth < 50 && hit.material->scatter( r, hit, attenuation, scattered ) )
+		vec3 emitted = hit.material->Emitted( hit.u, hit.v, hit.p );
+		if( depth < 50 && hit.material->Scatter( r, hit, attenuation, scattered ) )
 		{
-			return emitted + attenuation * getColor( scattered, scene, depth + 1 );
+			return emitted + attenuation * GetColor( scattered, scene, depth + 1 );
 		}
 		else
 		{
@@ -263,7 +263,7 @@ vec3 PathTracer::getColor( const Ray& r, Scene& scene, int depth ) const
 
 #if 0
 	// a gradient between white at the bottom and light blue at the top
-	vec3 direction = r.getDirection().getNormalized();
+	vec3 direction = r.GetDirection().GetNormalized();
 	float t = 0.5f * ( direction.y + 1.0f ); // [ -1, 1 ] -> [ 0, 1 ]
 
 	const vec3 lightBlue( 0.5f, 0.7f, 1.0f );
@@ -274,7 +274,7 @@ vec3 PathTracer::getColor( const Ray& r, Scene& scene, int depth ) const
 #endif
 }
 
-Scene* PathTracer::createRandomScene( void ) const
+Scene* PathTracer::CreateRandomScene( void ) const
 {
 	uint32_t n = 500; // # of objects to create
 
@@ -293,7 +293,7 @@ Scene* PathTracer::createRandomScene( void ) const
 		{
 			float materialChoice = RandomFloat();
 			vec3 center( a + 0.9f * RandomFloat(), 0.2f, b + 0.9f * RandomFloat() );
-			if( ( center - vec3( 4.0f, 0.2f, 0.0f ) ).length() > 0.9f )
+			if( ( center - vec3( 4.0f, 0.2f, 0.0f ) ).Length() > 0.9f )
 			{
 				if( materialChoice < 0.8f ) // 80% chance of a diffuse material
 				{
@@ -317,7 +317,7 @@ Scene* PathTracer::createRandomScene( void ) const
 					list[ i++ ] = new Sphere( center, 0.2f, new Glass( 1.5f ) );
 				}
 
-			} // if( ( center - vec3( 4.0f, 0.2f, 0.0f ) ).length() > 0.9f )
+			} // if( ( center - vec3( 4.0f, 0.2f, 0.0f ) ).Length() > 0.9f )
 
 		} // for( int b = -11; b < 11; ++b )
 
@@ -334,7 +334,7 @@ Scene* PathTracer::createRandomScene( void ) const
 	if( scene == nullptr )
 		return nullptr;
 
-	if( !scene->initialize( list, i ) )
+	if( !scene->Initialize( list, i ) )
 	{
 		delete scene;
 		return nullptr;
@@ -343,7 +343,7 @@ Scene* PathTracer::createRandomScene( void ) const
 	return scene;
 }
 
-Scene* PathTracer::createTwoPerlinSpheres( void ) const
+Scene* PathTracer::CreateTwoPerlinSpheres( void ) const
 {
 	static const float scale = 4.0f;
 	static const size_t kListCount = 4;
@@ -358,7 +358,7 @@ Scene* PathTracer::createTwoPerlinSpheres( void ) const
 	if( scene == nullptr )
 		return nullptr;
 
-	if( !scene->initialize( list, kListCount ) )
+	if( !scene->Initialize( list, kListCount ) )
 	{
 		delete scene;
 		return nullptr;

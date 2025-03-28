@@ -80,16 +80,16 @@ static void* ReadTextureFile( const char* filename, uint16_t& width, uint16_t& h
 	{
 		// Probably a BMP file
 		BMPReader reader;
-		if( !reader.set( file, uint32_t( size ) ) )
+		if( !reader.Set( file, uint32_t( size ) ) )
 		{
 			delete[] file;
 			return nullptr;
 		}
 
-		width = reader.getWidth();
-		height = reader.getHeight();
-		bytesPerPixel = reader.getBitCount() / 8; // bits per pixel -> bytes per pixel
-		pixels = reader.getPixelData();
+		width = reader.GetWidth();
+		height = reader.GetHeight();
+		bytesPerPixel = reader.GetBitCount() / 8; // bits per pixel -> bytes per pixel
+		pixels = reader.GetPixelData();
 
 		return file;
 	}
@@ -98,16 +98,16 @@ static void* ReadTextureFile( const char* filename, uint16_t& width, uint16_t& h
 		// Assume a TGA file; they have no "magic number" or other way
 		// to unambiguously identify the file contents as TGA-format pixels
 		TGAReader reader;
-		if( !reader.set( file, uint32_t( size ) ) )
+		if( !reader.Set( file, uint32_t( size ) ) )
 		{
 			delete[] file;
 			return nullptr;
 		}
 
-		width = reader.getWidth();
-		height = reader.getHeight();
-		bytesPerPixel = reader.getBitsPerPixel() / 8; // bits per pixel -> bytes per pixel
-		pixels = reader.getPixelData();
+		width = reader.GetWidth();
+		height = reader.GetHeight();
+		bytesPerPixel = reader.GetBitsPerPixel() / 8; // bits per pixel -> bytes per pixel
+		pixels = reader.GetPixelData();
 
 		return file;
 	}
@@ -128,7 +128,7 @@ ImageTexture::~ImageTexture()
 		delete[] mFile;
 }
 
-vec3 ImageTexture::getValue( float u, float v, const vec3& p ) const
+vec3 ImageTexture::GetValue( float u, float v, const vec3& p ) const
 {
 	size_t col = size_t( u * mWidth );
 	size_t row = size_t( ( 1.0f - v ) * mHeight - 0.001f );

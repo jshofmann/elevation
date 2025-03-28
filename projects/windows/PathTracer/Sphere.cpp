@@ -9,11 +9,11 @@
 #include <ee/math/AABB.h>
 #include <ee/math/Math.h>
 
-bool Sphere::hit( const Ray& ray, float t_min, float t_max, HitRecord& hit ) const
+bool Sphere::Hit( const Ray& ray, float t_min, float t_max, HitRecord& hit ) const
 {
-	vec3 oc = ray.getOrigin() - getCenter( ray.getTime() );
-	float a = Dot( ray.getDirection(), ray.getDirection() );
-	float b = Dot( oc, ray.getDirection() );
+	vec3 oc = ray.GetOrigin() - GetCenter( ray.GetTime() );
+	float a = Dot( ray.GetDirection(), ray.GetDirection() );
+	float b = Dot( oc, ray.GetDirection() );
 	float c = Dot( oc, oc ) - mRadius * mRadius;
 
 	// The 4 term in 4 * a * c was cancelled out by the 2 that was in the
@@ -25,8 +25,8 @@ bool Sphere::hit( const Ray& ray, float t_min, float t_max, HitRecord& hit ) con
 		if( temp > t_min && temp < t_max )
 		{
 			hit.t = temp;
-			hit.p = ray.pointAtParameter( hit.t );
-			hit.normal = ( hit.p - getCenter( ray.getTime() ) ) / mRadius;
+			hit.p = ray.PointAtParameter( hit.t );
+			hit.normal = ( hit.p - GetCenter( ray.GetTime() ) ) / mRadius;
 			hit.material = mMaterial;
 			return true;
 		}
@@ -35,8 +35,8 @@ bool Sphere::hit( const Ray& ray, float t_min, float t_max, HitRecord& hit ) con
 		if( temp > t_min && temp < t_max )
 		{
 			hit.t = temp;
-			hit.p = ray.pointAtParameter( hit.t );
-			hit.normal = ( hit.p - getCenter( ray.getTime() ) ) / mRadius;
+			hit.p = ray.PointAtParameter( hit.t );
+			hit.normal = ( hit.p - GetCenter( ray.GetTime() ) ) / mRadius;
 			hit.material = mMaterial;
 			return true;
 		}
@@ -46,7 +46,7 @@ bool Sphere::hit( const Ray& ray, float t_min, float t_max, HitRecord& hit ) con
 	return false;
 }
 
-bool Sphere::getBoundingBox( float t0, float t1, AABB& box ) const
+bool Sphere::GetBoundingBox( float t0, float t1, AABB& box ) const
 {
 	// If this sphere is stationary
 	if( t0 == t1 )
@@ -58,7 +58,7 @@ bool Sphere::getBoundingBox( float t0, float t1, AABB& box ) const
 		// Return a region enclosing any place this sphere can be
 		AABB boxa( mA - vec3( mRadius, mRadius, mRadius ), mA + vec3( mRadius, mRadius, mRadius ) );
 		AABB boxb( mB - vec3( mRadius, mRadius, mRadius ), mB + vec3( mRadius, mRadius, mRadius ) );
-		box = enclose( boxa, boxb );
+		box = Enclose( boxa, boxb );
 	}
 
 	return true;
