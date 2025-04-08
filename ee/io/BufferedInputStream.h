@@ -38,14 +38,14 @@ namespace ee
 		virtual size_t GetSize( void ) const override final;
 
 		// Returns true if this is a stream that supports seeking.
-		virtual bool CanSeek( void ) override final { return true; }
+		virtual bool CanSeek( void ) const override final { return true; }
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
 		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) const override final;
 
-		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead ) override final;
+		virtual FileResult Read( void* buffer, size_t bytesToRead, size_t* bytesRead ) override final;
 
 	private:
 		InputStream* mSourceStream;

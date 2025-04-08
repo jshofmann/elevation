@@ -107,11 +107,16 @@
     <ClInclude Include="..\..\..\ee\io\FileSystem.h" />
     <ClInclude Include="..\..\..\ee\io\InputStream.h" />
     <ClInclude Include="..\..\..\ee\io\OutputStream.h" />
+    <ClInclude Include="..\..\..\ee\io\Reader.h" />
+    <ClInclude Include="..\..\..\ee\io\StreamReader.h" />
+    <ClInclude Include="..\..\..\ee\io\StreamWriter.h" />
+    <ClInclude Include="..\..\..\ee\io\Writer.h" />
     <ClInclude Include="..\..\..\ee\math\AABB.h" />
     <ClInclude Include="..\..\..\ee\math\Math.h" />
     <ClInclude Include="..\..\..\ee\math\Perlin.h" />
     <ClInclude Include="..\..\..\ee\math\Ray.h" />
     <ClInclude Include="..\..\..\ee\math\vec3.h" />
+    <ClInclude Include="..\..\..\ee\utility\Config.h" />
     <ClInclude Include="..\..\..\ee\utility\HashUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -124,8 +129,12 @@
     <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp" />
     <ClCompile Include="..\..\..\ee\io\File.cpp" />
     <ClCompile Include="..\..\..\ee\io\FileStatus.cpp" />
+    <ClCompile Include="..\..\..\ee\io\Reader.cpp" />
+    <ClCompile Include="..\..\..\ee\io\StreamReader.cpp" />
+    <ClCompile Include="..\..\..\ee\io\StreamWriter.cpp" />
     <ClCompile Include="..\..\..\ee\math\AABB.cpp" />
     <ClCompile Include="..\..\..\ee\math\Perlin.cpp" />
+    <ClCompile Include="..\..\..\ee\utility\Config.cpp" />
     <ClCompile Include="..\..\..\ee\utility\HashUtils.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

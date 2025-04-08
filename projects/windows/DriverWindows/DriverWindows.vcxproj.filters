@@ -50,6 +50,9 @@
     <ClInclude Include="..\..\..\drivers\windows\core\WinWindow.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\StreamReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\StreamReader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

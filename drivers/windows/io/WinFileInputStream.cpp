@@ -32,7 +32,6 @@ namespace ee
 
 WinFileInputStream::WinFileInputStream( const char* filename )
 	: mFile( filename )
-	, mHandle( INVALID_HANDLE_VALUE )
 {
 	// Note: If this fails, we're not going to abort construction here
 	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
@@ -40,7 +39,6 @@ WinFileInputStream::WinFileInputStream( const char* filename )
 
 WinFileInputStream::WinFileInputStream( const File& file )
 	: mFile( file )
-	, mHandle( INVALID_HANDLE_VALUE )
 {
 	// Note: If this fails, we're not going to abort construction here
 	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
@@ -75,6 +73,23 @@ void WinFileInputStream::Close( void )
 	}
 }
 
+void WinFileInputStream::Mark( void )
+{
+	if( mHandle != INVALID_HANDLE_VALUE )
+	{
+		mMarkIndex = GetCurrentOffset();
+	}
+}
+
+void WinFileInputStream::Reset( void )
+{
+	if( mMarkIndex != kInvalidMarkIndex )
+	{
+		Seek( mMarkIndex, SeekOrigin::kFromStart );
+		mMarkIndex = kInvalidMarkIndex;
+	}
+}
+
 bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 {
 	if( !Available() )
@@ -98,12 +113,16 @@ size_t WinFileInputStream::GetCurrentOffset( void ) const
 	return WinUtil::ToSize( pointer );
 }
 
-FileResult WinFileInputStream::Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead )
+FileResult WinFileInputStream::Read( void* buffer, size_t bytesToRead, size_t* bytesRead )
 {
 	if( !Available() )
 		return FileResult::kNotFound;
 
-	BOOL success = eeCheckBool( ReadFile( mHandle, buffer, bytesToRead, LPDWORD( bytesRead ), NULL ) );
+	eeAssert( bytesToRead < 0xffffffff, "ReadFile can read only up to UINT32_MAX bytes; %lld bytes were requested", bytesToRead );
+	if( bytesToRead > 0xffffffff )
+		return FileResult::kInvalidArgument;
+
+	BOOL success = eeCheckBool( ReadFile( mHandle, buffer, static_cast< DWORD >( bytesToRead ), LPDWORD( bytesRead ), NULL ) );
 
 	return success ? FileResult::kSuccess : FileResult::kOther;
 }

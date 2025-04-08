@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string_view>
+
 #include <ee/io/Common.h>
 
 namespace ee
@@ -31,7 +33,7 @@ namespace ee
 		virtual size_t GetCurrentOffset( void ) = 0;
 
 		// Returns the number of bytes written
-		virtual uint32_t Write( const void* buffer, uint32_t length ) = 0;
+		virtual uint32_t Write( const void* buffer, size_t length ) = 0;
 		virtual void Flush( void ) {}
 
 		// Implement operator << for each primitive type we support
@@ -55,7 +57,7 @@ namespace ee
 		inline void WriteInt64( int64_t value );
 		inline void WriteFloat( float value );
 		inline void WriteDouble( double value );
-		// !!! string support coming soon....
+		inline void WriteString( const std::string_view& value );
 
 		inline void WriteBool( const bool* value, int count );
 		inline void WriteChar( const char* value, int count );
@@ -169,6 +171,11 @@ namespace ee
 	inline void OutputStream::WriteDouble( double value )
 	{
 		Write( &value, sizeof( double ) );
+	}
+
+	inline void OutputStream::WriteString( const std::string_view& value )
+	{
+		Write( value.data(), value.size() );
 	}
 
 	inline void OutputStream::WriteBool( const bool* value, int count )

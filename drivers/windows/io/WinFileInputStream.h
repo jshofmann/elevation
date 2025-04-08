@@ -36,19 +36,30 @@ namespace ee
 		// defined. For files, this is the size of the file in bytes.
 		virtual size_t GetSize( void ) const override final;
 
-		// Returns true if this is a stream that supports seeking.
-		virtual bool CanSeek( void ) override final { return true; }
+		virtual bool MarkSupported( void ) const override final { return true; }
+		// Mark() stores the current location within the stream;
+		// Reset() will seek to the marked location and clear the marker.
+		virtual void Mark( void ) override final;
+		virtual void Reset( void ) override final;
+
+		virtual bool CanSeek( void ) const override final { return true; }
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
 		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) const override final;
 
-		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead ) override final;
+		// Note: This is implemented using ReadFile() so bytesToRead can't
+		// be larger than what a DWORD can hold (ie UINT32_MAX). An assert
+		// will fire if bytesToRead is larger than what ReadFile() can support.
+		virtual FileResult Read( void* buffer, size_t bytesToRead, size_t* bytesRead ) override final;
 
 	private:
+		static constexpr size_t kInvalidMarkIndex = ~0ull;
+
 		File	mFile;
-		HANDLE	mHandle;
+		HANDLE	mHandle = INVALID_HANDLE_VALUE;
+		size_t	mMarkIndex = kInvalidMarkIndex;
 
 	}; // class WinFileInputStream
 

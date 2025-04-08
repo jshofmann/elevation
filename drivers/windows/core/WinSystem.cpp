@@ -29,8 +29,6 @@ WinSystem::WinSystem()
 {
 	mPlatform = Platform::kWindows;
 	mDriver = Driver::kDirectX12;
-
-	eeSetGlobalFlag( GlobalSettings::kDebuggerAttached, IsDebuggerAttached() );
 }
 
 // The Driver should only be assigned once on application launch

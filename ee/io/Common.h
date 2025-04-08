@@ -12,6 +12,7 @@ namespace ee
 		kNotFound,
 		kAlreadyExists,
 		kAccessDenied,
+		kInvalidArgument,
 		kOther
 	};
 

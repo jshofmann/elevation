@@ -27,15 +27,23 @@ namespace ee
 		// for memory, the number of bytes allocated or assigned.
 		virtual size_t GetSize( void ) const = 0;
 
+		// Return true if this is a stream that supports the concept of a marker
+		// defining a location within the stream (e.g. a byte offset from the start)
+		virtual bool MarkSupported( void ) const { return false; }
+		// If marking is supported, Mark() stores the current location within the stream;
+		// Reset() will seek to the marked location and clear the marker.
+		virtual void Mark( void ) {}
+		virtual void Reset( void ) {}
+
 		// Returns true if this is a stream that supports seeking.
-		virtual bool CanSeek( void ) = 0;
+		virtual bool CanSeek( void ) const = 0;
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) = 0;
 
 		// Known as 'ftell' in the POSIX API
 		virtual size_t GetCurrentOffset( void ) const = 0;
 
-		virtual FileResult Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead = nullptr ) = 0;
+		virtual FileResult Read( void* buffer, size_t bytesToRead, size_t* bytesRead = nullptr ) = 0;
 
 		// Implement operator >> each primitive type we support
 		template< class T >

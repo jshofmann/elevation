@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "GlobalSettings.h"
-
 namespace ee
 {
 	class System
@@ -20,7 +18,7 @@ namespace ee
 
 		static bool IsDebuggerAttached( void );
 
-		// Displays an alert box using platform services.
+		// Displays an alert box using platform services
 		static void DisplayAlert( const char* title, const char* message );
 
 		// Display an alert box with yes/no/cancel buttons.
@@ -28,17 +26,10 @@ namespace ee
 		enum { kOptionYes, kOptionNo, kOptionCancel };
 		static int DisplayAlertWithOptions( const char* title, const char* message );
 
-		static Flags GetGlobalFlags( void ) { return mGlobalFlags; }
-
 	protected:
 		static Platform	mPlatform;
 		static Driver	mDriver;
 
-		static Flags    mGlobalFlags;
-	};
-
-	#define eeGetGlobalFlag( f )		System::GetGlobalFlags().GetFlag( f )
-	#define eeSetGlobalFlag( f, val )	System::GetGlobalFlags().SetFlag( f, val )
-	#define eeToggleGlobalFlag( f )		System::GetGlobalFlags().ToggleFlag( f )
+	}; // class System
 
 } // namespace ee

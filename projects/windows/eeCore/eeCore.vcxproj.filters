@@ -134,6 +134,21 @@
     <ClInclude Include="..\..\..\ee\io\BufferedInputStream.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\Writer.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\StreamWriter.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\utility\Config.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\Reader.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\io\StreamReader.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -170,6 +185,18 @@
       <Filter>Source Files\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\StreamWriter.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\utility\Config.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\Reader.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\StreamReader.cpp">
       <Filter>Source Files\io</Filter>
     </ClCompile>
   </ItemGroup>

@@ -98,13 +98,17 @@ size_t WinFileOutputStream::GetCurrentOffset( void )
 	return WinUtil::ToSize( pointer );
 }
 
-uint32_t WinFileOutputStream::Write( const void* buffer, uint32_t length )
+uint32_t WinFileOutputStream::Write( const void* buffer, size_t length )
 {
 	if( !Available() )
 		return 0;
 
+	eeAssert( length < 0xffffffff, "WriteFile can only write up to UINT32_MAX bytes; %lld bytes were requested", length );
+	if( length > 0xffffffff )
+		return 0;
+
 	DWORD bytesWritten;
-	eeCheckBool( WriteFile( mHandle, buffer, length, &bytesWritten, NULL ) );
+	eeCheckBool( WriteFile( mHandle, buffer, DWORD( length ), &bytesWritten, NULL ) );
 
 	return bytesWritten;
 }

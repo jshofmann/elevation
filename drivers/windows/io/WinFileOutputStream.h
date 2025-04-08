@@ -41,7 +41,7 @@ namespace ee
 		virtual size_t GetCurrentOffset( void ) override final;
 
 		// Returns the number of bytes written
-		virtual uint32_t Write( const void* buffer, uint32_t length ) override final;
+		virtual uint32_t Write( const void* buffer, size_t length ) override final;
 		virtual void Flush( void ) override final;
 
 	private:

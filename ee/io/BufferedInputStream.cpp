@@ -62,7 +62,7 @@ bool BufferedInputStream::Seek( size_t offset, SeekOrigin origin )
 	return true;
 }
 
-FileResult BufferedInputStream::Read( void* buffer, uint32_t bytesToRead, uint32_t* bytesRead )
+FileResult BufferedInputStream::Read( void* buffer, size_t bytesToRead, size_t* bytesRead )
 {
 	return FileResult::kOther;
 }
