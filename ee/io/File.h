@@ -20,8 +20,8 @@ namespace ee
 
 		inline const char* GetFilename( void ) const noexcept;
 
-		inline FileStatus& GetFileStatus( void ) noexcept;
-		inline const FileStatus& GetFileStatus( void ) const noexcept;
+		inline FileStatus& GetStatus( void ) noexcept;
+		inline const FileStatus& GetStatus( void ) const noexcept;
 
 	private:
 		std::string	mFilename; // Filename as given during initialization
@@ -34,12 +34,12 @@ namespace ee
 		return mFilename.c_str();
 	}
 
-	inline FileStatus& File::GetFileStatus( void ) noexcept
+	inline FileStatus& File::GetStatus( void ) noexcept
 	{
 		return mFileStatus;
 	}
 
-	inline const FileStatus& File::GetFileStatus( void ) const noexcept
+	inline const FileStatus& File::GetStatus( void ) const noexcept
 	{
 		return mFileStatus;
 	}

@@ -9,6 +9,14 @@
 
 namespace ee {
 
+namespace HashUtils
+{
+	constexpr uint16_t CRC16InitialValue = 0xFFFF;
+	constexpr uint32_t CRC32InitialValue = 0xFFFFFFFF;
+	constexpr uint64_t CRC64InitialValue = 0xFFFFFFFFFFFFFFFFull;
+
+} // namespace HashUtils
+
 // This code is derived from the public domain CRC-32 v1.04 program
 // written by Craig Bruce on 5-Dec-1994 and available at
 // http://www.csbruce.com/~csbruce/software/crc32.c. His attribution:
@@ -34,14 +42,16 @@ namespace ee {
 // <-		  -- The CRC-16 hash code for the data array
 uint16_t HashUtils::CalculateCRC16( const uint8_t* const data, const size_t length )
 {
-	uint16_t crc = 0xFFFF;
+	uint16_t crc = CRC16InitialValue;
+	const uint8_t* current = data;
+	size_t count = length;
 
-	for( size_t i = 0; i < length; ++i )
+	while( count-- )
 	{
-		crc = ( crc >> 8 ) ^ HashUtils::CRC16Table[ ( crc ^ data[ i ] ) & 0xFF ];
+		crc = ( CRC16Table[ ( crc ^ *current++ ) & 0xFFL ] ^ ( crc >> 8 ) );
 	}
 
-	return ( crc ^ 0xFFFF );
+	return ( crc ^ CRC16InitialValue );
 }
 
 
@@ -54,14 +64,16 @@ uint16_t HashUtils::CalculateCRC16( const uint8_t* const data, const size_t leng
 // <-		  -- The CRC-32 hash code for the data array
 uint32_t HashUtils::CalculateCRC32( const uint8_t* const data, const size_t length )
 {
-	uint32_t crc = 0xFFFFFFFF;
+	uint32_t crc = CRC32InitialValue;
+	const uint8_t* current = data;
+	size_t count = length;
 
-	for( size_t i = 0; i < length; ++i )
+	while( count-- )
 	{
-		crc = ( crc >> 8 ) ^ HashUtils::CRC32Table[ ( crc ^ data[ i ] ) & 0xFF ];
+		crc = ( CRC32Table[ ( crc ^ *current++ ) & 0xFFL ] ^ ( crc >> 8 ) );
 	}
 
-	return ( crc ^ 0xFFFFFFFF );
+	return ( crc ^ CRC32InitialValue );
 }
 
 
@@ -74,14 +86,67 @@ uint32_t HashUtils::CalculateCRC32( const uint8_t* const data, const size_t leng
 // <-		  -- The CRC-64 hash code for the data array
 uint64_t HashUtils::CalculateCRC64( const uint8_t* const data, const size_t length )
 {
-	uint64_t crc = 0xFFFFFFFFFFFFFFFF;
+	uint64_t crc = CRC64InitialValue;
+	const uint8_t* current = data;
+	size_t count = length;
 
-	for( size_t i = 0; i < length; ++i )
+	while( count-- )
 	{
-		crc = ( crc >> 8 ) ^ HashUtils::CRC64Table[ ( crc ^ data[ i ] ) & 0xFF ];
+		crc = ( CRC64Table[ ( crc ^ *current++ ) & 0xFFL ] ^ ( crc >> 8 ) );
 	}
 
-	return ( crc ^ 0xFFFFFFFFFFFFFFFF );
+	return ( crc ^ CRC64InitialValue );
+}
+
+
+// HashUtils::CalculateStringHash( const std::string_view& string )
+//
+// Calculate and return a hash value of the given string. I use CRC64 hashes
+// for strings, but that should be considered an implementation detail -
+// I may switch to a DJB hash function, for example. DJB hashes are quicker,
+// and they have a nice uniform distribution, but there is an increased chance
+// of collision vs a CRC64 hash. (This has been observed in a large string
+// test database.)
+//
+//	-> string -- A string to hash
+// <-		  -- The hash code for this string
+uint64_t HashUtils::CalculateStringHash( const std::string_view& string )
+{
+	return CalculateCRC64( reinterpret_cast< const uint8_t* >( string.data() ), string.length() );
+}
+
+
+// HashUtils::CalculateLowercaseStringHash( const std::string_view& string )
+//
+// Calculate and return a case-insensitive hash value of the given string.
+// I use CRC64 hashes for strings, but that should be considered an
+// implementation detail. This function assumes that the string is limited
+// to the ASCII character set. Case-insensitivity is achieved by downcasing
+// every letter; downcasing is done by the simple 'A' + 32 = 'a' property,
+// which results in the limitation to just ASCII characters. std::tolower()
+// is avoided as it does a locale check, making it much slower than 'A' + 32.
+//
+//	-> string -- A string to hash
+// <-		  -- The case-insensitive hash code for this string
+uint64_t HashUtils::CalculateLowercaseStringHash( const std::string_view& string )
+{
+	uint64_t crc = CRC64InitialValue;
+	const char* current = string.data();
+	size_t count = string.length();
+
+	while( count-- )
+	{
+		// !!! NOTE: We aren't using std::tolower() here because we don't
+		// !!! want the overhead of its locale checks. This means we're
+		// !!! assuming our strings are limited to the ASCII character set.
+		char c = *current++;
+		if( c >= 'A' && c <= 'Z' )
+			c += 32; // downcase this capital letter
+
+		crc = ( CRC64Table[ ( crc ^ c ) & 0xFFL ] ^ ( crc >> 8 ) );
+	}
+
+	return ( crc ^ CRC64InitialValue );
 }
 
 } // namespace ee
@@ -190,7 +255,9 @@ namespace eeCRCTableGenerator
 		fprintf( file, "//\n// Generated CRC%d data table; see HashUtils.cpp\n", bitcount );
 		fprintf( file, "//\n\n" );
 
-		fprintf( file, "static const %s HashUtils::CRC%dTable[] =\n", typeString, bitcount );
+		fprintf( file, "namespace HashUtils {\n\n" );
+
+		fprintf( file, "static const %s CRC%dTable[] =\n", typeString, bitcount );
 		fprintf( file, "{\n" );
 
 		SizeType index = 0;
@@ -215,7 +282,9 @@ namespace eeCRCTableGenerator
 			index += tableWidth;
 		}
 
-		fprintf( file, "};\n" );
+		fprintf( file, "};\n\n" );
+
+		fprintf( file, "} // namespace HashUtils\n" );
 
 		fclose( file );
 	}
@@ -223,10 +292,10 @@ namespace eeCRCTableGenerator
 	void GenerateCrc16Table( const char* const filename )
 	{
 		CRCTableGenerator16 generator = {
-			16,
-			0x8408,
-			0xFFFF,
-			true
+			.mWidth = 16,
+			.mPolynomial = 0x8408,
+			.mMask = 0xFFFF,
+			.mReflected = true
 		};
 
 		GenerateCrcTable< uint16_t >( generator, filename );
@@ -235,10 +304,10 @@ namespace eeCRCTableGenerator
 	void GenerateCrc32Table( const char* const filename )
 	{
 		CRCTableGenerator32 generator = {
-			32,
-			0x04C11DB7,
-			0xFFFFFFFF,
-			true
+			.mWidth = 32,
+			.mPolynomial = 0x04C11DB7,
+			.mMask = 0xFFFFFFFF,
+			.mReflected = true
 		};
 
 		GenerateCrcTable< uint32_t >( generator, filename );
@@ -247,10 +316,10 @@ namespace eeCRCTableGenerator
 	void GenerateCrc64Table( const char* const filename )
 	{
 		CRCTableGenerator64 generator = {
-			64,
-			0x0060034000F0D50B,
-			0xFFFFFFFFFFFFFFFF,
-			true
+			.mWidth = 64,
+			.mPolynomial = 0x0060034000F0D50Bull,
+			.mMask = 0xFFFFFFFFFFFFFFFFull,
+			.mReflected = true
 		};
 
 		GenerateCrcTable< uint64_t >( generator, filename );

@@ -34,14 +34,14 @@ WinFileInputStream::WinFileInputStream( const char* filename )
 	: mFile( filename )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
+	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
 }
 
 WinFileInputStream::WinFileInputStream( const File& file )
 	: mFile( file )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
+	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
 }
 
 WinFileInputStream::~WinFileInputStream()

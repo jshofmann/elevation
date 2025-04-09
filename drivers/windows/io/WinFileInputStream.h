@@ -70,7 +70,7 @@ namespace ee
 
 	inline size_t WinFileInputStream::GetSize( void ) const
 	{
-		return mFile.GetFileStatus().GetSize();
+		return mFile.GetStatus().GetSize();
 	}
 
 } // namespace ee

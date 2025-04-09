@@ -35,7 +35,7 @@ WinFileOutputStream::WinFileOutputStream( const char* filename )
 	, mHandle( INVALID_HANDLE_VALUE )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
+	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
 }
 
 WinFileOutputStream::WinFileOutputStream( const File& file )
@@ -43,7 +43,7 @@ WinFileOutputStream::WinFileOutputStream( const File& file )
 	, mHandle( INVALID_HANDLE_VALUE )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetFileStatus() );
+	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
 }
 
 WinFileOutputStream::~WinFileOutputStream()
