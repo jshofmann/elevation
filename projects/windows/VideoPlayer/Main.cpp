@@ -7,6 +7,8 @@
 #include <cstdint>
 
 #include <ee/core/Debug.h>
+#include <ee/io/File.h>
+#include <ee/utility/Config.h>
 #include <drivers/Windows/core/WinApplication.h>
 #include <drivers/Windows/core/WinWindow.h>
 
@@ -24,11 +26,7 @@ public:
 
 	virtual int Main( int argCount, const char* args[] ) override final;
 
-	virtual bool Initialize( void ) override final
-	{
-		mRunning = true;
-		return mPlayer.Initialize( 1280,720 );
-	}
+	virtual bool Initialize( void ) override final;
 
 	// VideoPlayerApplication member functions
 
@@ -44,6 +42,7 @@ public:
 
 private:
 	VideoPlayer mPlayer;
+	Config		mConfig;
 
 }; // class VideoPlayerApplication
 
@@ -180,6 +179,14 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	} // switch( message )
 
 	return 0;
+}
+
+bool VideoPlayerApplication::Initialize( void )
+{
+	mRunning = true;
+	File configFile( "VideoPlayer.cfg" );
+	mConfig.LoadConfig( configFile );
+	return mPlayer.Initialize( 1280,720 );
 }
 
 int VideoPlayerApplication::Main( int argCount, const char* args[] )

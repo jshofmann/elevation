@@ -118,6 +118,7 @@
     <ClInclude Include="..\..\..\ee\math\vec3.h" />
     <ClInclude Include="..\..\..\ee\utility\Config.h" />
     <ClInclude Include="..\..\..\ee\utility\HashUtils.h" />
+    <ClInclude Include="..\..\..\ee\utility\StringUtils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

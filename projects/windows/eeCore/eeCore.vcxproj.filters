@@ -149,6 +149,9 @@
     <ClInclude Include="..\..\..\ee\io\StreamReader.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\utility\StringUtils.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -190,14 +193,14 @@
     <ClCompile Include="..\..\..\ee\io\StreamWriter.cpp">
       <Filter>Source Files\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ee\utility\Config.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ee\io\Reader.cpp">
       <Filter>Source Files\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ee\io\StreamReader.cpp">
       <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\utility\Config.cpp">
+      <Filter>Source Files\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

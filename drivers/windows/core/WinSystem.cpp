@@ -22,29 +22,35 @@ static GetProcessMemoryInfoType GetProcessMemoryInfoPtr = NULL;
 
 static bool gHasOpenModalDialog = false;
 
+static Driver gDriver = Driver::kDirectX12;
+
 //******************************************************************************
 //******************************************************************************
 
-WinSystem::WinSystem()
+Platform System::GetPlatform( void )
 {
-	mPlatform = Platform::kWindows;
-	mDriver = Driver::kDirectX12;
+	return Platform::kWindows;
+}
+
+Driver System::GetDriver( void )
+{
+	return gDriver;
 }
 
 // The Driver should only be assigned once on application launch
-/* static */ void WinSystem::SetDriver( Driver driver )
+void System::SetDriver( Driver driver )
 {
-	mDriver = driver;
+	gDriver = driver;
 }
 
-/* static */ uint32_t System::GetCoreCount( void )
+uint32_t System::GetCoreCount( void )
 {
 	SYSTEM_INFO	info;
 	GetSystemInfo( &info );
 	return uint32_t( info.dwNumberOfProcessors );
 }
 
-/* static */ bool System::IsDebuggerAttached( void )
+bool System::IsDebuggerAttached( void )
 {
 	return ( IsDebuggerPresent() == TRUE );
 }
@@ -62,8 +68,8 @@ void System::DisplayAlert( const char* title, const char* message )
 	if( gHasOpenModalDialog )
 	{
 		// Don't deadlock the UI by opening two message boxes,
-		// use OutputDebugString() instead
-		eeDebug( "WinSystem::DisplayAlert: %s: %s", title, message );
+		// use OutputDebugString() instead for further alerts
+		eeDebug( "System::DisplayAlert: %s: %s", title, message );
 	}
 	else
 	{
@@ -86,7 +92,7 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	{
 		// Don't deadlock the UI by opening two message boxes,
 		// use OutputDebugString() instead
-		eeDebug( "WinSystem::DisplayAlert: %s: %s", title, message );
+		eeDebug( "System::DisplayAlert: %s: %s", title, message );
 	}
 	else
 	{
@@ -106,7 +112,7 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	return kOptionYes;
 }
 
-/* static */ bool WinSystem::IsWin64( void )
+bool System::IsWin64( void )
 {
 	BOOL win64 = FALSE;
 
@@ -114,7 +120,7 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	{
 		if( !IsWow64ProcessFunction( GetCurrentProcess(), &win64 ) )
 		{
-			OutputDebugString( "WinSystem::IsWin64: IsWow64Process() failed! Assuming 32-bit Windows..." );
+			OutputDebugString( "System::IsWin64: IsWow64Process() failed! Assuming 32-bit Windows..." );
 			win64 = FALSE;
 		}
 	}
@@ -122,7 +128,7 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	return ( win64 == TRUE ) ? true : false;
 }
 
-/* static */ uint32_t WinSystem::GetWorkingSetSize( void )
+uint32_t System::GetWorkingSetSize( void )
 {
 	// Since we have to load and use the psapi.dll for this,
 	// I don't think we want to ship with it in.

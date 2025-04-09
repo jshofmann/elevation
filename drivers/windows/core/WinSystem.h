@@ -8,21 +8,19 @@
 
 namespace ee
 {
-    class WinSystem : public System
+	// Windows adds a few functions to the System namespace
+	namespace System
 	{
-	public:
-		WinSystem();
+		// Note: The Driver should only be assigned once on application launch.
+		// Note also that no validation is done to check if the assigned driver
+		// is a valid driver for Platform::kWindows.
+		void SetDriver( Driver driver );
 
-		// Note: The Driver should only be assigned once on application launch
-		static void SetDriver( Driver driver );
-
-		// WinSystem member functions
-
-		static bool IsWin64( void );
+		bool IsWin64( void );
 
 		// This is roughly the same as "how much memory are we using"
-		static uint32_t GetWorkingSetSize( void );
+		uint32_t GetWorkingSetSize( void );
 
-	}; // class WinSystem
+	} // namespace System
 
 } // namespace ee
