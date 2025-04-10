@@ -15,7 +15,7 @@ public:
 	inline void GetDimensions( uint16_t& width, uint16_t& height ) const;
 
 private:
-	uint16_t				mWidth, mHeight; // in pixels
+	uint16_t mWidth, mHeight; // in pixels
 
 }; // class VideoPlayer
 

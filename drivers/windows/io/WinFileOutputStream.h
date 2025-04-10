@@ -20,9 +20,9 @@ namespace ee
 		WinFileOutputStream( const File& file );
 		~WinFileOutputStream();
 
-		bool Open( void );
-
 		// OutputStream interface implementation
+
+		virtual bool Open( void ) override final;
 
 		// Close() closes the file opened by Open().
 		virtual void Close( void ) override final;
@@ -30,7 +30,7 @@ namespace ee
 		// Return true if the stream is usable - i.e for files the file exists
 		// (or could be created) and can be read (or written) to, for memory
 		// the memory has been assigned or allocated.
-		virtual bool Available( void ) const override final;
+		virtual bool Valid( void ) const override final;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) override final { return true; }
@@ -50,7 +50,7 @@ namespace ee
 
 	}; // class WinFileOutputStream
 
-	inline bool WinFileOutputStream::Available( void ) const
+	inline bool WinFileOutputStream::Valid( void ) const
 	{
 		return ( mHandle != INVALID_HANDLE_VALUE );
 	}

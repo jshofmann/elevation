@@ -60,6 +60,11 @@ bool WinFileInputStream::Open( void )
 
 		eeDebug( "WinFileInputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile.GetFilename(), error, WinUtil::GetErrorString( error ).c_str() );
 	}
+	else
+	{
+		mSize = mFile.GetStatus().GetSize();
+		mCurrentIndex = 0;
+	}
 
 	return ( mHandle != INVALID_HANDLE_VALUE );
 }
@@ -70,6 +75,9 @@ void WinFileInputStream::Close( void )
 	{
 		eeCheckBool( CloseHandle( mHandle ) );
 		mHandle = INVALID_HANDLE_VALUE;
+		mMarkIndex = kInvalidMarkIndex;
+		mSize = 0;
+		mCurrentIndex = 0;
 	}
 }
 
@@ -92,7 +100,7 @@ void WinFileInputStream::Reset( void )
 
 bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 {
-	if( !Available() )
+	if( !Valid() )
 		return false;
 
 	return eeCheckBool( SetFilePointerEx( mHandle, WinUtil::ToLARGE_INTEGER( offset ), NULL, WinFileUtils::GetMoveMethod( origin ) ) );
@@ -100,7 +108,7 @@ bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 
 size_t WinFileInputStream::GetCurrentOffset( void ) const
 {
-	if( !Available() )
+	if( !Valid() )
 		return -1;
 
 	// The Windows SDK equivalent of ftell() is SetFilePointerEx()'s lpNewFilePointer out parameter
@@ -115,14 +123,22 @@ size_t WinFileInputStream::GetCurrentOffset( void ) const
 
 FileResult WinFileInputStream::Read( void* buffer, size_t bytesToRead, size_t* bytesRead )
 {
-	if( !Available() )
+	if( !Valid() )
 		return FileResult::kNotFound;
 
 	eeAssert( bytesToRead < 0xffffffff, "ReadFile can read only up to UINT32_MAX bytes; %lld bytes were requested", bytesToRead );
 	if( bytesToRead > 0xffffffff )
 		return FileResult::kInvalidArgument;
 
-	BOOL success = eeCheckBool( ReadFile( mHandle, buffer, static_cast< DWORD >( bytesToRead ), LPDWORD( bytesRead ), NULL ) );
+	// ReadFile() requires lpNumberOfBytesRead to be non-nullptr,
+	// but we're allowing our bytesRead argument to be nullptr
+	DWORD numberOfBytesRead;
+	BOOL success = eeCheckBool( ReadFile( mHandle, buffer, static_cast< DWORD >( bytesToRead ), &numberOfBytesRead, NULL ) );
+
+	mCurrentIndex += numberOfBytesRead;
+
+	if( bytesRead != nullptr )
+		*bytesRead = numberOfBytesRead;
 
 	return success ? FileResult::kSuccess : FileResult::kOther;
 }

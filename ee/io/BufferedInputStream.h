@@ -26,12 +26,14 @@ namespace ee
 
 		// InputStream interface implementation
 
+		virtual bool Open( void ) override final;
+
 		virtual void Close( void ) override final;
 
 		// Return true if the stream is usable - i.e for files the file exists
 		// (or could be created) and can be read (or written) to, for memory
 		// the memory has been assigned or allocated.
-		virtual bool Available( void ) const override final;
+		virtual bool Valid( void ) const override final;
 
 		// Returns the size in bytes of the stream, if such a concept is well
 		// defined. For buffers, this is the size of the buffer in bytes.
@@ -58,7 +60,7 @@ namespace ee
 
 	}; // class BufferedInputStream
 
-	inline bool BufferedInputStream::Available( void ) const
+	inline bool BufferedInputStream::Valid( void ) const
 	{
 		return ( mBuffer != nullptr );
 	}

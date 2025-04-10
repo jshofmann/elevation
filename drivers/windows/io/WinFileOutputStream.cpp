@@ -77,7 +77,7 @@ void WinFileOutputStream::Close( void )
 
 bool WinFileOutputStream::Seek( size_t offset, SeekOrigin origin )
 {
-	if( !Available() )
+	if( !Valid() )
 		return false;
 
 	return eeCheckBool( SetFilePointerEx( mHandle, WinUtil::ToLARGE_INTEGER( offset ), NULL, WinFileUtils::GetMoveMethod( origin ) ) );
@@ -85,7 +85,7 @@ bool WinFileOutputStream::Seek( size_t offset, SeekOrigin origin )
 
 size_t WinFileOutputStream::GetCurrentOffset( void )
 {
-	if( !Available() )
+	if( !Valid() )
 		return -1;
 
 	// The Windows SDK equivalent of ftell() is SetFilePointerEx()'s lpNewFilePointer out parameter
@@ -100,7 +100,7 @@ size_t WinFileOutputStream::GetCurrentOffset( void )
 
 uint32_t WinFileOutputStream::Write( const void* buffer, size_t length )
 {
-	if( !Available() )
+	if( !Valid() )
 		return 0;
 
 	eeAssert( length < 0xffffffff, "WriteFile can only write up to UINT32_MAX bytes; %lld bytes were requested", length );
@@ -115,7 +115,7 @@ uint32_t WinFileOutputStream::Write( const void* buffer, size_t length )
 
 void WinFileOutputStream::Flush( void )
 {
-	if( Available() )
+	if( Valid() )
 	{
 		eeCheckBool( FlushFileBuffers( mHandle ) );
 	}

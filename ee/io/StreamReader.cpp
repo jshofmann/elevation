@@ -43,7 +43,7 @@ bool StreamReader::Ready( void )
 {
 	if( mInputStream != nullptr )
 	{
-		return mInputStream->Available();
+		return mInputStream->Available() != 0;
 	}
 	else
 	{
@@ -55,14 +55,12 @@ size_t StreamReader::ReadChars( std::string::value_type* str, size_t length )
 {
 	if( mInputStream != nullptr )
 	{
-		size_t start = mInputStream->GetCurrentOffset();
-
-		FileResult result = mInputStream->Read( str, length );
+		size_t bytesRead;
+		FileResult result = mInputStream->Read( str, length, &bytesRead );
 		if( result != FileResult::kSuccess )
 			return 0;
 
-		// Return the number of bytes read
-		return mInputStream->GetCurrentOffset() - start;
+		return bytesRead;
 	}
 	else
 	{

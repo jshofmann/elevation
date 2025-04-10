@@ -68,7 +68,7 @@ std::string WinUtil::GetErrorString( DWORD error )
         MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), // Default language
         (LPTSTR) &message, 0, NULL);
 
-	std::string errorString = std::format( "{}", message );
+	std::string errorString = std::format( "{}", (LPTSTR) message );
 
     LocalFree( message );
 

@@ -26,6 +26,14 @@ BufferedInputStream::~BufferedInputStream()
 	}
 }
 
+bool BufferedInputStream::Open( void )
+{
+	mSourceOffset = 0;
+	mSourceLength = 0;
+	mBufferOffset = 0;
+	return mSourceStream->Open();
+}
+
 void BufferedInputStream::Close( void )
 {
 	mSourceStream->Close();
@@ -36,7 +44,7 @@ void BufferedInputStream::Close( void )
 
 bool BufferedInputStream::Seek( size_t offset, SeekOrigin origin )
 {
-	if( !Available() )
+	if( !Valid() )
 		return false;
 
 	size_t requestedPosition;

@@ -80,27 +80,21 @@ bool ConfigDB::HasValue( const std::string_view& section, const std::string_view
 	return false;
 }
 
-bool ConfigDB::SaveConfig( File& file )
+// SaveConfig will write only this config properties set to non-default
+// values, unless the 'defaults' parameter is set to true, in which
+// case every config property will be written with their default values
+// assigned to them. This is used to document the set of all properties.
+bool ConfigDB::SaveConfig( File& file, bool defaults )
 {
 	const FileStatus& status = file.GetStatus();
 
 	if( !status.IsFile() || status.IsReadOnly() )
 		return false;
 
-	SaveConfigDB( file, false );
-
-	return true;
-}
-
-bool ConfigDB::LoadConfig( File& file )
-{
-	LoadConfigDB( file, false );
-
-	return true;
-}
-void ConfigDB::SaveConfigDB( File& file, bool defaults )
-{
 	std::unique_ptr<FileOutputStream> stream = MakeFileOutputStream( file );
+	if( !stream->Open() )
+		return false;
+
 	StreamWriter writer( *stream );
 	
 	for( auto sections : mSections )
@@ -144,15 +138,20 @@ void ConfigDB::SaveConfigDB( File& file, bool defaults )
 	} // for( auto sections : mSections )
 
 	writer.Close();
+
+	return true;
 }
 
-void ConfigDB::LoadConfigDB( File& file, bool shared )
+bool ConfigDB::LoadConfig( File& file )
 {
 	char sec[ 256 ];
 	std::string sectionName;
 
 	// load values from the config file
 	std::unique_ptr<FileInputStream> stream = MakeFileInputStream( file );
+	if( !stream->Open() )
+		return false;
+
 	StreamReader reader( *stream );
 
 	while( reader.Ready() )
@@ -161,10 +160,6 @@ void ConfigDB::LoadConfigDB( File& file, bool shared )
 
 		if( line.empty() )
 			continue;
-
-		// end of cfg
-		if( line[ 0 ] == '~' )
-			break;
 
 		// Skip all comments
 		if( line[ 0 ] == '#' )
@@ -190,13 +185,15 @@ void ConfigDB::LoadConfigDB( File& file, bool shared )
 			TrimWhitespace( key );
 			TrimWhitespace( value );
 
-			SetValueFromFile( sectionName, key, value, shared );
+			SetValueFromFile( sectionName, key, value );
 		}
 
 	} // while( reader.Ready() )
+
+	return true;
 }
 
-void ConfigDB::SetValueFromFile( const std::string_view& section, const std::string_view& key, const std::string_view& value, bool shared )
+void ConfigDB::SetValueFromFile( const std::string_view& section, const std::string_view& key, const std::string_view& value )
 {
 	uint64_t sectionHash = HashUtils::CalculateStringHash( section );
 	uint64_t keyHash = HashUtils::CalculateStringHash( key );
@@ -205,15 +202,6 @@ void ConfigDB::SetValueFromFile( const std::string_view& section, const std::str
 	ValuePair& valuePair = values[ keyHash ];
 	valuePair.mSetCurrent = true;
 	valuePair.mCurrentValue = value;
-
-	// If this is being read in from a shared config file overwrite the default.
-	// The default will be wrong now, but it doesn't really matter, and this
-	// keeps the shared setting from getting written to the user file.
-	if( shared )
-	{
-		valuePair.mSetDefault = true;
-		valuePair.mDefaultValue = value;
-	}
 }
 
 //******************************************************************************

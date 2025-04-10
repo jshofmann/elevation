@@ -15,6 +15,10 @@ namespace ee
 	class OutputStream
 	{
 	public:
+		// Not all OutputStreams have the concept of Opening the stream,
+		// so implementation is optional
+		virtual bool Open( void ) { return true; }
+
 		// Note: Do not attempt to use the stream after Close is called!
 		// For files, sockets, etc this will close the stream destination.
 		virtual void Close( void ) = 0;
@@ -22,7 +26,7 @@ namespace ee
 		// Return true if the stream is usable - i.e for files the file exists
 		// (or could be created) and can be read (or written) to, for memory
 		// the memory has been assigned or allocated.
-		virtual bool Available( void ) const = 0;
+		virtual bool Valid( void ) const = 0;
 
 		// Returns true if this is a stream that supports seeking.
 		virtual bool CanSeek( void ) = 0;

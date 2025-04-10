@@ -45,14 +45,15 @@ namespace ee
 			return mSections.contains( HashUtils::CalculateStringHash( section ) );
 		};
 
-		bool SaveConfig( File& file );
+		// SaveConfig will write only this config properties set to non-default
+		// values, unless the 'defaults' parameter is set to true, in which
+		// case every config property will be written with their default values
+		// assigned to them. This is used to document the set of all properties.
+		bool SaveConfig( File& file, bool defaults = false );
 		bool LoadConfig( File& file );
 
 	private:
-		void SaveConfigDB( File& file, bool defaults );
-		void LoadConfigDB( File& file, bool shared );
-
-		void SetValueFromFile( const std::string_view& section, const std::string_view& key, const std::string_view& value, bool shared );
+		void SetValueFromFile( const std::string_view& section, const std::string_view& key, const std::string_view& value );
 
 		class ValuePair
 		{
