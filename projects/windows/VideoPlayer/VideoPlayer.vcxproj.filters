@@ -15,40 +15,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="VideoPlayer.rc">
+    <ResourceCompile Include="..\..\..\Applications\VideoPlayer\VideoPlayer.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
+    <Image Include="..\..\..\Applications\VideoPlayer\small.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="VideoPlayer.ico">
+    <Image Include="..\..\..\Applications\VideoPlayer\VideoPlayer.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VideoPlayer.h">
+    <ClInclude Include="..\..\..\Applications\VideoPlayer\VideoPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="..\..\..\Applications\VideoPlayer\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="..\..\..\Applications\VideoPlayer\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="..\..\..\Applications\VideoPlayer\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="..\..\..\Applications\VideoPlayer\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VideoPlayer.cpp">
+    <ClCompile Include="..\..\..\Applications\VideoPlayer\VideoPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="..\..\..\Applications\VideoPlayer\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
