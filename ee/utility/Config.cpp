@@ -34,6 +34,7 @@ void ConfigDB::SetValue( const std::string_view& section, const std::string_view
 
 	Values& values = mSections[ sectionHash ];
 	ValuePair& valuePair = values[ keyHash ];
+	valuePair.mSection = std::string( section );
 	valuePair.mSetCurrent = true;
 	valuePair.mCurrentValue = value;
 }
@@ -84,14 +85,15 @@ bool ConfigDB::HasValue( const std::string_view& section, const std::string_view
 // values, unless the 'defaults' parameter is set to true, in which
 // case every config property will be written with their default values
 // assigned to them. This is used to document the set of all properties.
-bool ConfigDB::SaveConfig( File& file, bool defaults )
+bool ConfigDB::SaveConfig( std::shared_ptr< File >& file, bool defaults )
 {
-	const FileStatus& status = file.GetStatus();
+	std::unique_ptr<FileOutputStream> stream = MakeFileOutputStream( file );
+
+	const FileStatus& status = file->GetStatus();
 
 	if( !status.IsFile() || status.IsReadOnly() )
 		return false;
 
-	std::unique_ptr<FileOutputStream> stream = MakeFileOutputStream( file );
 	if( !stream->Open() )
 		return false;
 
@@ -117,7 +119,7 @@ bool ConfigDB::SaveConfig( File& file, bool defaults )
 					wroteHeader = true;
 
 					writer.Write( "[" );
-					writer.Write( sections.first );
+					writer.Write( value.mSection );
 					writer.Write( "]" );
 					writer.EndLine();
 				}
@@ -142,7 +144,7 @@ bool ConfigDB::SaveConfig( File& file, bool defaults )
 	return true;
 }
 
-bool ConfigDB::LoadConfig( File& file )
+bool ConfigDB::LoadConfig( std::shared_ptr< File >& file )
 {
 	char sec[ 256 ];
 	std::string sectionName;
@@ -200,6 +202,7 @@ void ConfigDB::SetValueFromFile( const std::string_view& section, const std::str
 
 	Values& values = mSections[ sectionHash ];
 	ValuePair& valuePair = values[ keyHash ];
+	valuePair.mSection = std::string( section );
 	valuePair.mSetCurrent = true;
 	valuePair.mCurrentValue = value;
 }
@@ -314,7 +317,7 @@ std::string ConfigProperty::ToString( void ) const
 //******************************************************************************
 //******************************************************************************
 
-void Config::SaveConfig( File& file )
+void Config::SaveConfig( std::shared_ptr< File >& file )
 {
 	// Copy the registered properties to the DB
 	SaveToConfigDB( mDB );
@@ -322,7 +325,7 @@ void Config::SaveConfig( File& file )
 	mDB.SaveConfig( file );
 }
 
-void Config::LoadConfig( File& file )
+void Config::LoadConfig( std::shared_ptr< File >& file )
 {
 	// Initialize the DB from a .cfg file
 	mDB.LoadConfig( file );

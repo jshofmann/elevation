@@ -23,8 +23,8 @@ namespace ee
 
 	// Use these functions to instantiate the appropriate OutputStream
 	// for the System you're running on. They'll be implemented in a driver.
-	std::unique_ptr<FileOutputStream> MakeFileOutputStream( const char* filename );
+	std::unique_ptr< FileOutputStream > MakeFileOutputStream( const char* filename );
 
-	std::unique_ptr<FileOutputStream> MakeFileOutputStream( const File& file );
+	std::unique_ptr< FileOutputStream > MakeFileOutputStream( std::shared_ptr< File > file );
 
 } // namespace ee

@@ -18,12 +18,12 @@ using namespace ee;
 
 namespace ee
 {
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const char* filename )
+	std::unique_ptr< FileInputStream > MakeFileInputStream( const char* filename )
 	{
 		return std::make_unique< WinFileInputStream >( filename );
 	}
 
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const File& file )
+	std::unique_ptr< FileInputStream > MakeFileInputStream( std::shared_ptr< File > file )
 	{
 		return std::make_unique< WinFileInputStream >( file );
 	}
@@ -31,17 +31,17 @@ namespace ee
 } // namespace ee
 
 WinFileInputStream::WinFileInputStream( const char* filename )
-	: mFile( filename )
 {
+	mFile = std::make_shared< File >( filename );
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
+	WinFileUtils::BuildFileStatus( *mFile, mFile->GetStatus() );
 }
 
-WinFileInputStream::WinFileInputStream( const File& file )
+WinFileInputStream::WinFileInputStream( std::shared_ptr< File > file )
 	: mFile( file )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
+	WinFileUtils::BuildFileStatus( *mFile, mFile->GetStatus() );
 }
 
 WinFileInputStream::~WinFileInputStream()
@@ -51,18 +51,20 @@ WinFileInputStream::~WinFileInputStream()
 
 bool WinFileInputStream::Open( void )
 {
-	mHandle = CreateFile( mFile.GetFilename(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+	mHandle = CreateFile( mFile->GetFilename(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+						  FILE_ATTRIBUTE_NORMAL, NULL );
 
 	if( mHandle == INVALID_HANDLE_VALUE )
 	{
 		DWORD error = GetLastError();
 		eeUnusedVariable( error );
 
-		eeDebug( "WinFileInputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile.GetFilename(), error, WinUtil::GetErrorString( error ).c_str() );
+		eeDebug( "WinFileInputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile->GetFilename(), error,
+				 WinUtil::GetErrorString( error ).c_str() );
 	}
 	else
 	{
-		mSize = mFile.GetStatus().GetSize();
+		mSize = mFile->GetStatus().GetSize();
 		mCurrentIndex = 0;
 	}
 
@@ -74,9 +76,10 @@ void WinFileInputStream::Close( void )
 	if( mHandle != INVALID_HANDLE_VALUE )
 	{
 		eeCheckBool( CloseHandle( mHandle ) );
-		mHandle = INVALID_HANDLE_VALUE;
-		mMarkIndex = kInvalidMarkIndex;
-		mSize = 0;
+
+		mHandle		  = INVALID_HANDLE_VALUE;
+		mMarkIndex	  = kInvalidMarkIndex;
+		mSize		  = 0;
 		mCurrentIndex = 0;
 	}
 }
@@ -103,7 +106,8 @@ bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 	if( !Valid() )
 		return false;
 
-	return eeCheckBool( SetFilePointerEx( mHandle, WinUtil::ToLARGE_INTEGER( offset ), NULL, WinFileUtils::GetMoveMethod( origin ) ) );
+	return eeCheckBool(
+		SetFilePointerEx( mHandle, WinUtil::ToLARGE_INTEGER( offset ), NULL, WinFileUtils::GetMoveMethod( origin ) ) );
 }
 
 size_t WinFileInputStream::GetCurrentOffset( void ) const
@@ -126,14 +130,16 @@ FileResult WinFileInputStream::Read( void* buffer, size_t bytesToRead, size_t* b
 	if( !Valid() )
 		return FileResult::kNotFound;
 
-	eeAssert( bytesToRead < 0xffffffff, "ReadFile can read only up to UINT32_MAX bytes; %lld bytes were requested", bytesToRead );
+	eeAssert( bytesToRead < 0xffffffff, "ReadFile can read only up to UINT32_MAX bytes; %lld bytes were requested",
+			  bytesToRead );
 	if( bytesToRead > 0xffffffff )
 		return FileResult::kInvalidArgument;
 
 	// ReadFile() requires lpNumberOfBytesRead to be non-nullptr,
 	// but we're allowing our bytesRead argument to be nullptr
 	DWORD numberOfBytesRead;
-	BOOL success = eeCheckBool( ReadFile( mHandle, buffer, static_cast< DWORD >( bytesToRead ), &numberOfBytesRead, NULL ) );
+	BOOL  success =
+		eeCheckBool( ReadFile( mHandle, buffer, static_cast< DWORD >( bytesToRead ), &numberOfBytesRead, NULL ) );
 
 	mCurrentIndex += numberOfBytesRead;
 

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <ee/io/Common.h>
 #include <ee/io/File.h>
 #include <ee/io/InputStream.h>
@@ -13,12 +15,12 @@ namespace ee
 	class WinFileInputStream : public InputStream
 	{
 	public:
-		WinFileInputStream() = delete;
-		WinFileInputStream( const WinFileInputStream& other ) = delete;
+		WinFileInputStream()								   = delete;
+		WinFileInputStream( const WinFileInputStream& other )  = delete;
 		WinFileInputStream( const WinFileInputStream&& other ) = delete;
 		WinFileInputStream( const char* filename );
-		WinFileInputStream( const File& file );
-		~WinFileInputStream();
+		WinFileInputStream( std::shared_ptr< File > file );
+		virtual ~WinFileInputStream();
 
 		// InputStream interface implementation
 
@@ -39,13 +41,20 @@ namespace ee
 		// defined. For files, this is the size of the file in bytes.
 		virtual size_t GetSize( void ) const override final;
 
-		virtual bool MarkSupported( void ) const override final { return true; }
+		virtual bool MarkSupported( void ) const override final
+		{
+			return true;
+		}
+
 		// Mark() stores the current location within the stream;
 		// Reset() will seek to the marked location and clear the marker.
 		virtual void Mark( void ) override final;
 		virtual void Reset( void ) override final;
 
-		virtual bool CanSeek( void ) const override final { return true; }
+		virtual bool CanSeek( void ) const override final
+		{
+			return true;
+		}
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
@@ -60,11 +69,11 @@ namespace ee
 	private:
 		static constexpr size_t kInvalidMarkIndex = ~0ull;
 
-		File	mFile;
-		HANDLE	mHandle = INVALID_HANDLE_VALUE;
-		size_t	mMarkIndex = kInvalidMarkIndex;
-		size_t	mSize = 0;
-		size_t	mCurrentIndex = 0;
+		std::shared_ptr< File > mFile;
+		HANDLE					mHandle		  = INVALID_HANDLE_VALUE;
+		size_t					mMarkIndex	  = kInvalidMarkIndex;
+		size_t					mSize		  = 0;
+		size_t					mCurrentIndex = 0;
 
 	}; // class WinFileInputStream
 

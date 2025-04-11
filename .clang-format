@@ -153,8 +153,9 @@ SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: Custom
 SpaceBeforeParensOptions:
+  AfterControlStatements: false
   AfterOverloadedOperator: true
-#  AfterPlacementOperator: true
+  AfterPlacementOperator: true
 SpaceAroundPointerQualifiers: Default
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyBlock: false

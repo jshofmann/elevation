@@ -23,7 +23,7 @@ namespace ee
 		return std::make_unique< WinFileOutputStream >( filename );
 	}
 
-	std::unique_ptr<FileOutputStream> MakeFileOutputStream( const File& file )
+	std::unique_ptr< FileOutputStream > MakeFileOutputStream( std::shared_ptr< File > file )
 	{
 		return std::make_unique< WinFileOutputStream >( file );
 	}
@@ -31,19 +31,17 @@ namespace ee
 } // namespace ee
 
 WinFileOutputStream::WinFileOutputStream( const char* filename )
-	: mFile( filename )
-	, mHandle( INVALID_HANDLE_VALUE )
 {
+	mFile = std::make_shared< File >( filename );
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
+	WinFileUtils::BuildFileStatus( *mFile, mFile->GetStatus() );
 }
 
-WinFileOutputStream::WinFileOutputStream( const File& file )
+WinFileOutputStream::WinFileOutputStream( std::shared_ptr< File > file )
 	: mFile( file )
-	, mHandle( INVALID_HANDLE_VALUE )
 {
 	// Note: If this fails, we're not going to abort construction here
-	WinFileUtils::GetFileAttributes( mFile, mFile.GetStatus() );
+	WinFileUtils::BuildFileStatus( *mFile, mFile->GetStatus() );
 }
 
 WinFileOutputStream::~WinFileOutputStream()
@@ -53,14 +51,14 @@ WinFileOutputStream::~WinFileOutputStream()
 
 bool WinFileOutputStream::Open( void )
 {
-	mHandle = CreateFile( mFile.GetFilename(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
+	mHandle = CreateFile( mFile->GetFilename(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
 
 	if( mHandle == INVALID_HANDLE_VALUE )
 	{
 		DWORD error = GetLastError();
 		eeUnusedVariable( error );
 
-		eeDebug( "WinFileOutputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile.GetFilename(), error, WinUtil::GetErrorString( error ).c_str() );
+		eeDebug( "WinFileOutputStream::Open: CreateFile( %s ) returned error %d: %s\n", mFile->GetFilename(), error, WinUtil::GetErrorString( error ).c_str() );
 	}
 
 	return ( mHandle != INVALID_HANDLE_VALUE );

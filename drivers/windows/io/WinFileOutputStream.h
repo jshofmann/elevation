@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <ee/io/Common.h>
 #include <ee/io/File.h>
 #include <ee/io/OutputStream.h>
@@ -13,11 +15,11 @@ namespace ee
 	class WinFileOutputStream : public OutputStream
 	{
 	public:
-		WinFileOutputStream() = delete;
-		WinFileOutputStream( const WinFileOutputStream& other ) = delete;
+		WinFileOutputStream()									 = delete;
+		WinFileOutputStream( const WinFileOutputStream& other )	 = delete;
 		WinFileOutputStream( const WinFileOutputStream&& other ) = delete;
 		WinFileOutputStream( const char* filename );
-		WinFileOutputStream( const File& file );
+		WinFileOutputStream( std::shared_ptr< File > file );
 		~WinFileOutputStream();
 
 		// OutputStream interface implementation
@@ -33,7 +35,10 @@ namespace ee
 		virtual bool Valid( void ) const override final;
 
 		// Returns true if this is a stream that supports seeking.
-		virtual bool CanSeek( void ) override final { return true; }
+		virtual bool CanSeek( void ) override final
+		{
+			return true;
+		}
 
 		virtual bool Seek( size_t offset, SeekOrigin origin = SeekOrigin::kFromCurrent ) override final;
 
@@ -42,11 +47,12 @@ namespace ee
 
 		// Returns the number of bytes written
 		virtual uint32_t Write( const void* buffer, size_t length ) override final;
+
 		virtual void Flush( void ) override final;
 
 	private:
-		File	mFile;
-		HANDLE	mHandle;
+		std::shared_ptr< File > mFile;
+		HANDLE					mHandle = INVALID_HANDLE_VALUE;
 
 	}; // class WinFileOutputStream
 

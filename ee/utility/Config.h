@@ -5,6 +5,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -49,8 +50,8 @@ namespace ee
 		// values, unless the 'defaults' parameter is set to true, in which
 		// case every config property will be written with their default values
 		// assigned to them. This is used to document the set of all properties.
-		bool SaveConfig( File& file, bool defaults = false );
-		bool LoadConfig( File& file );
+		bool SaveConfig( std::shared_ptr< File >& file, bool defaults = false );
+		bool LoadConfig( std::shared_ptr< File >& file );
 
 	private:
 		void SetValueFromFile( const std::string_view& section, const std::string_view& key, const std::string_view& value );
@@ -58,6 +59,10 @@ namespace ee
 		class ValuePair
 		{
 		public:
+			// Storing the section name here; section names will be duplicated
+			// because the map key is the hashed section name, not the section
+			// name itself so we can't just use iterator::first for the name
+			std::string mSection;
 			std::string mDefaultValue;
 			std::string mCurrentValue;
 			bool mSetDefault = false;
@@ -288,8 +293,8 @@ namespace ee
 	class Config
 	{
 	public:
-		void SaveConfig( File& file );
-		void LoadConfig( File& file );
+		void SaveConfig( std::shared_ptr< File >& file );
+		void LoadConfig( std::shared_ptr< File >& file );
 
 		void SetValue( const std::string_view& section, const std::string_view& key, const std::string_view& value );
 		std::string_view GetValue( const std::string_view& section, const std::string_view& key, const std::string_view& defaultValue );

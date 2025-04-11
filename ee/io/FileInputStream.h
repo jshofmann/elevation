@@ -23,8 +23,8 @@ namespace ee
 
 	// Use these functions to instantiate the appropriate InputStream
 	// for the System you're running on. They'll be implemented in a driver.
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const char* filename );
+	std::unique_ptr< FileInputStream > MakeFileInputStream( const char* filename );
 
-	std::unique_ptr<FileInputStream> MakeFileInputStream( const File& file );
+	std::unique_ptr< FileInputStream > MakeFileInputStream( std::shared_ptr< File > file );
 
 } // namespace ee

@@ -25,7 +25,7 @@ namespace ee
 
 	namespace WinFileUtils
 	{
-		bool GetFileAttributes( const File& file, FileStatus& status )
+		bool BuildFileStatus( const File& file, FileStatus& status )
 		{
 			char* filepart;
 			char buffer[ 1024 ];
@@ -37,7 +37,7 @@ namespace ee
 										  &filepart );
 			if( size == 0 )
 			{
-				eeDebug( "WinFileUtils::GetFileAttributes: GetFullPathName( %s ) failed with error 0x08x\n", file.GetFilename(), GetLastError() );
+				eeDebug( "WinFileUtils::BuildFileStatus: GetFullPathName( %s ) failed with error 0x08x\n", file.GetFilename(), GetLastError() );
 				return false;
 			}
 
@@ -50,7 +50,7 @@ namespace ee
 				DWORD error = GetLastError();
 				if( ( error != ERROR_FILE_NOT_FOUND ) && ( error != ERROR_PATH_NOT_FOUND ) )
 				{
-					eeDebug( "WinFileUtils::GetFileAttributes: GetFileAttributesEx( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
+					eeDebug( "WinFileUtils::BuildFileStatus: GetFileAttributesEx( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
 				}
 
 				status.SetType( FileStatus::Type::kNone );
@@ -63,6 +63,10 @@ namespace ee
 				if( ( attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 )
 				{
 					status.SetType( FileStatus::Type::kDirectory );
+				}
+				else
+				{
+					status.SetType( FileStatus::Type::kFile );
 				}
 
 				uint8_t flags = FileStatus::Flags::kExists;
@@ -84,7 +88,7 @@ namespace ee
 				}
 				else
 				{
-					eeDebug( "WinFileUtils::GetFileAttributes: FileTimeToLocalFileTime( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
+					eeDebug( "WinFileUtils::BuildFileStatus: FileTimeToLocalFileTime( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
 					status.SetLastModified( FileTimeToUnixTime( &attributes.ftLastWriteTime ) );
 				}
 

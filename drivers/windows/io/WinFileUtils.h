@@ -11,7 +11,7 @@ namespace ee
 
 	namespace WinFileUtils
 	{
-		bool GetFileAttributes( const File& file, FileStatus& status );
+		bool BuildFileStatus( const File& file, FileStatus& status );
 
 		DWORD GetMoveMethod( SeekOrigin origin );
 

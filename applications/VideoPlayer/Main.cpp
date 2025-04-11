@@ -27,6 +27,7 @@ public:
 	virtual int Main( int argCount, const char* args[] ) override final;
 
 	virtual bool Initialize( void ) override final;
+	virtual void Shutdown( void ) override final;
 
 	// VideoPlayerApplication member functions
 
@@ -184,9 +185,15 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 bool VideoPlayerApplication::Initialize( void )
 {
 	mRunning = true;
-	File configFile( "VideoPlayer.cfg" );
+	std::shared_ptr< File > configFile = std::make_shared< File >( "VideoPlayer.cfg" );
 	mConfig.LoadConfig( configFile );
 	return mPlayer.Initialize( 1280,720 );
+}
+
+void VideoPlayerApplication::Shutdown( void )
+{
+	std::shared_ptr< File > configFile = std::make_shared< File >( "VideoPlayer.cfg" );
+	mConfig.SaveConfig( configFile );
 }
 
 int VideoPlayerApplication::Main( int argCount, const char* args[] )
@@ -200,6 +207,8 @@ int VideoPlayerApplication::Main( int argCount, const char* args[] )
 		}
 
 	} // while( mRunning )
+
+	Shutdown();
 
 	return 0;
 }
