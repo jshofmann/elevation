@@ -24,9 +24,6 @@ namespace ee
 
 } // namespace ee
 
-// Note: These macros are deliberately not in the ee namespace, as the interface
-// should be as short and simple as possible to make use as easy as possible.
-
 #if !defined( BUILD_RETAIL )
 
 // Check HRESULT result values; fails if r != S_OK (0)

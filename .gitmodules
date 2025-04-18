@@ -1,3 +1,6 @@
 [submodule "external/libnop"]
 	path = external/libnop
 	url = https://github.com/google/libnop.git
+[submodule "external/dxerr"]
+	path = external/dxerr
+	url = https://github.com/jshofmann/dxerr.git

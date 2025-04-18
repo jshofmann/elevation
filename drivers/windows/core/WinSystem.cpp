@@ -10,13 +10,12 @@
 
 using namespace ee;
 
-typedef BOOL ( WINAPI *LPFN_ISWOW64PROCESS ) ( HANDLE, PBOOL );
+typedef BOOL ( WINAPI* LPFN_ISWOW64PROCESS )( HANDLE, PBOOL );
 
 static LPFN_ISWOW64PROCESS IsWow64ProcessFunction =
-	reinterpret_cast< LPFN_ISWOW64PROCESS >(
-		GetProcAddress( GetModuleHandle( "kernel32" ), "IsWow64Process" ) );
+	reinterpret_cast< LPFN_ISWOW64PROCESS >( GetProcAddress( GetModuleHandle( "kernel32" ), "IsWow64Process" ) );
 
-typedef BOOL ( __stdcall *GetProcessMemoryInfoType )( HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD );
+typedef BOOL ( __stdcall* GetProcessMemoryInfoType )( HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD );
 
 static GetProcessMemoryInfoType GetProcessMemoryInfoPtr = NULL;
 
@@ -26,11 +25,6 @@ static Driver gDriver = Driver::kDirectX12;
 
 //******************************************************************************
 //******************************************************************************
-
-Platform System::GetPlatform( void )
-{
-	return Platform::kWindows;
-}
 
 Driver System::GetDriver( void )
 {
@@ -45,7 +39,7 @@ void System::SetDriver( Driver driver )
 
 uint32_t System::GetCoreCount( void )
 {
-	SYSTEM_INFO	info;
+	SYSTEM_INFO info;
 	GetSystemInfo( &info );
 	return uint32_t( info.dwNumberOfProcessors );
 }
@@ -55,6 +49,22 @@ bool System::IsDebuggerAttached( void )
 	return ( IsDebuggerPresent() == TRUE );
 }
 
+static bool IsPixLaunchForGpuCapture( void )
+{
+	// check if the PIX replay dll is loaded in our process
+	return GetModuleHandle( "WinPixCaptureReplay.dll" ) != nullptr ||
+		   GetModuleHandle( "WinPixGpuCapturer.dll" ) != nullptr;
+}
+
+static bool IsRenderDocLaunchForGpuCapture( void )
+{
+	return GetModuleHandle( "renderdoc.dll" ) != nullptr;
+}
+
+bool System::IsGPUDebuggerAttached( void )
+{
+	return IsPixLaunchForGpuCapture() || IsRenderDocLaunchForGpuCapture();
+}
 
 void System::DisplayAlert( const char* title, const char* message )
 {
@@ -97,14 +107,18 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	else
 	{
 		gHasOpenModalDialog = true;
-		int ret = ::MessageBox( parent, message, title, MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST | MB_YESNOCANCEL | MB_ICONERROR );
+		int ret				= ::MessageBox( parent, message, title,
+											MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST | MB_YESNOCANCEL | MB_ICONERROR );
 		gHasOpenModalDialog = false;
 
 		switch( ret )
 		{
-		case IDYES:		return kOptionYes;
-		case IDNO:		return kOptionNo;
-		case IDCANCEL:	return kOptionCancel;
+		case IDYES:
+			return kOptionYes;
+		case IDNO:
+			return kOptionNo;
+		case IDCANCEL:
+			return kOptionCancel;
 		}
 	}
 
@@ -137,12 +151,11 @@ uint32_t System::GetWorkingSetSize( void )
 	static bool inited = false;
 	if( !inited )
 	{
-		inited = true;
+		inited				= true;
 		HINSTANCE dllHandle = LoadLibrary( "psapi.dll" );
 		if( dllHandle != NULL )
 		{
-			GetProcessMemoryInfoPtr = (GetProcessMemoryInfoType)
-				GetProcAddress( dllHandle, "GetProcessMemoryInfo");
+			GetProcessMemoryInfoPtr = (GetProcessMemoryInfoType) GetProcAddress( dllHandle, "GetProcessMemoryInfo" );
 		}
 	}
 

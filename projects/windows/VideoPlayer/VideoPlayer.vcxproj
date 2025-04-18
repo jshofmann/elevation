@@ -90,6 +90,9 @@
     <Image Include="..\..\..\Applications\VideoPlayer\VideoPlayer.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DriverDX12\DriverDX12.vcxproj">
+      <Project>{1fc23efe-0e70-4e93-b862-39e317d0cc16}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\DriverWindows\DriverWindows.vcxproj">
       <Project>{07d321d6-9abf-4b46-8042-78ec4228e770}</Project>
     </ProjectReference>

@@ -11,6 +11,7 @@
 #include <ee/utility/Config.h>
 #include <drivers/Windows/core/WinApplication.h>
 #include <drivers/Windows/core/WinWindow.h>
+#include <drivers/Windows/core/WinDebug.h>
 
 #include "resource.h"
 #include "VideoPlayer.h"
@@ -42,6 +43,8 @@ public:
 	}
 
 private:
+	static constexpr const char* sConfigName = "VideoPlayer.cfg";
+
 	VideoPlayer mPlayer;
 	Config		mConfig;
 
@@ -89,6 +92,8 @@ static INT_PTR CALLBACK AboutDialogProc( HWND hDlg, UINT message, WPARAM wParam,
 //
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
+//	eeDebug( "VideoPlayer WndProc: %s wParam = %d lParam = 0x%08x\n", WinDebug::GetMessageString( message ), wParam, lParam );
+
 	switch( message )
 	{
 	case WM_CREATE:
@@ -140,38 +145,35 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	}
 	break;
 
-	case WM_PAINT:
-	{
-		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
-
-#if 0 // placeholder
-		HBITMAP hbitmap = application->GetBitmap();
-
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint( hWnd, &ps );
-
-		HDC hdcMem = CreateCompatibleDC( hdc );
-		HGDIOBJ oldBitmap = SelectObject( hdcMem, hbitmap );
-
-		BITMAP bitmap;
-		GetObject( hbitmap, sizeof( BITMAP ), &bitmap );
-
-		BitBlt( hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY );
-
-		SelectObject( hdcMem, oldBitmap );
-		DeleteDC( hdcMem );
-
-		EndPaint( hWnd, &ps );
-#endif
-	}
-	break;
-
 	case WM_DESTROY:
 	{
 		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		application->Exit();
 		PostQuitMessage( 0 );
+	}
+	break;
+
+	case WM_SIZE:
+	{
+		switch( wParam )
+		{
+		case SIZE_MINIMIZED:
+		case SIZE_MAXHIDE:
+		{
+//			PauseGame();
+		}
+		break;
+
+		case SIZE_RESTORED:
+		case SIZE_MAXIMIZED:
+		case SIZE_MAXSHOW:
+		{
+//			ResumeGame();
+		}
+		break;
+
+		} // switch( wParam )
 	}
 	break;
 
@@ -185,20 +187,21 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 bool VideoPlayerApplication::Initialize( void )
 {
 	mRunning = true;
-	std::shared_ptr< File > configFile = std::make_shared< File >( "VideoPlayer.cfg" );
+	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.LoadConfig( configFile );
 	return mPlayer.Initialize( 1280,720 );
 }
 
 void VideoPlayerApplication::Shutdown( void )
 {
-	std::shared_ptr< File > configFile = std::make_shared< File >( "VideoPlayer.cfg" );
+	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.SaveConfig( configFile );
+
+	mPlayer.Shutdown();
 }
 
 int VideoPlayerApplication::Main( int argCount, const char* args[] )
 {
-	// Main loop:
 	while( mRunning )
 	{
 		if( !Update() )
@@ -245,6 +248,7 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 
 	ATOM wndclass = RegisterClassEx( &wcex );
 
+	// Trigger the instantiation of the VideoPlayerApplication object
 	VideoPlayerApplication& application = static_cast< VideoPlayerApplication& >( Application::GetInstance() );
 	application.SetHInstance( hInstance );
 

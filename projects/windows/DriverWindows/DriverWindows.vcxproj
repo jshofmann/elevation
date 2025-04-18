@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\drivers\windows\core\WinApplication.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinCheck.h" />
+    <ClInclude Include="..\..\..\drivers\windows\core\WinDebug.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinSystem.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinUtil.h" />
     <ClInclude Include="..\..\..\drivers\windows\core\WinWindow.h" />
@@ -98,13 +99,13 @@
     <ClCompile Include="..\..\..\drivers\windows\core\WinApplication.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinCheck.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinDebug.cpp" />
+    <ClCompile Include="..\..\..\drivers\windows\core\WinDevice.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinSystem.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinUtil.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileInputStream.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileOutputStream.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\io\WinFileUtils.cpp" />
-    <ClCompile Include="..\..\..\ee\io\StreamReader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

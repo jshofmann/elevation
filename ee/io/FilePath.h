@@ -1,8 +1,13 @@
 // Elevation Engine
 //
-// Copyright (c) 2024 Azimuth Studios
+// Copyright (c) 2025 Azimuth Studios
 
 #pragma once
+
+#include <string>
+#include <string_view>
+
+#include <ee/core/System.h>
 
 namespace ee
 {
@@ -33,10 +38,12 @@ namespace ee
 	class FilePath
 	{
 	public:
+		// The directory separator used by this platform. This class doesn't
+		// care which slashes are used, but certain operations will always use
+		// the preferred separator.
 		static constexpr char Separator = System::GetPlatform() == Platform::kWindows ? '\\' : '/';
 
-		explicit FilePath();
-		explicit FilePath( std::string_view path );
+		explicit FilePath( const std::string_view& path );
 
 		FilePath( const FilePath& ) = default;
 		FilePath& operator = ( const FilePath& ) = default;
@@ -44,11 +51,53 @@ namespace ee
 		FilePath( FilePath&& ) noexcept	= default;
 		FilePath& operator = ( FilePath&& ) noexcept = default;
 
-		inline const char* c_str() const noexcept;
-
-		inline operator std::string_view() const noexcept;
-
+		// Clears the stored contents so the path is now empty.
+		// Clear() preserves the capacity of the underlying string.
 		void Clear( void ) noexcept;
+
+		// ---------------------------------------------------------------------
+		// String operations
+		// ---------------------------------------------------------------------
+
+		inline const char* c_str( void ) const noexcept;
+
+		inline operator std::string_view( void ) const noexcept;
+
+		inline size_t size( void ) const noexcept; 
+
+		// ---------------------------------------------------------------------
+		// Concatenation
+		// ---------------------------------------------------------------------
+
+		// Appends new elements to the path with a directory separator in-between.
+		//
+		// When appending a path that has a root (all absolute paths and some
+		// less common relative path formats on Windows), the path is assigned
+		// rather than being appended.
+		//
+		// Common Examples (preferred separator may differ by platform):
+		//   ""     + ""   --> ""
+		//   ""     + "a"  --> "a"
+		//   "a"    + ""   ---> "a/"
+		//   "a/b"  + "c"  --> "a/b/c"
+		//   "a/b/" + "c"  --> "a/b/c"
+		//
+		// Windows Examples:
+		//   R"(C:\a)" + R"(b)"    --> R"(C:\a\b)" (relative path with no root appends)
+		//   R"(C:\a)" + R"(C:\b)" --> R"(C:\b)"   (absolute path assigns)
+		//   R"(C:a)"  +  R"(C:b)" --> R"(C:b)"   (rooted path assigns)
+		//   R"(a)"    + R"(\b)"   --> R"(\b)"     (rooted path assigns)
+		//
+		// POSIX Examples:
+		//   "a"  + "/b" --> "/b" (absolute path assigns)
+		//   "/a" + "/b" --> "/b" (absolute path assigns)
+		//
+		// Note: this behavior differs slightly from std::filesystem
+		// for the case of two relative paths with matching roots.
+		FilePath& Append( const std::string_view& path );
+
+		// Performs a simple string concatenation
+		FilePath& Concat( const std::string_view& path );
 
 		[[nodiscard]] inline bool operator == ( const FilePath& rhs ) const noexcept;
 		[[nodiscard]] inline bool operator != ( const FilePath& rhs ) const noexcept;
@@ -58,9 +107,16 @@ namespace ee
 		[[nodiscard]] inline bool operator >= ( const FilePath& rhs ) const noexcept;
 
 	private:
+		std::string_view GetPathRoot( const std::string_view& path ) const;
+
 		std::string mPath;
 
 	}; // class FilePath
+
+	inline FilePath::FilePath( const std::string_view& path )
+	{
+		mPath.assign( path );
+	}
 
 	inline void FilePath::Clear( void ) noexcept
 	{
@@ -75,6 +131,17 @@ namespace ee
 	inline FilePath::operator std::string_view () const noexcept
 	{
 		return mPath;
+	}
+
+	inline size_t FilePath::size( void ) const noexcept
+	{
+		return mPath.size();
+	}
+
+	inline FilePath& FilePath::Concat( const std::string_view& path )
+	{
+		mPath.append( path );
+		return *this;
 	}
 
 	bool FilePath::operator == ( const FilePath& rhs ) const noexcept

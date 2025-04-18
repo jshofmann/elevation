@@ -202,6 +202,9 @@
     <ClCompile Include="..\..\..\ee\utility\Config.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ee\io\FilePath.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\ee\utility\CRC16.inl">

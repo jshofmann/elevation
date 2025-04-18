@@ -129,6 +129,7 @@
     <ClCompile Include="..\..\..\ee\image\TGAWriter.cpp" />
     <ClCompile Include="..\..\..\ee\io\BufferedInputStream.cpp" />
     <ClCompile Include="..\..\..\ee\io\File.cpp" />
+    <ClCompile Include="..\..\..\ee\io\FilePath.cpp" />
     <ClCompile Include="..\..\..\ee\io\FileStatus.cpp" />
     <ClCompile Include="..\..\..\ee\io\Reader.cpp" />
     <ClCompile Include="..\..\..\ee\io\StreamReader.cpp" />

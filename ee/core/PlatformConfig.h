@@ -20,15 +20,6 @@
 
 #  if defined( BUILD_PROFILE )
 
-//   Enable extra D3D9 debugging in debug builds if using the debug DirectX
-//   runtime. This makes D3D objects work well in the debugger watch window,
-//   but slows down performance slightly.
-#    if defined( BUILD_DX9 )
-#      if !defined( D3D_DEBUG_INFO )
-#        define D3D_DEBUG_INFO
-#      endif
-#    endif
-
 //   RAD's Telemetry is available for multiple platforms,
 //   but we only have a license for Windows
 //#    define BUILD_RAD_TELEMETRY 1
@@ -68,7 +59,7 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-// Xbox One configuration
+// Xbox One (aka Durango) configuration
 //
 
 #elif defined( BUILD_XB1 )
@@ -117,12 +108,12 @@
 
 #if defined( BUILD_RETAIL )
 
-#  define NTELEMETRY		// make sure that RAD's Telemetry is a no-op in Retail builds
+#  define NTELEMETRY // make sure that RAD's Telemetry is disabled in Retail builds
 
 #endif // #if defined( BUILD_RETAIL )
 
 // We use keyboards/chatpads everywhere in development configurations;
-// keyboard/mouse controls are supported on the PC and Stadia only.
+// keyboard/mouse controls are supported on the PC only.
 #if !defined( BUILD_RETAIL ) || defined( BUILD_PC )
 #  define BUILD_ENABLE_KEYBOARD
 #endif

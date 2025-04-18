@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eeCore", "..\eeCore\eeCore.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DriverWindows", "..\DriverWindows\DriverWindows.vcxproj", "{07D321D6-9ABF-4B46-8042-78EC4228E770}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DriverDX12", "..\DriverDX12\DriverDX12.vcxproj", "{1FC23EFE-0E70-4E93-B862-39E317D0CC16}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxerr", "..\..\..\external\dxerr\dxerr.vcxproj", "{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +43,20 @@ Global
 		{07D321D6-9ABF-4B46-8042-78EC4228E770}.Release|x64.Build.0 = Release|x64
 		{07D321D6-9ABF-4B46-8042-78EC4228E770}.Release|x86.ActiveCfg = Release|Win32
 		{07D321D6-9ABF-4B46-8042-78EC4228E770}.Release|x86.Build.0 = Release|Win32
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Debug|x64.ActiveCfg = Debug|x64
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Debug|x64.Build.0 = Debug|x64
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Debug|x86.ActiveCfg = Debug|x64
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Release|x64.ActiveCfg = Release|x64
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Release|x64.Build.0 = Release|x64
+		{1FC23EFE-0E70-4E93-B862-39E317D0CC16}.Release|x86.ActiveCfg = Release|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Debug|x64.ActiveCfg = Debug|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Debug|x64.Build.0 = Debug|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Debug|x86.ActiveCfg = Debug|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Debug|x86.Build.0 = Debug|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Release|x64.ActiveCfg = Release|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Release|x64.Build.0 = Release|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Release|x86.ActiveCfg = Release|x64
+		{5975F91B-FEC5-4A3C-A534-A5226CEC3E44}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

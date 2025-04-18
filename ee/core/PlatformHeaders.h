@@ -69,6 +69,9 @@
 #    undef UNDEF_WINSOCKAPI
 #  endif
 
+// Define the threading primitives for the host platform
+#  include <drivers/windows/core/WinThread.h>
+
 #elif defined( BUILD_XB1 ) || defined( BUILD_XSX )
 
 #  define NOMINMAX				// Define std::min() and std::max() functions rather than min() and max() macros
@@ -81,9 +84,15 @@
 
 #  include <windows.h>
 
+// Define the threading primitives for the host platform
+#  include <drivers/windows/core/WinThread.h>
+
 #elif defined( BUILD_LINUX ) || defined( BUILD_NX ) || defined( BUILD_PS4 ) || defined( BUILD_PS5 )
 
 #  define _USE_MATH_DEFINES	// Define M_PI, etc in <math.h>
 #  include <stddef.h>		// defines ptrdiff_t, NULL, and other items
+
+// Define the threading primitives for the host platform
+#  include <drivers/posix/core/PosixThread.h>
 
 #endif // #elif defined( POSIX-based platforms )
