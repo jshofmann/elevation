@@ -6,6 +6,8 @@
 
 namespace ee
 {
+	class Config;
+
 	/*
 	*/
 	class Application
@@ -41,6 +43,11 @@ namespace ee
 		// simulation frame - by default, one simulation frame == one render
 		// frame, but some applications may decouple those loops
 		virtual bool Update( void ) { return false; }
+
+		// If your application supports use of config files,
+		// implement this accessor. Users should assume that the Application
+		// owns the Config object and manages its lifetime.
+		virtual Config* GetConfig( void ) noexcept { return nullptr; }
 
 	}; // class Application
 

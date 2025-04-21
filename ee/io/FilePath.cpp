@@ -73,7 +73,7 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// is an absolute path.
 		//
 		//     "C:\Windows\explorer.exe"
-		//     GetRoot() returns "C:\"
+		//     GetPathRoot() returns "C:\"
 		//     std::filesystem::path::root_path() returns "C:\"
 		//
 		// Redundant separators are allowed such as "C:\\\Windows\\\explorer.exe".
@@ -90,7 +90,7 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// a relative path to the current directory of that drive.
 		//
 		//     "C:explorer.exe"
-		//     GetRoot() returns "C:"
+		//     GetPathRoot() returns "C:"
 		//     std::filesystem::path::root_path() returns "C:"
 		//
 		// In Windows, each root can have its own working directory. This is
@@ -119,7 +119,7 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// of the drive currently set as the working directory.
 		//
 		//     "\Windows\explorer.exe"
-		//     GetRoot() returns "\"
+		//     GetPathRoot() returns "\"
 		//     std::filesystem::path::root_path() returns "\"
 		//
 		// Redundant leading separators are not allowed, because that forms
@@ -142,7 +142,7 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// Paths relative to the current working directory have no root.
 		//
 		//     "abc/def.txt"
-		//     GetRoot() returns ""
+		//     GetPathRoot() returns ""
 		//     std::filesystem::path::root_path() returns ""
 		//
 		// Redundant separators are allowed.
@@ -154,7 +154,7 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// The server name and share name together make up the volume.
 		//
 		//     "\\MyServer\MyShare\abc\def.txt"
-		//     GetRoot() returns "\\MyServer\MyShare"
+		//     GetPathRoot() returns "\\MyServer\MyShare"
 		//     std::filesystem::path::root_path() returns "\\MyServer"
 		//
 		// Redundant leading slashes are not allowed.
@@ -183,11 +183,11 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// should use the "\\.\" prefix to access devices only and not files."
 		//
 		//     "\\.\C:\Windows\explorer.exe"
-		//     GetRoot() returns "\\.\C:\"
+		//     GetPathRoot() returns "\\.\C:\"
 		//     std::filesystem::path::root_path() returns "\\.\"
 		//
 		//     "\\.\UNC\MyServer\MyShare\abs\def.txt"
-		//     GetRoot() returns "\\.\UNC\MyServer\MyShare"
+		//     GetPathRoot() returns "\\.\UNC\MyServer\MyShare"
 		//     std::filesystem::path::root_path() returns "\\.\"
 		//
 		// Redundant leading slashes are not allowed.
@@ -204,11 +204,11 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 		// be used. This form also allows use of paths that exceed MAX_PATH.
 		//
 		//     "\\?\C:\Windows\explorer.exe"
-		//     GetRoot() returns "\\?\C:\"
+		//     GetPathRoot() returns "\\?\C:\"
 		//     std::filesystem::path::root_path() returns "\\?\"
 		//
 		//     "\\?\UNC\MyServer\MyShare\abs\def.txt"
-		//     GetRoot() returns "\\?\UNC\MyServer\MyShare"
+		//     GetPathRoot() returns "\\?\UNC\MyServer\MyShare"
 		//     std::filesystem::path::root_path() returns "\\?\"
 		//
 		// Redundant leading slashes are not allowed.

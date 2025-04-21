@@ -107,7 +107,7 @@ extern bool gInFatalError;
 
 #endif // BUILD_HAS_ASSERT
 
-#if defined( BUILD_WINDOWS ) && !defined( BUILD_X64 )
+#if defined( BUILD_PC ) && !defined( BUILD_X64 )
 
 	// This is better than DebugBreak, because it will make the debugger go to
 	// the correct location in the code. With DebugBreak you have back up the

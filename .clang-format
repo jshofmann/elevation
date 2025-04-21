@@ -8,7 +8,7 @@ AlignConsecutiveMacros: None
 AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveBitFields: None
 AlignConsecutiveDeclarations: Consecutive
-AlignEscapedNewlines: DontAlign
+AlignEscapedNewlines: LeftWithLastLine
 AlignOperands:   Align
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
@@ -103,7 +103,7 @@ IndentAccessModifiers: false
 IndentCaseLabels: false
 IndentCaseBlocks: false
 IndentGotoLabels: true
-IndentPPDirectives: None
+IndentPPDirectives: BeforeHash
 IndentExternBlock: NoIndent
 IndentRequires:  false
 IndentWidth:     4

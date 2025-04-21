@@ -6,9 +6,28 @@
 
 #include <string>
 #include <algorithm>
+#include <charconv>
 
 namespace ee
 {
+	// Wrap std::from_chars in a more strtoul-style interface,
+	// returning 0 if the string_view is not convertable to uint32_t
+	inline uint32_t ToUInt( const std::string_view& value )
+	{
+		unsigned int result;
+		auto [ptr, ec] = std::from_chars( value.data(), value.data() + value.size(), result );
+		return  ec == std::errc() ? result : 0;
+	}
+
+	// Wrap std::from_chars in a more strtof-style interface,
+	// returning 0 if the string_view is not convertable to uint32_t
+	inline float ToFloat( const std::string_view& value )
+	{
+		float result;
+		auto [ptr, ec] = std::from_chars( value.data(), value.data() + value.size(), result );
+		return  ec == std::errc() ? result : 0;
+	}
+
 	// Remove any whitespace from the start of a string
 	inline void TrimLeadingWhitespace( std::string& str )
 	{

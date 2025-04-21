@@ -78,15 +78,15 @@ namespace ee
 		// Common Examples (preferred separator may differ by platform):
 		//   ""     + ""   --> ""
 		//   ""     + "a"  --> "a"
-		//   "a"    + ""   ---> "a/"
+		//   "a"    + ""   --> "a/"
 		//   "a/b"  + "c"  --> "a/b/c"
 		//   "a/b/" + "c"  --> "a/b/c"
 		//
 		// Windows Examples:
-		//   R"(C:\a)" + R"(b)"    --> R"(C:\a\b)" (relative path with no root appends)
-		//   R"(C:\a)" + R"(C:\b)" --> R"(C:\b)"   (absolute path assigns)
-		//   R"(C:a)"  +  R"(C:b)" --> R"(C:b)"   (rooted path assigns)
-		//   R"(a)"    + R"(\b)"   --> R"(\b)"     (rooted path assigns)
+		//   "C:\a" + "b"    --> "C:\a\b" (relative path with no root appends)
+		//   "C:\a" + "C:\b" --> "C:\b"   (absolute path assigns)
+		//   "C:a"  + "C:b"  --> "C:b"    (rooted path assigns)
+		//   "a"    + "\b"   --> "\b"     (rooted path assigns)
 		//
 		// POSIX Examples:
 		//   "a"  + "/b" --> "/b" (absolute path assigns)

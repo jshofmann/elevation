@@ -1,6 +1,6 @@
 // Elevation Engine
 //
-// Copyright (c) 2024 Azimuth Studios
+// Copyright (c) 2025 Azimuth Studios
 
 #pragma once
 
@@ -10,14 +10,22 @@
 
 	// Make sure that all debug printouts compile down to nothing in retail builds
 	#define eeDebug( x, ... ) (void) 0
-	#define veeDebug( x, f )  (void) 0
+	#define eeDebugIf( x, ... ) (void) 0
 
 #else
 
 	// Because these functions are used so much, and they're meant for trivial,
 	// ephemeral temporary debug code, provide an alias outside of any namespace
-	#define eeDebug  ee::Debugf
-	#define veeDebug ee::VDebugf
+	#define eeDebug ee::Debugf
+
+	#define eeDebugIf( condition, ... )    \
+		do                                 \
+		{                                  \
+			if( condition )                \
+			{                              \
+				ee::Debugf( __VA_ARGS__ ); \
+			}                              \
+		} while( 0 );
 
 #endif // if !defined( BUILD_RETAIL )
 

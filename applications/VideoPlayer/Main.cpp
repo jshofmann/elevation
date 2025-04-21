@@ -30,6 +30,11 @@ public:
 	virtual bool Initialize( void ) override final;
 	virtual void Shutdown( void ) override final;
 
+	virtual Config* GetConfig( void ) noexcept override final
+	{
+		return &mConfig;
+	}
+
 	// VideoPlayerApplication member functions
 
 	VideoPlayer& GetPlayer( void )

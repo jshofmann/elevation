@@ -18,6 +18,8 @@ namespace ee
 	class dx12Device : public Device
 	{
 	public:
+		static constexpr uint32_t kInvalidGPUIndex = ~0u;
+
 		// IDevice interface implementation
 
 		virtual bool Initialize( void );
@@ -50,8 +52,6 @@ namespace ee
 		Microsoft::WRL::ComPtr< IDXGIFactory6 > mDXGIFactory;
 		Microsoft::WRL::ComPtr< IDXGIAdapter1 > mAdapter;
 
-		static constexpr uint32_t kInvalidGPUIndex = ~0u;
-
 		Microsoft::WRL::ComPtr< ID3D12Debug > mD3D12Debug;
 
 		Microsoft::WRL::ComPtr< ID3D12Device > mDevice;
@@ -59,6 +59,8 @@ namespace ee
 
 		bool	mAllowPIXAttach = true;
 		HMODULE mPIXCapturerModule = NULL;
+
+		D3D_FEATURE_LEVEL mFeatureLevel = D3D_FEATURE_LEVEL_12_0;
 
 		// For lack of a better place to store this....
 		Microsoft::WRL::ComPtr< IDxcUtils > mDxcUtils;

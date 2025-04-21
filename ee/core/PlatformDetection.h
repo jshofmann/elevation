@@ -39,6 +39,7 @@
 #  define BUILD_X64				1
 #  define BUILD_LITTLE_ENDIAN	1
 #elif defined( _WIN32 ) || defined( _WIN64 ) // Windows PC
+// Note: BULD_WINDOWS is used by some Windows SDK headers so avoid that name
 #  define BUILD_PC				1
 #  define BUILD_LITTLE_ENDIAN	1
 #  define BUILD_X86				1

@@ -17,12 +17,18 @@
     <ClInclude Include="..\..\..\drivers\dx12\dx12Device.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\drivers\dx12\dxDebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\dx12\dx12Device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\dx12\dxDebug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

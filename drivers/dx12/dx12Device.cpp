@@ -7,7 +7,7 @@
 #include <dxgidebug.h>
 
 #if !defined( BUILD_RETAIL )
-#include <shlobj.h>
+	#include <shlobj.h>
 #endif
 
 #include <dxerr/dxerr.h>
@@ -17,10 +17,12 @@
 #include <ee/core/System.h>
 #include <ee/io/FilePath.h>
 #include <ee/utility/Config.h>
+#include <ee/utility/StringUtils.h>
 
 #include <drivers/windows/core/WinCheck.h>
 #include <drivers/windows/core/WinApplication.h>
 #include <drivers/windows/core/WinWindow.h>
+#include <drivers/dx12/dxDebug.h>
 
 #pragma comment( lib, "d3d12.lib" )
 #pragma comment( lib, "dxgi.lib" )
@@ -33,19 +35,19 @@ using namespace ee;
 // Level 1: CPU-side debug layer enabled: https://docs.microsoft.com/en-us/windows/win32/direct3d12/direct3d-12-sdklayers-reference
 // Level 2: GPU-based validation: https://docs.microsoft.com/en-us/windows/win32/direct3d12/using-d3d12-debug-layer-gpu-based-validation
 // Level 3: GPU-based validation with resource state validation
-REGISTER_CONFIG_PROPERTY( "Device", "EnableDebugLayer",		gGraphicsEnableDebugLayer,			int,		0 )
+REGISTER_CONFIG_PROPERTY( "Device", "EnableDebugLayer", gGraphicsEnableDebugLayer, int, 0 )
 
 // DRED: Device Removed Extended Data, see https://devblogs.microsoft.com/directx/dred
 // If gGraphicsEnableDebugLayer > 0 then all DRED features are automatically enabled
-REGISTER_CONFIG_PROPERTY( "Device", "EnableDRED",				gGraphicsEnableDRED,			bool,		false )
+REGISTER_CONFIG_PROPERTY( "Device", "EnableDRED", gGraphicsEnableDRED, bool, false )
 
 // Enabling page fault reporting adds some system memory overhead and
 // a small performance hit to object creation and destruction,
 // so it's off by default
-REGISTER_CONFIG_PROPERTY( "Device", "EnableDREDPageFaults",	gGraphicsEnableDREDPageFaults,		bool,		false )
+REGISTER_CONFIG_PROPERTY( "Device", "EnableDREDPageFaults", gGraphicsEnableDREDPageFaults, bool, false )
 
 // Enabling auto-breadcrumbs incurs a 2-5% performance hit, so off by default
-REGISTER_CONFIG_PROPERTY( "Device", "EnableDREDBreadcrumbs",	gGraphicsEnableDREDBreadcrumbs,	bool,		false )
+REGISTER_CONFIG_PROPERTY( "Device", "EnableDREDBreadcrumbs", gGraphicsEnableDREDBreadcrumbs, bool, false )
 
 bool dx12Device::Initialize( void )
 {
@@ -106,7 +108,7 @@ bool dx12Device::CreateDevice( void )
 
 #if defined( BUILD_PC )
 
-#if defined( BUILD_PROFILE )
+	#if defined( BUILD_PROFILE )
 
 	// Enable connections to PIX if there isn't already a GPU debugger attached
 	// and we haven't enabled the debug layers (a documented restriction).
@@ -117,22 +119,27 @@ bool dx12Device::CreateDevice( void )
 		LoadPIXDLL();
 	}
 
-#endif // #if defined( BUILD_PROFILE )
+	#endif // #if defined( BUILD_PROFILE )
 
 	if( !eeCheck( CreateDeviceFactory() ) )
 	{
 		return false;
 	}
-#if 0
+
 	// The user can override the best-GPU selection here, but note that it
 	// does require knowledge of the order in which the GPUs are enumerated
-	// (i.e. for debugging use only, pretty much, since that's something
+	// (i.e. for debugging use only, pretty much, since the order is something
 	//	that's considered to be a video driver implementation detail.)
 	// 4294967295 == kInvalidGPUIndex (~0u aka 0xffffffff aka -1)
-	UInt32 gpuIndex = ConfigInstance.getValue( String( "Device" ), String( "GPUIndex" ), String( "4294967295" ) ).toUInt();
+	// !!! TODO: does this logic belong here or at an application level?
+	Config*	 config = Application::GetInstance().GetConfig();
+	uint32_t gpuIndex =
+		config != nullptr ? ToUInt( config->GetValue( "Device", "GPUIndex", "4294967295" ) ) : kInvalidGPUIndex;
 
 	// First, check if the desired adapter is available
-	HRESULT result = mDXGIFactory->EnumAdapterByGpuPreference( gpuIndex != 4294967295 ? gpuIndex : 0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS( mAdapter.ReleaseAndGetAddressOf() ) );
+	HRESULT result = mDXGIFactory->EnumAdapterByGpuPreference( gpuIndex != kInvalidGPUIndex ? gpuIndex : 0,
+															   DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+															   IID_PPV_ARGS( mAdapter.ReleaseAndGetAddressOf() ) );
 	if( FAILED( result ) )
 	{
 		mAdapter = nullptr;
@@ -141,29 +148,35 @@ bool dx12Device::CreateDevice( void )
 		// iterating over all available adapters won't fix this problem
 		if( result == D3D12_ERROR_INVALID_REDIST )
 		{
-			eeDebug( "dx12Device::CreateDevice: D3D12Core.dll is missing or an unexpected version" ); // !!! should log this
+			eeDebug(
+				"dx12Device::CreateDevice: D3D12Core.dll is missing or an unexpected version" ); // !!! should log this
 		}
 		else
 		{
-			eeDebug( "dx12Device::CreateDevice: IDXGIFactory::EnumAdapterByGpuPreference() failed with error 0x%08x: %s", result, DXGetErrorString( result ) ); // !!! should log this
+			eeDebug(
+				"dx12Device::CreateDevice: IDXGIFactory::EnumAdapterByGpuPreference() failed with error 0x%08x: %s",
+				result, DXGetErrorString( result ) ); // !!! should log this
 		}
 
 		return false;
 	}
 
 	// If the requested adapter doesn't support the required D3D feature levle
-	if( !eeCheck( verifyMinimumFeatureLevel( mAdapter.Get(), mFeatureLevel ) ) )
+	if( !eeCheck( VerifyMinimumFeatureLevel( mAdapter.Get(), mFeatureLevel ) ) )
 	{
 		mAdapter = nullptr;
 
 		// Look for one that does. If there is more than one adapter supporting
 		// the required feature level choose the one with the most memory.
-		Microsoft::WRL::ComPtr<IDXGIAdapter1> adapter;
-		SIZE_T maxMemorySize = 0;
+		Microsoft::WRL::ComPtr< IDXGIAdapter1 > adapter;
+		SIZE_T									maxMemorySize = 0;
 
-		for( gpuIndex = 0; mDXGIFactory->EnumAdapterByGpuPreference( gpuIndex, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS( adapter.ReleaseAndGetAddressOf() ) ) != DXGI_ERROR_NOT_FOUND; ++gpuIndex )
+		for( gpuIndex = 0; mDXGIFactory->EnumAdapterByGpuPreference(
+							   gpuIndex, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+							   IID_PPV_ARGS( adapter.ReleaseAndGetAddressOf() ) ) != DXGI_ERROR_NOT_FOUND;
+			 ++gpuIndex )
 		{
-			if( eeCheck( verifyMinimumFeatureLevel( adapter.Get(), mFeatureLevel ) ) )
+			if( eeCheck( VerifyMinimumFeatureLevel( adapter.Get(), mFeatureLevel ) ) )
 			{
 				DXGI_ADAPTER_DESC1 desc;
 				adapter->GetDesc1( &desc );
@@ -183,31 +196,35 @@ bool dx12Device::CreateDevice( void )
 
 		} // for( each adapter )
 
-	} // if( !eeCheck( verifyMinimumFeatureLevel( adapter, mFeatureLevel ) ) )
+	} // if( !eeCheck( VerifyMinimumFeatureLevel( adapter, mFeatureLevel ) ) )
 
 	if( mAdapter == nullptr )
 	{
-		eeDebug( "dx12Device::CreateDevice: Unable to find a suitable IDXGIAdapter for our D3D12 device" ); // !!! should log this
+		eeDebug( "dx12Device::CreateDevice: Unable to find a IDXGIAdapter supporting %s",
+				 GetD3DFeatureLevelString( mFeatureLevel ) ); // !!! should log this
 		return false;
 	}
 
 	// Now that we have an adapater, create the device for realsies this time
-	if( !eeCheck( D3D12CreateDevice( mAdapter.Get(), mFeatureLevel, __uuidof( ID3D12Device ), reinterpret_cast< LPVOID* >( mDevice.GetAddressOf() ) ) ) )
+	if( !eeCheck( D3D12CreateDevice( mAdapter.Get(), mFeatureLevel, __uuidof( ID3D12Device ),
+									 reinterpret_cast< LPVOID* >( mDevice.GetAddressOf() ) ) ) )
 	{
 		return false;
 	}
 
-#if !defined( BUILD_RETAIL )
+	#if !defined( BUILD_RETAIL )
 
 	bool developerModeEnabled = false;
 
 	// Look in the Windows Registry to determine if Developer Mode is enabled
-	HKEY hKey;
-	LSTATUS status = RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock", 0, KEY_READ, &hKey );
+	HKEY	hKey;
+	LSTATUS status = RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock",
+								   0, KEY_READ, &hKey );
 	if( status == ERROR_SUCCESS )
 	{
 		DWORD keyValue, keySize = sizeof( DWORD );
-		status = RegQueryValueEx( hKey, "AllowDevelopmentWithoutDevLicense", NULL, NULL, reinterpret_cast< LPBYTE >( &keyValue ), &keySize );
+		status = RegQueryValueEx( hKey, "AllowDevelopmentWithoutDevLicense", NULL, NULL,
+								  reinterpret_cast< LPBYTE >( &keyValue ), &keySize );
 		if( status == ERROR_SUCCESS && keyValue == 1 )
 		{
 			developerModeEnabled = true;
@@ -216,13 +233,14 @@ bool dx12Device::CreateDevice( void )
 		RegCloseKey( hKey );
 	}
 
-	eeDebugIf( !developerModeEnabled, "dx12Device::CreateDevice: Enable Developer Mode on Windows 10 to get consistent profiling results" );
+	eeDebugIf( !developerModeEnabled,
+			   "dx12Device::CreateDevice: Enable Developer Mode on Windows 10 to get consistent profiling results" );
 
 	// Prevent the GPU from overclocking or underclocking to get consistent timings
 	if( developerModeEnabled )
 		mDevice->SetStablePowerState( TRUE );
 
-#endif // #if !defined( BUILD_RETAIL )
+	#endif // #if !defined( BUILD_RETAIL )
 
 #endif // #if defined( BUILD_PC )
 
@@ -233,8 +251,6 @@ bool dx12Device::CreateDevice( void )
 	{
 		return false;
 	}
-
-#endif
 
 	return true;
 }
@@ -260,7 +276,8 @@ HRESULT dx12Device::EnableDebugLayer( void )
 		}
 		else
 		{
-			eeDebug( "dx12Device::EnableDebugLayer: D3D12GetDebugInterface( ID3D12Debug ) failed with error 0x%08x: %s", result, DXGetErrorString( result ) ); // !!! should log this
+			eeDebug( "dx12Device::EnableDebugLayer: D3D12GetDebugInterface( ID3D12Debug ) failed with error 0x%08x: %s",
+					 result, DXGetErrorString( result ) ); // !!! should log this
 			return result;
 		}
 
@@ -277,7 +294,9 @@ HRESULT dx12Device::EnableDebugLayer( void )
 				if( eeCheck( D3D12GetDebugInterface( IID_PPV_ARGS( d3d12Debug2.GetAddressOf() ) ) ) )
 				{
 					// Level 3 adds resource state validation
-					d3d12Debug2->SetGPUBasedValidationFlags( gGraphicsEnableDebugLayer > 2 ? D3D12_GPU_BASED_VALIDATION_FLAGS_NONE : D3D12_GPU_BASED_VALIDATION_FLAGS_DISABLE_STATE_TRACKING );
+					d3d12Debug2->SetGPUBasedValidationFlags(
+						gGraphicsEnableDebugLayer > 2 ? D3D12_GPU_BASED_VALIDATION_FLAGS_NONE
+													  : D3D12_GPU_BASED_VALIDATION_FLAGS_DISABLE_STATE_TRACKING );
 
 				} // if( eeCheck( D3D12GetDebugInterface( ID3D12Debug2 ) ) ) )
 
@@ -341,14 +360,13 @@ HRESULT dx12Device::CreateDeviceFactory( void )
 			dxgiInfoQueue->SetBreakOnSeverity( DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true );
 			dxgiInfoQueue->SetBreakOnSeverity( DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true );
 
-			DXGI_INFO_QUEUE_MESSAGE_ID hide[] =
-			{
+			DXGI_INFO_QUEUE_MESSAGE_ID hide[] = {
 				80 // IDXGISwapChain::GetContainingOutput: The swapchain's adapter does not control the output on which the swapchain's window resides.
 			};
 
 			DXGI_INFO_QUEUE_FILTER filter = {};
 
-			filter.DenyList.NumIDs = _countof( hide );
+			filter.DenyList.NumIDs	= _countof( hide );
 			filter.DenyList.pIDList = hide;
 
 			eeCheck( dxgiInfoQueue->AddStorageFilterEntries( DXGI_DEBUG_DXGI, &filter ) );
@@ -357,7 +375,7 @@ HRESULT dx12Device::CreateDeviceFactory( void )
 
 	} // if( gGraphicsEnableDebugLayer > 0 )
 
-	return CreateDXGIFactory2( dxgiFactoryFlags, IID_PPV_ARGS( mDXGIFactory.ReleaseAndGetAddressOf()) );
+	return CreateDXGIFactory2( dxgiFactoryFlags, IID_PPV_ARGS( mDXGIFactory.ReleaseAndGetAddressOf() ) );
 }
 
 HRESULT dx12Device::VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATURE_LEVEL level ) const
@@ -372,7 +390,20 @@ HRESULT dx12Device::VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATU
 	}
 
 	// D3D12CreateDevice() may return S_FALSE because we're passing NULL for ppDevice
-	return D3D12CreateDevice( adapter, level, __uuidof( ID3D12Device ), NULL );
+	HRESULT result = D3D12CreateDevice( adapter, level, __uuidof( ID3D12Device ), nullptr );
+	if( ( result != S_OK ) && ( result != S_FALSE ) )
+	{
+		constexpr size_t descriptionSize = 128; // characters
+		char description[ descriptionSize ];
+		DXGetErrorDescription( result, description, descriptionSize );
+
+		eeDebug( "D3D12CreateDevice( %s ) returned error 0x%08x (%s): %ls\n", GetD3DFeatureLevelString( level ), result,
+				 DXGetErrorString( result ), description );
+
+		return result;
+	}
+
+	return S_OK;
 }
 
 #if defined( BUILD_PROFILE )
@@ -389,7 +420,7 @@ bool dx12Device::LoadPIXDLL( void )
 		return false;
 	}
 
-	char programFilesPath[ MAX_PATH ];
+	char   programFilesPath[ MAX_PATH ];
 	size_t convertedCount;
 	wcstombs_s( &convertedCount, programFilesPath, MAX_PATH, wideProgramFilesPath, _TRUNCATE );
 
@@ -397,13 +428,13 @@ bool dx12Device::LoadPIXDLL( void )
 	// directory but don't recurse into subdirectories
 	FilePath pixPath = FilePath( programFilesPath ).Append( "Microsoft PIX\\*" );
 
-//	eeDebug( "dx12Device::LoadPIXDLL: Searching %s\n", pixPath.c_str() );
+	//	eeDebug( "dx12Device::LoadPIXDLL: Searching %s\n", pixPath.c_str() );
 
-	bool foundPixInstallation = false;
+	bool		foundPixInstallation = false;
 	std::string latestVersionPath;
 
 	WIN32_FIND_DATA findData;
-	HANDLE findHandle = FindFirstFile( pixPath.c_str(), &findData );
+	HANDLE			findHandle = FindFirstFile( pixPath.c_str(), &findData );
 	if( findHandle != INVALID_HANDLE_VALUE )
 	{
 		do
@@ -412,17 +443,16 @@ bool dx12Device::LoadPIXDLL( void )
 			if( ( ( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY ) &&
 				( findData.cFileName[ 0 ] != '.' ) )
 			{
-//				eeDebug( "dx12Device::LoadPIXDLL: Examining %s\n", findData.cFileName );
+				//				eeDebug( "dx12Device::LoadPIXDLL: Examining %s\n", findData.cFileName );
 
 				// Look for the subdirectory with the highest version number
 				if( !foundPixInstallation || latestVersionPath.compare( findData.cFileName ) <= 0 )
 				{
 					foundPixInstallation = true;
-					latestVersionPath = std::string( findData.cFileName );
+					latestVersionPath	 = std::string( findData.cFileName );
 				}
 			}
-		}
-		while( FindNextFile( findHandle, &findData ) != 0 );
+		} while( FindNextFile( findHandle, &findData ) != 0 );
 
 	} // if( findHandle != INVALID_HANDLE_VALUE )
 
@@ -437,7 +467,8 @@ bool dx12Device::LoadPIXDLL( void )
 
 	// Load the WinPixGPUCapturer.dll module from the directory we found
 
-	FilePath capturerPath( std::string_view( pixPath.c_str(), pixPath.size() - 1 ) ); // clip off the '*' from the end of pixPath
+	FilePath capturerPath(
+		std::string_view( pixPath.c_str(), pixPath.size() - 1 ) ); // clip off the '*' from the end of pixPath
 	capturerPath.Append( latestVersionPath );
 	capturerPath.Append( "WinPixGPUCapturer.dll" );
 
