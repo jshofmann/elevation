@@ -29,81 +29,81 @@
 
 // Scarlett and Durango also define WIN32 and WIN64 so test for them first
 #if defined( _GAMING_XBOX_SCARLETT ) // Xbox Series X (Anaconda) or Xbox Series S (Lockhart)
-#  define BUILD_XSX				1
-#  define BUILD_X86				1
-#  define BUILD_X64				1
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_XSX				1
+#  define EE_BUILD_X86				1
+#  define EE_BUILD_X64				1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( _XBOX_ONE )		// aka Durango
-#  define BUILD_XB1				1
-#  define BUILD_X86				1
-#  define BUILD_X64				1
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_XB1				1
+#  define EE_BUILD_X86				1
+#  define EE_BUILD_X64				1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( _WIN32 ) || defined( _WIN64 ) // Windows PC
 // Note: BULD_WINDOWS is used by some Windows SDK headers so avoid that name
-#  define BUILD_PC				1
-#  define BUILD_LITTLE_ENDIAN	1
-#  define BUILD_X86				1
+#  define EE_BUILD_WINDOWS			1
+#  define EE_BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_X86				1
 #  if defined( COMPILER_MSVC )
 #    if defined( _AMD64_ ) || defined( _M_X64 ) || defined( _M_AMD64 )
-#      define BUILD_X64			1
+#      define EE_BUILD_X64			1
 #    endif
 #  elif defined( COMPILER_GCC )
 #    if defined( _X86_64_ ) || defined( __amd64__ )
-#      define BUILD_X64			1
+#      define EE_BUILD_X64			1
 #    endif
 #  endif
 #elif defined( __ORBIS__ )		// Sony Playstation 4
-#  define BUILD_PS4				1
-#  define BUILD_X86				1
-#  define BUILD_X64				1
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_PS4				1
+#  define EE_BUILD_X86				1
+#  define EE_BUILD_X64				1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __PROSPERO__ )	// Sony Playstation 5
-#  define BUILD_PS5				1
-#  define BUILD_X86				1
-#  define BUILD_X64				1
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_PS5				1
+#  define EE_BUILD_X86				1
+#  define EE_BUILD_X64				1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __linux__ )      // Includes Stadia and SteamOS
-#  define BUILD_LINUX			1
-#  define BUILD_X86				1
+#  define EE_BUILD_LINUX			1
+#  define EE_BUILD_X86				1
 #  if defined( _X86_64_ ) || defined( __amd64__ )
-#    define BUILD_X64			1
+#    define EE_BUILD_X64			1
 #  endif
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __NX__ )			// Nintendo Switch
-#  define BUILD_NX				1
-#  define BUILD_ARM				1
+#  define EE_BUILD_NX				1
+#  define EE_BUILD_ARM				1
 #  if defined( __ARM_32BIT_STATE )
-#    define BUILD_ARM32			1
+#    define EE_BUILD_ARM32			1
 #  endif
 #  if defined( __ARM_64BIT_STATE )
-#    define BUILD_ARM64			1
+#    define EE_BUILD_ARM64			1
 #  endif
-#  define BUILD_LITTLE_ENDIAN	1
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #else
 #  error Unknown platform
 #endif
 
-#if defined( BUILD_X64 ) || defined( BUILD_ARM64 )
-#  define BUILD_64BIT 1
+#if defined( EE_BUILD_X64 ) || defined( EE_BUILD_ARM64 )
+#  define EE_BUILD_64BIT 1
 #else
-#  define BUILD_32BIT 1
+#  define EE_BUILD_32BIT 1
 #endif
 
-#if defined( _DEBUG ) || defined( BUILD_DEVELOP )
-#  define BUILD_DEBUG 1
+#if defined( _DEBUG ) || defined( EE_BUILD_DEVELOP )
+#  define EE_BUILD_DEBUG 1
 #endif
 
 // Anything that doesn't need to be in the retail build (profiling stuff, debug
-// code) should be wrapped in a #if !defined( BUILD_RETAIL ). This is
+// code) should be wrapped in a #if !defined( EE_BUILD_RETAIL ). This is
 // automatically defined by the Retail build configuration, this is here
 // just for reference.
 #if 0
-#  define BUILD_RETAIL	1
+#  define EE_BUILD_RETAIL	1
 #endif
 
 // In non-retail builds we enable profiling tools
-#if !defined( BUILD_RETAIL )
-#  define BUILD_PROFILE 1
+#if !defined( EE_BUILD_RETAIL )
+#  define EE_BUILD_PROFILE 1
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@
 //
 
 // Turn off all deprecated CRT / Windows SDK function warnings
-#if defined( BUILD_PC ) || defined( BUILD_XB1 ) || defined( BUILD_XSX )
+#if defined( EE_BUILD_WINDOWS ) || defined( EE_BUILD_XB1 ) || defined( EE_BUILD_XSX )
 #  if !defined( _CRT_SECURE_NO_DEPRECATE )
 #    define _CRT_SECURE_NO_DEPRECATE 1
 #  endif
@@ -127,7 +127,7 @@
 #if defined( COMPILER_MSVC )
 #  define FORCE_INLINE __forceinline
 #elif defined( COMPILER_CLANG ) || defined( COMPILER_GCC )
-#  if defined( BUILD_DEBUG )
+#  if defined( EE_BUILD_DEBUG )
 #    define FORCE_INLINE inline
 #  else
 #    define FORCE_INLINE __attribute__((always_inline)) inline

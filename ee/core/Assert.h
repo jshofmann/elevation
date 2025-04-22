@@ -16,10 +16,10 @@
 
 extern bool gInFatalError;
 
-#if !defined( BUILD_RETAIL )
-#	define BUILD_HAS_ASSERT 1
-#	define BUILD_HAS_ASSERT_RELEASE 1
-#	define BUILD_HAS_FATAL 1
+#if !defined( EE_BUILD_RETAIL )
+#	define EE_BUILD_HAS_ASSERT 1
+#	define EE_BUILD_HAS_ASSERT_RELEASE 1
+#	define EE_BUILD_HAS_FATAL 1
 #endif
 
 #define eeSilentFatal( condition, ... ) 									\
@@ -29,7 +29,7 @@ extern bool gInFatalError;
 		}																	\
 	}
 
-#if defined( BUILD_HAS_FATAL )
+#if defined( EE_BUILD_HAS_FATAL )
 	#define eeFatal( condition, ... )										\
 		{																	\
 			if( !(condition) )												\
@@ -41,8 +41,8 @@ extern bool gInFatalError;
 	#define eeFatal eeSilentFatal
 #endif
 
-#if defined( BUILD_HAS_ASSERT_RELEASE )
-	#if	defined( BUILD_DEBUG )
+#if defined( EE_BUILD_HAS_ASSERT_RELEASE )
+	#if	defined( EE_BUILD_DEBUG )
 		#define eeAssertRelease eeAssert
 	#else
 		#define eeAssertRelease( condition, ... )							\
@@ -55,7 +55,7 @@ extern bool gInFatalError;
 				}
 	#endif
 
-#else // if !defined( BUILD_HAS_ASSERT_RELEASE )
+#else // if !defined( EE_BUILD_HAS_ASSERT_RELEASE )
 
 	#define eeAssertRelease( condition, ... )								\
 		{																	\
@@ -64,7 +64,7 @@ extern bool gInFatalError;
 
 #endif
 
-#if defined( BUILD_HAS_ASSERT )
+#if defined( EE_BUILD_HAS_ASSERT )
 
 	// PC asserts.  Pop up a message box and give the user some options.
 	#define eeAssert( condition, ... )										\
@@ -95,7 +95,7 @@ extern bool gInFatalError;
 			}																\
 		}
 
-#else // if !defined( BUILD_HAS_ASSERT )
+#else // if !defined( EE_BUILD_HAS_ASSERT )
 
 	// This macro body will get rid of unreferenced parameter warnings (at more
 	// stringent compiler error levels) and is guaranteed not to emit any code.
@@ -105,16 +105,16 @@ extern bool gInFatalError;
 	#define eeAssert( condition, ... )	( ( void )( 0 ) )
 	#define eeAssertAlways( ... )		( ( void )( 0 ) )
 
-#endif // BUILD_HAS_ASSERT
+#endif // EE_BUILD_HAS_ASSERT
 
-#if defined( BUILD_PC ) && !defined( BUILD_X64 )
+#if defined( EE_BUILD_WINDOWS ) && !defined( EE_BUILD_X64 )
 
 	// This is better than DebugBreak, because it will make the debugger go to
 	// the correct location in the code. With DebugBreak you have back up the
 	// stack one level.
 	#define BreakPoint __asm { int 3 }
 
-#elif defined( BUILD_X64 )
+#elif defined( EE_BUILD_X64 )
 
 	#define BreakPoint DebugBreak()
 

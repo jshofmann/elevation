@@ -35,7 +35,7 @@ namespace ee
 	private:
 		bool CreateDevice( void );
 
-		// Note: Use of the debug layer is not gated by BUILD_RETAIL
+		// Note: Use of the debug layer is not gated by EE_BUILD_RETAIL
 		// because we want the option of enabling DRED in retail builds
 		HRESULT EnableDebugLayer( void );
 
@@ -43,11 +43,11 @@ namespace ee
 
 		HRESULT VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATURE_LEVEL level ) const;
 
-#if !defined( BUILD_RETAIL )
+#if !defined( EE_BUILD_RETAIL )
 
 		bool LoadPIXDLL( void );
 
-#endif // #if !defined( BUILD_RETAIL )
+#endif // #if !defined( EE_BUILD_RETAIL )
 
 		Microsoft::WRL::ComPtr< IDXGIFactory6 > mDXGIFactory;
 		Microsoft::WRL::ComPtr< IDXGIAdapter1 > mAdapter;

@@ -20,9 +20,9 @@ namespace ee
 		// Platform and Driver are defined in <ee/core/PlatformTypes.h>
 		constexpr Platform GetPlatform( void ) noexcept
 		{
-#if defined( BUILD_PC )
+#if defined( EE_BUILD_WINDOWS )
 			return Platform::kWindows;
-#elif defined( BUILD_LINUX )
+#elif defined( EE_BUILD_LINUX )
 			return Platform::kLinux;
 #else
 			return Platform::kGeneric;

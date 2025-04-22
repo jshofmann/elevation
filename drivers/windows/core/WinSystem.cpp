@@ -146,7 +146,7 @@ uint32_t System::GetWorkingSetSize( void )
 {
 	// Since we have to load and use the psapi.dll for this,
 	// I don't think we want to ship with it in.
-#if !defined( BUILD_RETAIL )
+#if !defined( EE_BUILD_RETAIL )
 
 	static bool inited = false;
 	if( !inited )
@@ -171,7 +171,7 @@ uint32_t System::GetWorkingSetSize( void )
 		}
 	}
 
-#endif // if !defined( BUILD_RETAIL )
+#endif // if !defined( EE_BUILD_RETAIL )
 
 	return 0;
 }

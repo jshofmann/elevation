@@ -7,7 +7,7 @@
 #include <ee/core/PlatformDetection.h>
 #include <ee/io/File.h>
 
-#if defined( BUILD_PC )
+#if defined( EE_BUILD_WINDOWS )
 #include <drivers/windows/io/WinFileInputStream.h>
 #else // assume the POSIX interface is supported
 #include <drivers/posix/io/PosixFileInputStream.h>
@@ -15,7 +15,7 @@
 
 namespace ee
 {
-#if defined( BUILD_PC )
+#if defined( EE_BUILD_WINDOWS )
 	using FileInputStream = WinFileInputStream;
 #else // assume the POSIX interface is supported
 	using FileInputStream = PosixFileInputStream;

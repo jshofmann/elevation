@@ -6,7 +6,7 @@
 
 #include <stdarg.h>
 
-#if defined( BUILD_RETAIL )
+#if defined( EE_BUILD_RETAIL )
 
 	// Make sure that all debug printouts compile down to nothing in retail builds
 	#define eeDebug( x, ... ) (void) 0
@@ -27,7 +27,7 @@
 			}                              \
 		} while( 0 );
 
-#endif // if !defined( BUILD_RETAIL )
+#endif // if !defined( EE_BUILD_RETAIL )
 
 namespace ee
 {

@@ -47,7 +47,7 @@ int ee::_Assert( const char* function, const char* file, int line, const char* f
 
 //	eeLog( kAssert, LV_ERROR, "Assert: function %s file %s line %d %s", function, file, line, buffer );
 
-#if !defined( BUILD_DEBUG )
+#if !defined( EE_BUILD_DEBUG )
 
 	// Release logs the error and returns ignore
 	return ErrorResult::kIgnore;
@@ -107,7 +107,7 @@ int ee::_Assert( const char* function, const char* file, int line, const char* f
 
 	return result;
 
-#endif // BUILD_DEBUG
+#endif // #if !defined( EE_BUILD_DEBUG ) #else
 }
 
 void ee::_SilentAssert( const char* function, const char* file, int line, const char* format, ... )

@@ -6,7 +6,7 @@
 #include <dxcapi.h>
 #include <dxgidebug.h>
 
-#if !defined( BUILD_RETAIL )
+#if !defined( EE_BUILD_RETAIL )
 	#include <shlobj.h>
 #endif
 
@@ -51,7 +51,7 @@ REGISTER_CONFIG_PROPERTY( "Device", "EnableDREDBreadcrumbs", gGraphicsEnableDRED
 
 bool dx12Device::Initialize( void )
 {
-#if defined( BUILD_RETAIL )
+#if defined( EE_BUILD_RETAIL )
 
 	// Make sure gGraphicsEnableDebugLayer is 0 even if it's in the config file
 	SET_CONFIG_PROPERTY( gGraphicsEnableDebugLayer, 0 );
@@ -76,7 +76,7 @@ bool dx12Device::Initialize( void )
 		SET_CONFIG_PROPERTY( gGraphicsEnableDREDBreadcrumbs, true );
 	}
 
-#endif // #if !defined( BUILD_RETAIL )
+#endif // #if !defined( EE_BUILD_RETAIL )
 
 	return CreateDevice();
 }
@@ -106,9 +106,9 @@ bool dx12Device::CreateDevice( void )
 		return false;
 	}
 
-#if defined( BUILD_PC )
+#if defined( EE_BUILD_WINDOWS )
 
-	#if defined( BUILD_PROFILE )
+	#if defined( EE_BUILD_PROFILE )
 
 	// Enable connections to PIX if there isn't already a GPU debugger attached
 	// and we haven't enabled the debug layers (a documented restriction).
@@ -119,7 +119,7 @@ bool dx12Device::CreateDevice( void )
 		LoadPIXDLL();
 	}
 
-	#endif // #if defined( BUILD_PROFILE )
+	#endif // #if defined( EE_BUILD_PROFILE )
 
 	if( !eeCheck( CreateDeviceFactory() ) )
 	{
@@ -212,7 +212,7 @@ bool dx12Device::CreateDevice( void )
 		return false;
 	}
 
-	#if !defined( BUILD_RETAIL )
+	#if !defined( EE_BUILD_RETAIL )
 
 	bool developerModeEnabled = false;
 
@@ -240,9 +240,9 @@ bool dx12Device::CreateDevice( void )
 	if( developerModeEnabled )
 		mDevice->SetStablePowerState( TRUE );
 
-	#endif // #if !defined( BUILD_RETAIL )
+	#endif // #if !defined( EE_BUILD_RETAIL )
 
-#endif // #if defined( BUILD_PC )
+#endif // #if defined( EE_BUILD_WINDOWS )
 
 	// Shader reflection requires access to the IDxcUtils interface;
 	// this is unrelated to the D3D12 device, but dx12Device is not a bad place
@@ -406,7 +406,7 @@ HRESULT dx12Device::VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATU
 	return S_OK;
 }
 
-#if defined( BUILD_PROFILE )
+#if defined( EE_BUILD_PROFILE )
 
 bool dx12Device::LoadPIXDLL( void )
 {
@@ -480,4 +480,4 @@ bool dx12Device::LoadPIXDLL( void )
 	return mPIXCapturerModule != NULL;
 }
 
-#endif // #if defined( BUILD_PROFILE )
+#endif // #if defined( EE_BUILD_PROFILE )

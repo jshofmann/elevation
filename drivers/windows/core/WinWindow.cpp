@@ -283,7 +283,7 @@ DWORD WinWindow::GetWindowStyle( Application::DisplayMode mode )
 	DWORD fullscreenFlags = WS_VISIBLE | WS_POPUP;
 	DWORD windowedFlags = WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
-#if !defined( BUILD_RETAIL )
+#if !defined( EE_BUILD_RETAIL )
 	windowedFlags |= WS_MAXIMIZEBOX;
 #endif
 

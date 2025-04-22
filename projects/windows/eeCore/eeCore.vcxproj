@@ -102,6 +102,8 @@
     <ClInclude Include="..\..\..\ee\image\TGAWriter.h" />
     <ClInclude Include="..\..\..\ee\io\BufferedInputStream.h" />
     <ClInclude Include="..\..\..\ee\io\Common.h" />
+    <ClInclude Include="..\..\..\ee\io\FileInputStream.h" />
+    <ClInclude Include="..\..\..\ee\io\FileOutputStream.h" />
     <ClInclude Include="..\..\..\ee\io\FilePath.h" />
     <ClInclude Include="..\..\..\ee\io\FileStatus.h" />
     <ClInclude Include="..\..\..\ee\io\FileSystem.h" />

@@ -49,7 +49,7 @@ namespace ee
 #define FMT_HEXQUAD		"%I64x"
 #define FMT_HEXQUADU	"%I64x"
 
-#elif defined( BUILD_64BIT )
+#elif defined( EE_BUILD_64BIT )
 
 // A long is 64 bits in 64-bit builds
 #define QUAD( X )		X##L
@@ -60,7 +60,7 @@ namespace ee
 #define FMT_HEXQUAD		"%lx"
 #define FMT_HEXQUADU	"%lx"
 
-#else // !defined( COMPILER_MSVC ) and !defined( BUILD_64BIT )
+#else // !defined( COMPILER_MSVC ) and !defined( EE_BUILD_64BIT )
 
 // In 32-bit builds a long is 32 bits, so you need to use long long
 #define QUAD( X )		X##LL
@@ -71,22 +71,8 @@ namespace ee
 #define FMT_HEXQUAD		"%llx"
 #define FMT_HEXQUADU	"%llx"
 
-#endif // !COMPILER_MSVC and !BUILD_64BIT
+#endif // !COMPILER_MSVC and !EE_BUILD_64BIT
 
 #if !defined( NULL )
 #  define NULL 0
-#endif
-
-// Handy for when you need a bool that is true in retail builds and false otherwise
-#if defined( BUILD_RETAIL )
-#  define BUILD_RETAIL_BOOL true
-#else
-#  define BUILD_RETAIL_BOOL false
-#endif
-
-// Or if you need a bool that is true in debug (including develop) builds and false otherwise
-#if defined( BUILD_DEBUG )
-#  define BUILD_DEBUG_BOOL true
-#else
-#  define BUILD_DEBUG_BOOL false
 #endif

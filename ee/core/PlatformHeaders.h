@@ -8,7 +8,7 @@
 // System headers
 //
 
-#if defined( BUILD_PC )
+#if defined( EE_BUILD_WINDOWS )
 
 // Configure what we want out of <windows.h>. 
 // See https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-header
@@ -72,7 +72,7 @@
 // Define the threading primitives for the host platform
 #  include <drivers/windows/core/WinThread.h>
 
-#elif defined( BUILD_XB1 ) || defined( BUILD_XSX )
+#elif defined( EE_BUILD_XB1 ) || defined( EE_BUILD_XSX )
 
 #  define NOMINMAX				// Define std::min() and std::max() functions rather than min() and max() macros
 #  define _USE_MATH_DEFINES		// Define M_PI, etc in <math.h>
@@ -87,7 +87,7 @@
 // Define the threading primitives for the host platform
 #  include <drivers/windows/core/WinThread.h>
 
-#elif defined( BUILD_LINUX ) || defined( BUILD_NX ) || defined( BUILD_PS4 ) || defined( BUILD_PS5 )
+#elif defined( EE_BUILD_LINUX ) || defined( EE_BUILD_NX ) || defined( EE_BUILD_PS4 ) || defined( EE_BUILD_PS5 )
 
 #  define _USE_MATH_DEFINES	// Define M_PI, etc in <math.h>
 #  include <stddef.h>		// defines ptrdiff_t, NULL, and other items
