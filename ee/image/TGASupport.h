@@ -6,11 +6,11 @@
 
 #include <stdint.h>
 
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 	#pragma pack( push, p, 1 )
-#elif defined( COMPILER_GCC )
+#elif defined( EE_COMPILER_GCC )
 	#pragma pack( push, 1 )
-#elif defined( COMPILER_CLANG )
+#elif defined( EE_COMPILER_CLANG )
 	#pragma pack( 1 )
 #endif
 
@@ -67,10 +67,10 @@ namespace ee
 
 } // namespace ee
 
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 	#pragma pack( pop, p )
-#elif defined( COMPILER_GCC )
+#elif defined( EE_COMPILER_GCC )
 	#pragma pack( pop )
-#elif defined( COMPILER_CLANG )
+#elif defined( EE_COMPILER_CLANG )
 	#pragma options align = reset
 #endif

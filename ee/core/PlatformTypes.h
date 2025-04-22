@@ -38,7 +38,7 @@ namespace ee
 //
 // Helpers for 64 bit value handling since they're defined in non-standard ways
 //
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 
 // Microsoft has to do their own thing, of course....
 #define QUAD( X )		X##i64
@@ -60,7 +60,7 @@ namespace ee
 #define FMT_HEXQUAD		"%lx"
 #define FMT_HEXQUADU	"%lx"
 
-#else // !defined( COMPILER_MSVC ) and !defined( EE_BUILD_64BIT )
+#else // !defined( EE_COMPILER_MSVC ) and !defined( EE_BUILD_64BIT )
 
 // In 32-bit builds a long is 32 bits, so you need to use long long
 #define QUAD( X )		X##LL
@@ -71,7 +71,7 @@ namespace ee
 #define FMT_HEXQUAD		"%llx"
 #define FMT_HEXQUADU	"%llx"
 
-#endif // !COMPILER_MSVC and !EE_BUILD_64BIT
+#endif // !EE_COMPILER_MSVC and !EE_BUILD_64BIT
 
 #if !defined( NULL )
 #  define NULL 0

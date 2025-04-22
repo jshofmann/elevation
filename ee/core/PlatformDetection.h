@@ -9,20 +9,20 @@
 //
 
 // Microsoft Visual Studio is being used,
-// but don't define COMPILER_MSVC if the clang-cl toolset is being used
+// but don't define EE_COMPILER_MSVC if the clang-cl toolset is being used
 #if defined( _MSC_VER )	&& !defined( __clang__ )
-#  define COMPILER_MSVC			1
+#  define EE_COMPILER_MSVC			1
 // clang defines __GNUC__ too so check __clang__ first;
 // if using the clang-cl toolset in Visual Studio _MSC_VER will also be defined,
-// for our purposes we want COMPILER_CLANG not COMPILER_MSVC in that case.
+// for our purposes we want EE_COMPILER_CLANG not EE_COMPILER_MSVC in that case.
 #elif defined( __clang__ )
-#  define COMPILER_CLANG		1
+#  define EE_COMPILER_CLANG			1
 #elif defined( __ghs__ )	// Green Hills also defines __GNUC__
-#  define COMPILER_GHS			1
+#  define EE_COMPILER_GHS			1
 #elif defined( __SNC__ )	// SNC may define __GNUC__ too
-#  define COMPILER_SNC			1
+#  define EE_COMPILER_SNC			1
 #elif defined( __GNUC__ )	// GNU GCC
-#  define COMPILER_GCC			1
+#  define EE_COMPILER_GCC			1
 #else
 #  error Unsupported compiler
 #endif
@@ -43,11 +43,11 @@
 #  define EE_BUILD_WINDOWS			1
 #  define EE_BUILD_LITTLE_ENDIAN	1
 #  define EE_BUILD_X86				1
-#  if defined( COMPILER_MSVC )
+#  if defined( EE_COMPILER_MSVC )
 #    if defined( _AMD64_ ) || defined( _M_X64 ) || defined( _M_AMD64 )
 #      define EE_BUILD_X64			1
 #    endif
-#  elif defined( COMPILER_GCC )
+#  elif defined( EE_COMPILER_GCC )
 #    if defined( _X86_64_ ) || defined( __amd64__ )
 #      define EE_BUILD_X64			1
 #    endif
@@ -124,9 +124,9 @@
 #  endif
 #endif
 
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 #  define FORCE_INLINE __forceinline
-#elif defined( COMPILER_CLANG ) || defined( COMPILER_GCC )
+#elif defined( EE_COMPILER_CLANG ) || defined( EE_COMPILER_GCC )
 #  if defined( EE_BUILD_DEBUG )
 #    define FORCE_INLINE inline
 #  else
@@ -148,11 +148,11 @@
 // 	} END_ALIGN( 16 );					<- Before semicolon closing class
 //
 
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 #  define BEGIN_ALIGN( name, a )	__declspec( align(a) ) name
 #  define END_ALIGN( a )
 #  define MEMBER_ALIGN( name, a )	__declspec( align(a) ) name
-#elif defined( COMPILER_CLANG ) || defined( COMPILER_GCC )
+#elif defined( EE_COMPILER_CLANG ) || defined( EE_COMPILER_GCC )
 #  define BEGIN_ALIGN( name, a )	name
 #  define END_ALIGN( a )			__attribute__(( aligned(a) ))
 #  define MEMBER_ALIGN( name, a )	name __attribute__(( aligned(a) ))
@@ -161,17 +161,17 @@
 #endif
 
 // On the PC, packing is done via #pragma pack( push, 1 ) / #pragma pack( pop )
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 #  define PACKED
-#elif defined( COMPILER_CLANG ) || defined( COMPILER_GCC )
+#elif defined( EE_COMPILER_CLANG ) || defined( EE_COMPILER_GCC )
 #  define PACKED __attribute__(( packed ))
 #else
 #  error No packed macro defined for this platform
 #endif
 
-#if defined( COMPILER_CLANG ) || defined( COMPILER_GCC )
+#if defined( EE_COMPILER_CLANG ) || defined( EE_COMPILER_GCC )
 #  define eeMaybeUnused __attribute__(( unused ))
-#elif defined( COMPILER_MSVC )
+#elif defined( EE_COMPILER_MSVC )
 // It would be brilliant if MSVC supported __attribute(( unused )) but they
 // decided to wait for C++17's [[ maybe_unused ]]. VS2017 won't warn on
 // set-but-unused variables (e.g. stuff calculated for a eeAssert test)
@@ -186,7 +186,7 @@
 #endif
 
 // Everyone but Microsoft supports __PRETTY_FUNCTION__
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 #  define eeFunctionName __FUNCSIG__
 #else
 #  define eeFunctionName __PRETTY_FUNCTION__
@@ -198,17 +198,17 @@
 // as short as possible!
 //
 
-#if defined( COMPILER_MSVC )
+#if defined( EE_COMPILER_MSVC )
 
 #  pragma warning( disable : 4201 )	// Nameless unions are not ansi but generally well supported
 #  pragma warning( disable : 4324 ) // structure was padded due to __declspec(align())
 #  pragma warning( disable : 4786 ) // Many symbols resulting from the use of template parameters exceed 255 characters
 
-#endif // #if defined( COMPILER_MSVC )
+#endif // #if defined( EE_COMPILER_MSVC )
 
-#if defined( COMPILER_CLANG )
+#if defined( EE_COMPILER_CLANG )
 
 #pragma clang diagnostic ignored "-Wswitch"							// Case not handled in switch statement
 #pragma clang diagnostic ignored "-Wunused-parameter"				// Unused function parameter
 
-#endif // #if defined( COMPILER_CLANG )
+#endif // #if defined( EE_COMPILER_CLANG )
