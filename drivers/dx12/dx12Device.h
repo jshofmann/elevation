@@ -29,6 +29,8 @@ namespace ee
 
 		// dx12Device implementation
 
+		IDXGIFactory6* GetDXGIFactory( void ) const;
+
 		// For lack of a better place to store this....
 		IDxcUtils* GetDxcUtils( void ) const;
 
@@ -70,6 +72,11 @@ namespace ee
 	inline bool dx12Device::IsInitialized( void ) const
 	{
 		return mDevice != NULL;
+	}
+
+	inline IDXGIFactory6* dx12Device::GetDXGIFactory( void ) const
+	{
+		return mDXGIFactory.Get();
 	}
 
 	inline IDxcUtils* dx12Device::GetDxcUtils( void ) const

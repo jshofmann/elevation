@@ -39,6 +39,12 @@
     <Filter Include="Source Files\math">
       <UniqueIdentifier>{7047f0c7-e002-4da9-9331-e0db271d2e25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\graphics">
+      <UniqueIdentifier>{2e86088b-74c8-461b-af97-43866fcd75de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{73e6301f-0853-4a4a-9c7e-d0210e809c7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -158,6 +164,18 @@
     <ClInclude Include="..\..\..\ee\io\FileOutputStream.h">
       <Filter>Header Files\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ee\graphics\Display.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\graphics\Enums.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\graphics\ProfilerSupport.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ee\graphics\Device.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -210,6 +228,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ee\io\FilePath.cpp">
       <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ee\graphics\ProfilerSupport.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

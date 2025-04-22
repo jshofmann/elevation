@@ -46,26 +46,6 @@ LRESULT CALLBACK WinWindow::WindowProc( HWND hwnd, UINT message, WPARAM wparam, 
 //*****************************************************************************
 //*****************************************************************************
 
-WinWindow::WinWindow()
-	: mWindowClassName( "Elevation" )
-	, mWindowTitle( "Elevation Window" )
-	, mWindowWidth( 1920 )
-	, mWindowHeight( 1080 )
-	, mClientWidth( 1920 )
-	, mClientHeight( 1080 )
-	, mAspectRatio( 1920.0f / 1080.0f )
-	, mWindowStyle( WS_VISIBLE | WS_POPUP ) // assume fullscreen display
-	, mWindowExStyle( 0 )
-	, mWindowProc( WinWindow::WindowProc )
-	, mHwnd( NULL )
-	, mOwnWindow( false )
-{
-}
-
-WinWindow::~WinWindow()
-{
-}
-
 void WinWindow::SetWindowClassName( const char* windowClass )
 {
 	mWindowClassName = windowClass;
@@ -113,7 +93,7 @@ bool WinWindow::RegisterWindowClass( void )
 }
 
 // create a window to attach to the Direct3D device
-bool WinWindow::CreateHWND( uint16_t width, uint16_t height, Application::DisplayMode mode, void* windowdata )
+bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, void* windowdata )
 {
 	WinApplication& application = WinApplication::GetInstance();
 	HINSTANCE hinstance = application.GetHInstance();
@@ -126,7 +106,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, Application::Displa
 	screenRect.right = GetSystemMetrics( SM_CXSCREEN );
 	screenRect.bottom = GetSystemMetrics( SM_CYSCREEN );
 
-	if( mode == Application::kDisplayFullscreenWindow )
+	if( mode == DisplayMode::kFullscreenWindow )
 	{
 		// In fullscreen window mode we ignore the width and height parameters
 		// and use the monitor dimensions instead.
@@ -155,7 +135,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, Application::Displa
 		mClientWidth = width;
 		mClientHeight = height;
 	}
-	else if( mode == Application::kDisplayWindowed )
+	else if( mode == DisplayMode::kWindowed )
 	{
 		// If the requested height equals the monitor's height then there won't
 		// be room for the title bar so we need to choose a smaller resolution
@@ -182,7 +162,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, Application::Displa
 		// Adjust the window dimensions to account for the title bar and borders
 		AdjustWindowDimensions( width, height );
 	}
-	else // mode == kDisplayFullscreen
+	else // mode == DisplayMode::kFullscreen
 	{
 		// Initialize the client dimensions to the selected resolution
 		// The window dimensions will be identical in this case
@@ -205,7 +185,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, Application::Displa
 		return false;
 	}
 
-	if( mode == Application::kDisplayFullscreenWindow )
+	if( mode == DisplayMode::kFullscreenWindow )
 	{
 		SetWindowPos( mHwnd, NULL, 0, 0, width, height, SWP_NOACTIVATE | SWP_FRAMECHANGED );
 	}
@@ -246,7 +226,7 @@ void WinWindow::SetWindowSize( uint16_t width, uint16_t height )
 	}
 }
 
-void WinWindow::SetHWND( HWND hwnd, Application::DisplayMode mode )
+void WinWindow::SetHWND( HWND hwnd, DisplayMode mode )
 {
 	mHwnd = hwnd;
 
@@ -259,7 +239,7 @@ void WinWindow::SetHWND( HWND hwnd, Application::DisplayMode mode )
 	SetWindowLong( mHwnd, GWL_STYLE, mWindowStyle );
 	ShowWindow( mHwnd, SW_SHOW );
 
-	if( mode != Application::kDisplayFullscreen )
+	if( mode != DisplayMode::kFullscreen )
 	{
 		RECT rect;
 		if( eeCheckBool( GetWindowRect( hwnd, &rect ) ) )
@@ -278,7 +258,7 @@ void WinWindow::SetHWND( HWND hwnd, Application::DisplayMode mode )
 	}
 }
 
-DWORD WinWindow::GetWindowStyle( Application::DisplayMode mode )
+DWORD WinWindow::GetWindowStyle( DisplayMode mode )
 {
 	DWORD fullscreenFlags = WS_VISIBLE | WS_POPUP;
 	DWORD windowedFlags = WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -287,8 +267,8 @@ DWORD WinWindow::GetWindowStyle( Application::DisplayMode mode )
 	windowedFlags |= WS_MAXIMIZEBOX;
 #endif
 
-	// Application::kDisplayFullscreenWindow uses the same style flags as fullscreen
-	return ( mode == Application::kDisplayWindowed ) ? windowedFlags : fullscreenFlags;
+	// DisplayMode::kFullscreenWindow uses the same style flags as fullscreen
+	return ( mode == DisplayMode::kWindowed ) ? windowedFlags : fullscreenFlags;
 }
 
 void WinWindow::AdjustWindowDimensions( uint16_t& width, uint16_t& height )

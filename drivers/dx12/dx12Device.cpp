@@ -1,3 +1,5 @@
+// Elevation Engine
+//
 // Copyright (C) 2025 Azimuth Studios
 
 #include "pch.h"
@@ -7,7 +9,7 @@
 #include <dxgidebug.h>
 
 #if !defined( EE_BUILD_RETAIL )
-	#include <shlobj.h>
+#include <shlobj.h>
 #endif
 
 #include <dxerr/dxerr.h>
@@ -148,14 +150,14 @@ bool dx12Device::CreateDevice( void )
 		// iterating over all available adapters won't fix this problem
 		if( result == D3D12_ERROR_INVALID_REDIST )
 		{
-			eeDebug(
-				"dx12Device::CreateDevice: D3D12Core.dll is missing or an unexpected version" ); // !!! should log this
+			eeDebug( "dx12Device::CreateDevice: D3D12Core.dll is missing "
+					 "or an unexpected version" ); // !!! should log this
 		}
 		else
 		{
-			eeDebug(
-				"dx12Device::CreateDevice: IDXGIFactory::EnumAdapterByGpuPreference() failed with error 0x%08x: %s",
-				result, DXGetErrorString( result ) ); // !!! should log this
+			eeDebug( "dx12Device::CreateDevice: IDXGIFactory::EnumAdapterByGpuPreference() "
+					 "failed with error 0x%08x: %s",
+					 result, DXGetErrorString( result ) ); // !!! should log this
 		}
 
 		return false;
@@ -169,11 +171,11 @@ bool dx12Device::CreateDevice( void )
 		// Look for one that does. If there is more than one adapter supporting
 		// the required feature level choose the one with the most memory.
 		Microsoft::WRL::ComPtr< IDXGIAdapter1 > adapter;
-		SIZE_T									maxMemorySize = 0;
+		SIZE_T maxMemorySize = 0;
 
 		for( gpuIndex = 0; mDXGIFactory->EnumAdapterByGpuPreference(
-							   gpuIndex, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-							   IID_PPV_ARGS( adapter.ReleaseAndGetAddressOf() ) ) != DXGI_ERROR_NOT_FOUND;
+				 gpuIndex, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+				 IID_PPV_ARGS( adapter.ReleaseAndGetAddressOf() ) ) != DXGI_ERROR_NOT_FOUND;
 			 ++gpuIndex )
 		{
 			if( eeCheck( VerifyMinimumFeatureLevel( adapter.Get(), mFeatureLevel ) ) )
@@ -212,7 +214,7 @@ bool dx12Device::CreateDevice( void )
 		return false;
 	}
 
-	#if !defined( EE_BUILD_RETAIL )
+#if !defined( EE_BUILD_RETAIL )
 
 	bool developerModeEnabled = false;
 
@@ -240,7 +242,7 @@ bool dx12Device::CreateDevice( void )
 	if( developerModeEnabled )
 		mDevice->SetStablePowerState( TRUE );
 
-	#endif // #if !defined( EE_BUILD_RETAIL )
+#endif // #if !defined( EE_BUILD_RETAIL )
 
 #endif // #if defined( EE_BUILD_WINDOWS )
 
@@ -403,6 +405,7 @@ HRESULT dx12Device::VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATU
 		return result;
 	}
 
+	// Don't return S_FALSE from this function if D3D12CreateDevice returned it
 	return S_OK;
 }
 
@@ -428,13 +431,13 @@ bool dx12Device::LoadPIXDLL( void )
 	// directory but don't recurse into subdirectories
 	FilePath pixPath = FilePath( programFilesPath ).Append( "Microsoft PIX\\*" );
 
-	//	eeDebug( "dx12Device::LoadPIXDLL: Searching %s\n", pixPath.c_str() );
+//	eeDebug( "dx12Device::LoadPIXDLL: Searching %s\n", pixPath.c_str() );
 
-	bool		foundPixInstallation = false;
+	bool foundPixInstallation = false;
 	std::string latestVersionPath;
 
 	WIN32_FIND_DATA findData;
-	HANDLE			findHandle = FindFirstFile( pixPath.c_str(), &findData );
+	HANDLE findHandle = FindFirstFile( pixPath.c_str(), &findData );
 	if( findHandle != INVALID_HANDLE_VALUE )
 	{
 		do
@@ -443,7 +446,7 @@ bool dx12Device::LoadPIXDLL( void )
 			if( ( ( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY ) &&
 				( findData.cFileName[ 0 ] != '.' ) )
 			{
-				//				eeDebug( "dx12Device::LoadPIXDLL: Examining %s\n", findData.cFileName );
+//				eeDebug( "dx12Device::LoadPIXDLL: Examining %s\n", findData.cFileName );
 
 				// Look for the subdirectory with the highest version number
 				if( !foundPixInstallation || latestVersionPath.compare( findData.cFileName ) <= 0 )

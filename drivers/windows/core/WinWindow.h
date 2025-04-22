@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ee/core/Application.h>
+#include <ee/graphics/Enums.h>
 
 namespace ee
 {
@@ -12,9 +13,6 @@ namespace ee
 	class WinWindow
 	{
 	public:
-		WinWindow();
-		~WinWindow();
-
 		// Either use these functions and WinWindow will create the window,
 		// or use SetHwnd() below to hand WinWindow an existing window.
 
@@ -26,7 +24,7 @@ namespace ee
 		// it's the caller's responsibility to do string memory management
 		void SetWindowTitle( const char* windowTitle );
 
-		void SetWindowProc( WNDPROC proc );
+		void	SetWindowProc( WNDPROC proc );
 		WNDPROC GetWindowProc( void ) const;
 
 		// Use RegisterWindowClass if you haven't called RegisterClassEx()
@@ -39,14 +37,13 @@ namespace ee
 		// windowdata is an optional argument that will be passed to
 		// CreateWindowEx as the lpParam argument - which is then passed to the
 		// WndProc as WM_CREATE's CREATESTRUCT::lpCreateParams member.
-		bool CreateHWND( uint16_t width, uint16_t height, Application::DisplayMode mode,
-						 void* windowdata = nullptr );
+		bool CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, void* windowdata = nullptr );
 
 		void SetWindowSize( uint16_t width, uint16_t height );
 		void GetWindowSize( uint16_t& width, uint16_t& height );
 
 		// Or hand an already-existing window to this function
-		void SetHWND( HWND hwnd, Application::DisplayMode mode = Application::kDisplayWindowed );
+		void SetHWND( HWND hwnd, DisplayMode mode = DisplayMode::kWindowed );
 		HWND GetHWND( void ) const;
 
 		void GetClientSize( uint16_t& width, uint16_t& height );
@@ -56,20 +53,21 @@ namespace ee
 	private:
 		static LRESULT CALLBACK WindowProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam );
 
-		DWORD GetWindowStyle( Application::DisplayMode mode );
+		DWORD GetWindowStyle( DisplayMode mode );
 
 		void AdjustWindowDimensions( uint16_t& width, uint16_t& height );
 
-		const char*	mWindowClassName;
-		const char*	mWindowTitle;
+		const char* mWindowClassName = "Elevation";
+		const char* mWindowTitle	 = "Elevation Window";
 
-		uint16_t	mWindowWidth, mWindowHeight;
-		uint16_t	mClientWidth, mClientHeight;
-		float		mAspectRatio;
-		DWORD		mWindowStyle, mWindowExStyle;
-		WNDPROC		mWindowProc;
-		HWND		mHwnd;
-		bool		mOwnWindow;
+		uint16_t mWindowWidth = 1920, mWindowHeight = 1080;
+		uint16_t mClientWidth = 1920, mClientHeight = 1080;
+		float	 mAspectRatio	= 1920.0f / 1080.0f;
+		DWORD	 mWindowStyle	= WS_VISIBLE | WS_POPUP; // assume fullscreen display
+		DWORD	 mWindowExStyle = 0;
+		WNDPROC	 mWindowProc	= WinWindow::WindowProc;
+		HWND	 mHwnd			= nullptr;
+		bool	 mOwnWindow		= false;
 
 	}; // class WinWindow
 
@@ -80,13 +78,13 @@ namespace ee
 
 	inline void WinWindow::GetWindowSize( uint16_t& width, uint16_t& height )
 	{
-		width = mWindowWidth;
+		width  = mWindowWidth;
 		height = mWindowHeight;
 	}
 
 	inline void WinWindow::GetClientSize( uint16_t& width, uint16_t& height )
 	{
-		width = mClientWidth;
+		width  = mClientWidth;
 		height = mClientHeight;
 	}
 

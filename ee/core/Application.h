@@ -13,15 +13,6 @@ namespace ee
 	class Application
 	{
 	public:
-		typedef enum
-		{
-			kDisplayWindowed			= 0,
-			kDisplayFullscreen			= 1,
-			kDisplayFullscreenWindow	= 2,
-			kDisplayModeCount
-		}
-		DisplayMode;
-
 		// Application::GetInstance() is a "static virtual" function
 		// that each application is expected to implement. This is
 		// an instance of the Meyer singleton pattern.

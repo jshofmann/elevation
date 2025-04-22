@@ -111,9 +111,3 @@
 #  define NTELEMETRY // make sure that RAD's Telemetry is disabled in Retail builds
 
 #endif // #if defined( EE_BUILD_RETAIL )
-
-// We use keyboards/chatpads everywhere in development configurations;
-// keyboard/mouse controls are supported on the PC only.
-#if !defined( EE_BUILD_RETAIL ) || defined( EE_BUILD_WINDOWS )
-#  define EE_BUILD_ENABLE_KEYBOARD
-#endif

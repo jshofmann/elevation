@@ -277,7 +277,7 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 	window.SetWindowTitle( szTitle );
 	window.SetWindowProc( WndProc );
 
-	if( !window.CreateHWND( width, height, Application::kDisplayWindowed, &application ) )
+	if( !window.CreateHWND( width, height, DisplayMode::kWindowed, &application ) )
 	{
 		return -1;
 	}
