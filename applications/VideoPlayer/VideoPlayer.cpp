@@ -1,10 +1,10 @@
-// Copyright (C) 2025 Azimuth Studios
+// Elevation Engine
+//
+// Copyright (c) 2025 Azimuth Studios
 
 #include "pch.h"
 
 #include "VideoPlayer.h"
-
-#include <ee/graphics/Device.h>
 
 using namespace ee;
 
@@ -18,17 +18,10 @@ VideoPlayer::~VideoPlayer()
 {
 }
 
-bool VideoPlayer::Initialize( uint16_t width, uint16_t height )
+bool VideoPlayer::Initialize( std::unique_ptr< ee::Device > device, std::unique_ptr< ee::Display > display )
 {
-	mWidth = width;
-	mHeight = height;
-
-	mDevice = MakeDevice();
-	if( mDevice == nullptr )
-		return false;
-
-	if( !mDevice->Initialize() )
-		return false;
+	mDevice = std::move( device );
+	mDisplay = std::move( display );
 
 	return true;
 }

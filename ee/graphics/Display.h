@@ -8,15 +8,14 @@ namespace ee
 {
 	class Device;
 
-	// The Display concept manages the output to a display device (e.g. monitor);
-	// it manages the swap chain and output configuration
+	// The Display controls the output to a display device (e.g. monitor);
+	// it manages the swap chain and output configuration. On Windows, this
+	// maps to DXGI's responsibilities; in Vulkan, VkSwapChain and its
+	// Win32 extensions.
 	class Display
 	{
 	public:
-		virtual bool Initialize( Device* device = nullptr ) = 0;
-		virtual void Release( void ) = 0;
-
-		virtual bool IsInitialized( void ) const = 0;
+		// Setup/teardown is very driver-specific and not done here
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) = 0; // in pixels
 

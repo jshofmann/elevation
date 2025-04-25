@@ -9,9 +9,12 @@
 #include <ee/core/Debug.h>
 #include <ee/io/File.h>
 #include <ee/utility/Config.h>
+
 #include <drivers/Windows/core/WinApplication.h>
 #include <drivers/Windows/core/WinWindow.h>
 #include <drivers/Windows/core/WinDebug.h>
+#include <drivers/dx12/dx12Device.h>
+#include <drivers/dx12/dx12Display.h>
 
 #include "resource.h"
 #include "VideoPlayer.h"
@@ -194,7 +197,27 @@ bool VideoPlayerApplication::Initialize( void )
 	mRunning = true;
 	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.LoadConfig( configFile );
-	return mPlayer.Initialize( 1280,720 );
+
+	uint32_t width = 1280;
+	uint32_t height = 720;
+
+	std::unique_ptr< dx12Device > device = std::make_unique< dx12Device >();
+	if( device == nullptr )
+		return false;
+
+	if( !device->Initialize() )
+	{
+		return false;
+	}
+
+	std::unique_ptr< Display > display = device->MakeDisplay();
+	if( display == nullptr )
+		return false;
+
+	if( !static_cast< dx12Display* >( display.get() )->Initialize( width, height, DXGI_FORMAT_UNKNOWN, mApplicationWindow.GetHWND(), device.get() ) )
+		return false;
+
+	return mPlayer.Initialize( std::move( device ), std::move( display ) );
 }
 
 void VideoPlayerApplication::Shutdown( void )

@@ -52,7 +52,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..;..\..\..\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\External;..\..\..\External\microsoft.direct3d.d3d12.1.615.1\build\native\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -71,7 +71,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..;..\..\..\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\External;..\..\..\External\microsoft.direct3d.d3d12.1.615.1\build\native\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -82,12 +82,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\drivers\dx12\dx12ColorBuffer.h" />
     <ClInclude Include="..\..\..\drivers\dx12\dx12Device.h" />
+    <ClInclude Include="..\..\..\drivers\dx12\dx12Display.h" />
+    <ClInclude Include="..\..\..\drivers\dx12\dx12FrameBuffer.h" />
+    <ClInclude Include="..\..\..\drivers\dx12\dx12Resource.h" />
     <ClInclude Include="..\..\..\drivers\dx12\dxDebug.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\drivers\dx12\dx12ColorBuffer.cpp" />
     <ClCompile Include="..\..\..\drivers\dx12\dx12Device.cpp" />
+    <ClCompile Include="..\..\..\drivers\dx12\dx12Display.cpp" />
+    <ClCompile Include="..\..\..\drivers\dx12\dx12FrameBuffer.cpp" />
     <ClCompile Include="..\..\..\drivers\dx12\dxDebug.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

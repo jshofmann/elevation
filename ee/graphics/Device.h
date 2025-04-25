@@ -10,12 +10,7 @@
 
 namespace ee
 {
-	class Device;
-
-	// MakeDevice() will create a device appropriate for the requested Driver.
-	// If Driver::kNative is used then it will pick the default driver for
-	// the host operating system this program is running on.
-	std::unique_ptr< Device > MakeDevice( Driver driver = Driver::kNative );
+	class Display;
 
 	// The Device concept maps to a device in a target driver-
 	// e.g. a ID3D12Device, VkDevice, or WGPUDevice
@@ -31,6 +26,14 @@ namespace ee
 		// a mechanism to recover from a lost device error
 		virtual bool Recover( void ) { return true; }
 
+		// MakeDisplay() will create a Display appropriate for this Device
+		virtual std::unique_ptr< Display > MakeDisplay( void ) const = 0;
+
 	}; // class Device
+
+	// MakeDevice() will create a device appropriate for the requested Driver.
+	// If Driver::kNative is used then it will pick the default driver for
+	// the host operating system this program is running on.
+	std::unique_ptr< Device > MakeDevice( Driver driver = Driver::kNative );
 
 } // namespace ee

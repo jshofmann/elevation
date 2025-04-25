@@ -8,12 +8,27 @@
 
 using namespace ee;
 
+// Why aren't we just using ID3D12Object::SetName() instead?
+// Because ID3D12Object::SetName() takes a LPCWSTR with no LPCSTR option.
+// Per https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12object-setname:
+// "D3D12 supports narrow strings for names, using the WKPDID_D3DDebugObjectName
+// GUID directly instead."
+void ee::dxDebug::SetObjectName( ID3D12Object* object, const std::string_view& name )
+{
+	if( ( object == nullptr ) || ( name.length() == 0 ) )
+		return;
+
+	// We probably should check for UINT overflow here in name.length() but
+	// it's a safe assumption that the name being assigned is reasonably short
+	object->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( name.length() ), name.data() );
+}
+
 const char* ee::GetD3DFeatureLevelString( D3D_FEATURE_LEVEL level )
 {
 	switch( level )
 	{
-//	case D3D_FEATURE_LEVEL_1_0_GENERIC:
-//		return "D3D_FEATURE_LEVEL_1_0_GENERIC";
+	case D3D_FEATURE_LEVEL_1_0_GENERIC:
+		return "D3D_FEATURE_LEVEL_1_0_GENERIC";
 	case D3D_FEATURE_LEVEL_1_0_CORE:
 		return "D3D_FEATURE_LEVEL_1_0_CORE";
 	case D3D_FEATURE_LEVEL_9_1:

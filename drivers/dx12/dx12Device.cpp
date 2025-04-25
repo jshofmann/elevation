@@ -25,6 +25,7 @@
 #include <drivers/windows/core/WinApplication.h>
 #include <drivers/windows/core/WinWindow.h>
 #include <drivers/dx12/dxDebug.h>
+#include <drivers/dx12/dx12Display.h>
 
 #pragma comment( lib, "d3d12.lib" )
 #pragma comment( lib, "dxgi.lib" )
@@ -99,6 +100,11 @@ void dx12Device::Release( void )
 	mDeviceThreadID = kInvalidThreadID;
 
 	mDxcUtils.Reset();
+}
+
+std::unique_ptr< Display > dx12Device::MakeDisplay( void ) const
+{
+	return std::make_unique< dx12Display >();
 }
 
 bool dx12Device::CreateDevice( void )

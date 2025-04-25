@@ -22,14 +22,18 @@ namespace ee
 
 		// IDevice interface implementation
 
-		virtual bool Initialize( void );
-		virtual void Release( void );
+		virtual bool Initialize( void ) override final;
+		virtual void Release( void ) override final;
 
-		virtual bool IsInitialized( void ) const;
+		virtual bool IsInitialized( void ) const override final;
+
+		virtual std::unique_ptr< Display > MakeDisplay( void ) const override final;
 
 		// dx12Device implementation
 
 		IDXGIFactory6* GetDXGIFactory( void ) const;
+
+		ID3D12Device* GetD3D12Device( void ) const;
 
 		// For lack of a better place to store this....
 		IDxcUtils* GetDxcUtils( void ) const;
@@ -77,6 +81,11 @@ namespace ee
 	inline IDXGIFactory6* dx12Device::GetDXGIFactory( void ) const
 	{
 		return mDXGIFactory.Get();
+	}
+
+	inline ID3D12Device* dx12Device::GetD3D12Device( void ) const
+	{
+		return mDevice.Get();
 	}
 
 	inline IDxcUtils* dx12Device::GetDxcUtils( void ) const

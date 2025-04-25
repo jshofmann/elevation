@@ -4,17 +4,19 @@
 
 #pragma once
 
+#include <wrl/client.h>
+#include <dxgi1_6.h>
+
 #include <ee/graphics/Display.h>
+#include <drivers/dx12/dx12ColorBuffer.h>
 
 namespace ee
 {
 	class dx12Display : public Display
 	{
 	public:
-		virtual bool Initialize( uint32_t width, uint32_t height, Device* device ) override final;
-		virtual void Release( void ) override final;
-
-		virtual bool IsInitialized( void ) const override final;
+		bool Initialize( uint32_t width, uint32_t height, DXGI_FORMAT format, HWND hwnd, Device* device );
+		void Release( void );
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) override final; // in pixels
 
@@ -28,13 +30,17 @@ namespace ee
 		virtual void Present( void ) override final;
 
 	private:
+		enum
+		{
+			kSwapChainBufferCount = 3
+		};
+
+		Microsoft::WRL::ComPtr< IDXGISwapChain1 > mSwapChain;
+		dx12ColorBuffer mFrameBuffers[ kSwapChainBufferCount ];
+
+		bool mHDROutputEnabled = false;
 
 	}; // class dx12Display
-
-	inline bool dx12Display::IsInitialized( void ) const
-	{
-		return false;
-	}
 
 	inline void dx12Display::GetResolution( uint32_t& width, uint32_t& height )
 	{
@@ -42,12 +48,12 @@ namespace ee
 		height = 0;
 	}
 
-	uint32_t dx12Display::GetMonitorRefreshRate( void ) const
+	inline uint32_t dx12Display::GetMonitorRefreshRate( void ) const
 	{
 		return 0;
 	}
 
-	bool dx12Display::IsHDRCapable( void ) const
+	inline bool dx12Display::IsHDRCapable( void ) const
 	{
 		return false;
 	}
