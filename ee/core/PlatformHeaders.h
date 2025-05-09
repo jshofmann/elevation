@@ -11,7 +11,7 @@
 #if defined( EE_BUILD_WINDOWS )
 
 // Configure what we want out of <windows.h>. 
-// See https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-header
+// See https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers
 
 // See https://msdn.microsoft.com/en-us/library/6sehtctf.aspx and
 // https://devblogs.microsoft.com/oldnewthing/20070411-00/?p=27283
@@ -40,14 +40,42 @@
 // of compatibility problems with 3rd party headers like OpenEXR.
 // See <windows.h> for the full list of available NOxxx tokens.
 
-#  define NOMINMAX					// Don't #define macros named min and max
-//#  define NOGDI
-#  define NODRAWTEXT
-#  define NOBITMAP
-#  define NOMCX						// Include <mcx.h> if you need this
-#  define NOSERVICE					// Include <winsvc.h> if you need this
-#  define NOHELP					// WinHelp is deprecated
+#  define NOGDICAPMASKS				// CC_*, LC_*, PC_*, CP_*, TC_*, RC_
+#  define NOVIRTUALKEYCODES			// VK_*
+//#  define NOWINMESSAGES			// WM_*, EM_*, LB_*, CB_*
+//#  define NOWINSTYLES				// WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*
+//#  define NOSYSMETRICS			// SM_*
+#  define NOMENUS					// MF_*
+//#  define NOICONS					// IDI_*
+#  define NOKEYSTATES				// MK_*
+#  define NOSYSCOMMANDS				// SC_*
+//#  define NORASTEROPS				// Binary and Tertiary raster ops
+#  define NOATOM					// Atom Manager routines
+#  define NOCLIPBOARD				// Clipboard routines
+//#  define NOCOLOR					// Screen colors
+//#  define NOCTLMGR				// Control and Dialog routines
+#  define NODRAWTEXT				// DrawText() and DT_*
+//#  define NOGDI					// All GDI defines and routines
+#  define NOKERNEL					// All KERNEL defines and routines
+//#  define NOUSER					// All USER defines and routines
+#  define NONLS						// All NLS defines and routines
+#  define NOMEMMGR					// GMEM_*, LMEM_*, GHND, LHND, associated routines
+#  define NOMETAFILE				// typedef METAFILEPICT
+#  define NOMINMAX					// Macros min(a,b) and max(a,b)
+//#  define NOMSG					// typedef MSG and associated routines
+#  define NOOPENFILE				// OpenFile(), OemToAnsi, AnsiToOem, and OF_*
+#  define NOSCROLL					// SB_* and scrolling routines
+#  define NOSERVICE					// All Service Controller routines, SERVICE_ equates, etc.
+#  define NOSOUND					// Sound driver routines
+#  define NOTEXTMETRIC				// typedef TEXTMETRIC and associated routines
+#  define NOWH						// SetWindowsHook and WH_*
+//#  define NOWINOFFSETS			// GWL_*, GCL_*, associated routines
 #  define NOCOMM					// Exclude the serial communication API
+#  define NOKANJI					// Kanji support stuff.
+#  define NOHELP					// WinHelp is deprecated
+#  define NOPROFILER				// Profiler interface
+#  define NODEFERWINDOWPOS			// DeferWindowPos routines
+#  define NOMCX						// Modem Configuration Extensions
 
 #  define _USE_MATH_DEFINES			// Define M_PI, etc in <math.h>
 
@@ -59,10 +87,9 @@
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN		// Exclude rarely-used Windows features
 #  endif
-#  define VC_EXTRALEAN
+#  define VC_EXTRALEAN				// Used by MFC; has no effect on <windows.h>
 
 #  include <windows.h>
-#  include <intsafe.h>
 
 #  if defined( UNDEF_WINSOCKAPI )
 #    undef _WINSOCKAPI_
