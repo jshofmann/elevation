@@ -77,6 +77,14 @@
 #  define NODEFERWINDOWPOS			// DeferWindowPos routines
 #  define NOMCX						// Modem Configuration Extensions
 
+// These are documented in shared/mmreg.h instead of um/windows.h:
+#  define NOMMIDS					// Multimedia IDs are not defined
+#  define NONEWWAVE					// No new waveform types are defined except WAVEFORMATEX
+#  define NONEWRIFF					// No new RIFF forms are defined
+#  define NOJPEGDIB					// No JPEG DIB definitions
+#  define NONEWIC					// No new Image Compressor types are defined
+#  define NOBITMAP					// No extended bitmap info header definition
+
 #  define _USE_MATH_DEFINES			// Define M_PI, etc in <math.h>
 
 #  if !defined( _WINSOCKAPI_ )
