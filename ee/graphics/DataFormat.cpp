@@ -10,55 +10,55 @@ using namespace ee;
 
 // Returns 0 if there is no well-formed concept of "bits per pixel"
 // (e.g. if you pass in kUnknown or a block-compressed format here)
-uint32_t ee::GetBitsPerPixel( const DataFormat format )
+constexpr uint32_t ee::GetBytesPerPixel( const DataFormat format )
 {
 	// clang-format off: preserve the formatting of this switch statement
 	switch( format )
 	{
 	case DataFormat::kUnknown:				return 0;
-	case DataFormat::kR32G32B32A32_FLOAT:	return 128;
-	case DataFormat::kR32G32B32A32_UINT:	return 128;
-	case DataFormat::kR32G32B32A32_SINT:	return 128;
-	case DataFormat::kR16G16B16A16_FLOAT:	return 64;
-	case DataFormat::kR16G16B16A16_UNORM:	return 64;
-	case DataFormat::kR16G16B16A16_UINT:	return 64;
-	case DataFormat::kR16G16B16A16_SNORM:	return 64;
-	case DataFormat::kR16G16B16A16_SINT:	return 64;
-	case DataFormat::kR32G32_FLOAT:			return 64;
-	case DataFormat::kR32G32_UINT:			return 64;
-	case DataFormat::kR32G32_SINT:			return 64;
-	case DataFormat::kR10G10B10A2_UNORM:	return 32;
-	case DataFormat::kR10G10B10A2_UINT:		return 32;
-	case DataFormat::kR11G11B10_FLOAT:		return 32;
-	case DataFormat::kR8G8B8A8_UNORM:		return 32;
-	case DataFormat::kR8G8B8A8_UNORM_SRGB:	return 32;
-	case DataFormat::kR8G8B8A8_UINT:		return 32;
-	case DataFormat::kR8G8B8A8_SNORM:		return 32;
-	case DataFormat::kR8G8B8A8_SINT:		return 32;
-	case DataFormat::kB8G8R8A8_UNORM:		return 32;
-	case DataFormat::kB8G8R8A8_UNORM_SRGB:	return 32;
-	case DataFormat::kR16G16_FLOAT:			return 32;
-	case DataFormat::kR16G16_UNORM:			return 32;
-	case DataFormat::kR16G16_UINT:			return 32;
-	case DataFormat::kR16G16_SNORM:			return 32;
-	case DataFormat::kR16G16_SINT:			return 32;
-	case DataFormat::kR32_FLOAT:			return 32;
-	case DataFormat::kR32_UINT:				return 32;
-	case DataFormat::kR32_SINT:				return 32;
-	case DataFormat::kR8G8_UNORM:			return 16;
-	case DataFormat::kR8G8_UINT:			return 16;
-	case DataFormat::kR8G8_SNORM:			return 16;
-	case DataFormat::kR8G8_SINT:			return 16;
-	case DataFormat::kR16_FLOAT:			return 16;
-	case DataFormat::kR16_UNORM:			return 16;
-	case DataFormat::kR16_UINT:				return 16;
-	case DataFormat::kR16_SNORM:			return 16;
-	case DataFormat::kR16_SINT:				return 16;
-	case DataFormat::kR8_UNORM:				return 8;
-	case DataFormat::kR8_UINT:				return 8;
-	case DataFormat::kR8_SNORM:				return 8;
-	case DataFormat::kR8_SINT:				return 8;
-	case DataFormat::kA8_UNORM:				return 8;
+	case DataFormat::kR32G32B32A32_FLOAT:	return 16;
+	case DataFormat::kR32G32B32A32_UINT:	return 16;
+	case DataFormat::kR32G32B32A32_SINT:	return 16;
+	case DataFormat::kR16G16B16A16_FLOAT:	return 8;
+	case DataFormat::kR16G16B16A16_UNORM:	return 8;
+	case DataFormat::kR16G16B16A16_UINT:	return 8;
+	case DataFormat::kR16G16B16A16_SNORM:	return 8;
+	case DataFormat::kR16G16B16A16_SINT:	return 8;
+	case DataFormat::kR32G32_FLOAT:			return 8;
+	case DataFormat::kR32G32_UINT:			return 8;
+	case DataFormat::kR32G32_SINT:			return 8;
+	case DataFormat::kR10G10B10A2_UNORM:	return 4;
+	case DataFormat::kR10G10B10A2_UINT:		return 4;
+	case DataFormat::kR11G11B10_FLOAT:		return 4;
+	case DataFormat::kR8G8B8A8_UNORM:		return 4;
+	case DataFormat::kR8G8B8A8_UNORM_SRGB:	return 4;
+	case DataFormat::kR8G8B8A8_UINT:		return 4;
+	case DataFormat::kR8G8B8A8_SNORM:		return 4;
+	case DataFormat::kR8G8B8A8_SINT:		return 4;
+	case DataFormat::kB8G8R8A8_UNORM:		return 4;
+	case DataFormat::kB8G8R8A8_UNORM_SRGB:	return 4;
+	case DataFormat::kR16G16_FLOAT:			return 4;
+	case DataFormat::kR16G16_UNORM:			return 4;
+	case DataFormat::kR16G16_UINT:			return 4;
+	case DataFormat::kR16G16_SNORM:			return 4;
+	case DataFormat::kR16G16_SINT:			return 4;
+	case DataFormat::kR32_FLOAT:			return 4;
+	case DataFormat::kR32_UINT:				return 4;
+	case DataFormat::kR32_SINT:				return 4;
+	case DataFormat::kR8G8_UNORM:			return 2;
+	case DataFormat::kR8G8_UINT:			return 2;
+	case DataFormat::kR8G8_SNORM:			return 2;
+	case DataFormat::kR8G8_SINT:			return 2;
+	case DataFormat::kR16_FLOAT:			return 2;
+	case DataFormat::kR16_UNORM:			return 2;
+	case DataFormat::kR16_UINT:				return 2;
+	case DataFormat::kR16_SNORM:			return 2;
+	case DataFormat::kR16_SINT:				return 2;
+	case DataFormat::kR8_UNORM:				return 1;
+	case DataFormat::kR8_UINT:				return 1;
+	case DataFormat::kR8_SNORM:				return 1;
+	case DataFormat::kR8_SINT:				return 1;
+	case DataFormat::kA8_UNORM:				return 1;
 	case DataFormat::kBC1_UNORM:			return 0;
 	case DataFormat::kBC1_UNORM_SRGB:		return 0;
 	case DataFormat::kBC2_UNORM:			return 0;
@@ -73,24 +73,19 @@ uint32_t ee::GetBitsPerPixel( const DataFormat format )
 	case DataFormat::kBC6H_SF16:			return 0;
 	case DataFormat::kBC7_UNORM:			return 0;
 	case DataFormat::kBC7_UNORM_SRGB:		return 0;
-	case DataFormat::kD32_FLOAT:			return 32;
-	case DataFormat::kD24_UNORM_S8_UINT:	return 32;
-	case DataFormat::kD16_UNORM:			return 16;
+	case DataFormat::kD32_FLOAT:			return 4;
+	case DataFormat::kD24_UNORM_S8_UINT:	return 4;
+	case DataFormat::kD16_UNORM:			return 2;
 
 	} // switch( format )
 
 	// clang-format on
 
-	eeAssertAlways( "GetBitsPerPixel: Unsupported DataFormat value!" );
+	eeAssertAlways( "GetBytesPerPixel: Unsupported DataFormat value!" );
 	return 0;
 }
 
-uint32_t ee::GetBytesPerPixel( const DataFormat format )
-{
-	return GetBitsPerPixel( format ) >> 3; // integer divide by 8
-}
-
-bool ee::IsDataFormatFloat( const DataFormat format )
+constexpr bool ee::IsDataFormatFloat( const DataFormat format )
 {
 	switch( format )
 	{
@@ -111,7 +106,7 @@ bool ee::IsDataFormatFloat( const DataFormat format )
 	return false;
 }
 
-bool ee::IsDataFormatDepth( const DataFormat format )
+constexpr bool ee::IsDataFormatDepth( const DataFormat format )
 {
 	switch( format )
 	{
@@ -125,7 +120,7 @@ bool ee::IsDataFormatDepth( const DataFormat format )
 	return false;
 }
 
-bool ee::IsDataFormatCompressed( const DataFormat format )
+constexpr bool ee::IsDataFormatCompressed( const DataFormat format )
 {
 	switch( format )
 	{
@@ -150,7 +145,7 @@ bool ee::IsDataFormatCompressed( const DataFormat format )
 	return false;
 }
 
-bool ee::DataFormatHasAlpha( const DataFormat format )
+constexpr bool ee::DataFormatHasAlpha( const DataFormat format )
 {
 	switch( format )
 	{
@@ -188,7 +183,7 @@ bool ee::DataFormatHasAlpha( const DataFormat format )
 
 #if !defined( EE_BUILD_RETAIL )
 
-const char* DataFormatToString( DataFormat format )
+constexpr const char* DataFormatToString( const DataFormat format )
 {
 	// clang-format off: preserve the formatting of this switch statement
 	switch( format )
@@ -259,6 +254,7 @@ const char* DataFormatToString( DataFormat format )
 
 	// clang-format on
 
+	eeAssertAlways( "DataFormatToString: Unsupported DataFormat value!" );
 	return "Unknown DataFormat value";
 }
 
