@@ -74,20 +74,20 @@ namespace ee
 
 	// Returns 0 if there is no well-formed concept of "bits per pixel"
 	// (e.g. if you pass in kUnknown or a block-compressed format here)
-	constexpr uint32_t GetBytesPerPixel( const DataFormat format );
+	uint32_t GetBytesPerPixel( const DataFormat format );
 
 	inline constexpr uint32_t GetBitsPerPixel( const DataFormat format )
 	{
 		return GetBytesPerPixel( format ) * 8;
 	}
 
-	constexpr bool IsDataFormatFloat( const DataFormat format );
-	constexpr bool IsDataFormatDepth( const DataFormat format );
-	constexpr bool IsDataFormatCompressed( const DataFormat format );
-	constexpr bool DataFormatHasAlpha( const DataFormat format );
+	bool IsDataFormatFloat( const DataFormat format );
+	bool IsDataFormatDepth( const DataFormat format );
+	bool IsDataFormatCompressed( const DataFormat format );
+	bool DataFormatHasAlpha( const DataFormat format );
 
 #if !defined( EE_BUILD_RETAIL )
-	constexpr const char* DataFormatToString( const DataFormat format );
+	const char* DataFormatToString( const DataFormat format );
 #endif
 
 } // namespace ee

@@ -10,7 +10,7 @@ using namespace ee;
 
 // Returns 0 if there is no well-formed concept of "bits per pixel"
 // (e.g. if you pass in kUnknown or a block-compressed format here)
-constexpr uint32_t ee::GetBytesPerPixel( const DataFormat format )
+uint32_t ee::GetBytesPerPixel( const DataFormat format )
 {
 	// clang-format off: preserve the formatting of this switch statement
 	switch( format )
@@ -85,7 +85,7 @@ constexpr uint32_t ee::GetBytesPerPixel( const DataFormat format )
 	return 0;
 }
 
-constexpr bool ee::IsDataFormatFloat( const DataFormat format )
+bool ee::IsDataFormatFloat( const DataFormat format )
 {
 	switch( format )
 	{
@@ -106,7 +106,7 @@ constexpr bool ee::IsDataFormatFloat( const DataFormat format )
 	return false;
 }
 
-constexpr bool ee::IsDataFormatDepth( const DataFormat format )
+bool ee::IsDataFormatDepth( const DataFormat format )
 {
 	switch( format )
 	{
@@ -120,7 +120,7 @@ constexpr bool ee::IsDataFormatDepth( const DataFormat format )
 	return false;
 }
 
-constexpr bool ee::IsDataFormatCompressed( const DataFormat format )
+bool ee::IsDataFormatCompressed( const DataFormat format )
 {
 	switch( format )
 	{
@@ -145,7 +145,7 @@ constexpr bool ee::IsDataFormatCompressed( const DataFormat format )
 	return false;
 }
 
-constexpr bool ee::DataFormatHasAlpha( const DataFormat format )
+bool ee::DataFormatHasAlpha( const DataFormat format )
 {
 	switch( format )
 	{
@@ -183,7 +183,7 @@ constexpr bool ee::DataFormatHasAlpha( const DataFormat format )
 
 #if !defined( EE_BUILD_RETAIL )
 
-constexpr const char* DataFormatToString( const DataFormat format )
+const char* DataFormatToString( const DataFormat format )
 {
 	// clang-format off: preserve the formatting of this switch statement
 	switch( format )
