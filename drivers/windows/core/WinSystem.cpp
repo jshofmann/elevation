@@ -10,12 +10,12 @@
 
 using namespace ee;
 
-typedef BOOL ( WINAPI* LPFN_ISWOW64PROCESS )( HANDLE, PBOOL );
+typedef BOOL( WINAPI* LPFN_ISWOW64PROCESS )( HANDLE, PBOOL );
 
 static LPFN_ISWOW64PROCESS IsWow64ProcessFunction =
 	reinterpret_cast< LPFN_ISWOW64PROCESS >( GetProcAddress( GetModuleHandle( "kernel32" ), "IsWow64Process" ) );
 
-typedef BOOL ( __stdcall* GetProcessMemoryInfoType )( HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD );
+typedef BOOL( __stdcall* GetProcessMemoryInfoType )( HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD );
 
 static GetProcessMemoryInfoType GetProcessMemoryInfoPtr = NULL;
 
@@ -107,8 +107,10 @@ int System::DisplayAlertWithOptions( const char* title, const char* message )
 	else
 	{
 		gHasOpenModalDialog = true;
-		int ret				= ::MessageBox( parent, message, title,
-											MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST | MB_YESNOCANCEL | MB_ICONERROR );
+
+		int ret = ::MessageBox( parent, message, title,
+								MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST | MB_YESNOCANCEL | MB_ICONERROR );
+
 		gHasOpenModalDialog = false;
 
 		switch( ret )

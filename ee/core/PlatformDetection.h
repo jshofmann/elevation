@@ -4,23 +4,22 @@
 
 #pragma once
 
+#if defined( __APPLE__ )
+#include <TargetConditionals.h>
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // OS and compiler detection
-//
 
 // Microsoft Visual Studio is being used,
 // but don't define EE_COMPILER_MSVC if the clang-cl toolset is being used
-#if defined( _MSC_VER )	&& !defined( __clang__ )
+#if defined( _MSC_VER ) && !defined( __clang__ )
 #  define EE_COMPILER_MSVC			1
 // clang defines __GNUC__ too so check __clang__ first;
 // if using the clang-cl toolset in Visual Studio _MSC_VER will also be defined,
 // for our purposes we want EE_COMPILER_CLANG not EE_COMPILER_MSVC in that case.
 #elif defined( __clang__ )
 #  define EE_COMPILER_CLANG			1
-#elif defined( __ghs__ )	// Green Hills also defines __GNUC__
-#  define EE_COMPILER_GHS			1
-#elif defined( __SNC__ )	// SNC may define __GNUC__ too
-#  define EE_COMPILER_SNC			1
 #elif defined( __GNUC__ )	// GNU GCC
 #  define EE_COMPILER_GCC			1
 #else
@@ -30,22 +29,25 @@
 // Scarlett and Durango also define WIN32 and WIN64 so test for them first
 #if defined( _GAMING_XBOX_SCARLETT ) // Xbox Series X (Anaconda) or Xbox Series S (Lockhart)
 #  define EE_BUILD_XSX				1
-#  define EE_BUILD_X86				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( _XBOX_ONE )		// aka Durango
 #  define EE_BUILD_XB1				1
-#  define EE_BUILD_X86				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( _WIN32 ) || defined( _WIN64 ) // Windows PC
-// Note: BULD_WINDOWS is used by some Windows SDK headers so avoid that name
+// Note: BUILD_WINDOWS is used by some Windows SDK headers so avoid that name
 #  define EE_BUILD_WINDOWS			1
 #  define EE_BUILD_LITTLE_ENDIAN	1
-#  define EE_BUILD_X86				1
 #  if defined( EE_COMPILER_MSVC )
 #    if defined( _AMD64_ ) || defined( _M_X64 ) || defined( _M_AMD64 )
 #      define EE_BUILD_X64			1
+#    elif defined( _M_ARM )
+#      define EE_BUILD_ARM			1
+#      define EE_BUILD_ARM32		1
+#    elif defined( _M_ARM64 )
+#      define EE_BUILD_ARM			1
+#      define EE_BUILD_ARM64		1
 #    endif
 #  elif defined( EE_COMPILER_GCC )
 #    if defined( _X86_64_ ) || defined( __amd64__ )
@@ -54,17 +56,14 @@
 #  endif
 #elif defined( __ORBIS__ )		// Sony Playstation 4
 #  define EE_BUILD_PS4				1
-#  define EE_BUILD_X86				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __PROSPERO__ )	// Sony Playstation 5
 #  define EE_BUILD_PS5				1
-#  define EE_BUILD_X86				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __linux__ )      // Includes Stadia and SteamOS
 #  define EE_BUILD_LINUX			1
-#  define EE_BUILD_X86				1
 #  if defined( _X86_64_ ) || defined( __amd64__ )
 #    define EE_BUILD_X64			1
 #  endif
@@ -79,6 +78,17 @@
 #    define EE_BUILD_ARM64			1
 #  endif
 #  define EE_BUILD_LITTLE_ENDIAN	1
+#elif defined( __APPLE__ )
+#  define EE_BUILD_APPLE			1
+#  define EE_BUILD_LITTLE_ENDIAN	1
+#  if TARGET_CPU_X86_64
+#    define EE_BUILD_X64			1
+#  elif TARGET_CPU_ARM64
+#    define EE_BUILD_ARM			1
+#    define EE_BUILD_ARM64			1
+#  endif
+#elif defined( __EMSCRIPTEN__ )
+#  define EE_BUILD_EMSCRIPTEN		1
 #else
 #  error Unknown platform
 #endif
@@ -98,7 +108,7 @@
 // automatically defined by the Retail build configuration, this is here
 // just for reference.
 #if 0
-#  define EE_BUILD_RETAIL	1
+#  define EE_BUILD_RETAIL 1
 #endif
 
 // In non-retail builds we enable profiling tools
@@ -108,7 +118,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Compiler configuration
-//
 
 // Turn off all deprecated CRT / Windows SDK function warnings
 #if defined( EE_BUILD_WINDOWS ) || defined( EE_BUILD_XB1 ) || defined( EE_BUILD_XSX )
@@ -169,22 +178,6 @@
 #  error No packed macro defined for this platform
 #endif
 
-#if defined( EE_COMPILER_CLANG ) || defined( EE_COMPILER_GCC )
-#  define eeMaybeUnused __attribute__(( unused ))
-#elif defined( EE_COMPILER_MSVC )
-// It would be brilliant if MSVC supported __attribute(( unused )) but they
-// decided to wait for C++17's [[ maybe_unused ]]. VS2017 won't warn on
-// set-but-unused variables (e.g. stuff calculated for a eeAssert test)
-// so having eeMaybeUnused being empty there doesn't introduce any new warns.
-#  if _MSVC_LANG >= 201703L // C++17 is supported
-#    define eeMaybeUnused [[ maybe_unused ]]
-#  else
-#    define eeMaybeUnused
-#  endif
-#else
-#  error Determine if this compiler supports [[ maybe_unused ]] or __attribute__(( unused ))
-#endif
-
 // Everyone but Microsoft supports __PRETTY_FUNCTION__
 #if defined( EE_COMPILER_MSVC )
 #  define eeFunctionName __FUNCSIG__
@@ -192,11 +185,32 @@
 #  define eeFunctionName __PRETTY_FUNCTION__
 #endif
 
+// Branch prediction hints
+
+// Use LIKELY to tell the branch predictor that the expression is expected
+// to be true, allows expression to be false with a slight performance penalty
+#if defined( EE_COMPILER_CLANG ) || defined( EE_CCOMPILER_GCC )
+	#define LIKELY( x )			__builtin_expect( !!(x), 1 )
+#else
+	// the additional "!!" is used to silence "warning: equality comparison
+	// with extraneous parentheses" messages on android
+	#define LIKELY( x )			( !!(x) )
+#endif
+
+// Use UNLIKELY to tell the branch predictor that the expression is expected
+// to be false, allows expression to be true with a slight performance penalty
+#if defined( EE_COMPILER_CLANG ) || defined( EE_CCOMPILER_GCC )
+	#define UNLIKELY( x )		__builtin_expect( !!(x), 0 )
+#else
+	// the additional "!!" is used to silence "warning: equality comparison
+	// with extraneous parentheses" messages on android
+	#define UNLIKELY( x )		( !!(x) )
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // Disable some compiler warnings regarding things that are not problems
 // or are benign problems that we will not address. Make these lists
 // as short as possible!
-//
 
 #if defined( EE_COMPILER_MSVC )
 

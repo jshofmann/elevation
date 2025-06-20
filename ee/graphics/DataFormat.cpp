@@ -58,7 +58,6 @@ uint32_t ee::GetBytesPerPixel( const DataFormat format )
 	case DataFormat::kR8_UINT:				return 1;
 	case DataFormat::kR8_SNORM:				return 1;
 	case DataFormat::kR8_SINT:				return 1;
-	case DataFormat::kA8_UNORM:				return 1;
 	case DataFormat::kBC1_UNORM:			return 0;
 	case DataFormat::kBC1_UNORM_SRGB:		return 0;
 	case DataFormat::kBC2_UNORM:			return 0;
@@ -166,7 +165,6 @@ bool ee::DataFormatHasAlpha( const DataFormat format )
 	case DataFormat::kR8G8B8A8_SINT:
 	case DataFormat::kB8G8R8A8_UNORM:
 	case DataFormat::kB8G8R8A8_UNORM_SRGB:
-	case DataFormat::kA8_UNORM:
 	case DataFormat::kBC2_UNORM:
 	case DataFormat::kBC2_UNORM_SRGB:
 	case DataFormat::kBC3_UNORM:
@@ -231,7 +229,6 @@ const char* DataFormatToString( const DataFormat format )
 	case DataFormat::kR8_UINT:				return "DataFormat::kR8_UINT";
 	case DataFormat::kR8_SNORM:				return "DataFormat::kR8_SNORM";
 	case DataFormat::kR8_SINT:				return "DataFormat::kR8_SINT";
-	case DataFormat::kA8_UNORM:				return "DataFormat::kA8_UNORM";
 	case DataFormat::kBC1_UNORM:			return "DataFormat::kBC1_UNORM";
 	case DataFormat::kBC1_UNORM_SRGB:		return "DataFormat::kBC1_UNORM_SRGB";
 	case DataFormat::kBC2_UNORM:			return "DataFormat::kBC2_UNORM";

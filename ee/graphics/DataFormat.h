@@ -51,24 +51,23 @@ namespace ee
 		kR8_UINT			 = 40,
 		kR8_SNORM			 = 41,
 		kR8_SINT			 = 42,
-		kA8_UNORM			 = 43,
-		kBC1_UNORM			 = 44,
-		kBC1_UNORM_SRGB		 = 45,
-		kBC2_UNORM			 = 46,
-		kBC2_UNORM_SRGB		 = 47,
-		kBC3_UNORM			 = 48,
-		kBC3_UNORM_SRGB		 = 49,
-		kBC4_UNORM			 = 50,
-		kBC4_SNORM			 = 51,
-		kBC5_UNORM			 = 52,
-		kBC5_SNORM			 = 53,
-		kBC6H_UF16			 = 54,
-		kBC6H_SF16			 = 55,
-		kBC7_UNORM			 = 56,
-		kBC7_UNORM_SRGB		 = 57,
-		kD32_FLOAT			 = 58,
-		kD24_UNORM_S8_UINT	 = 59,
-		kD16_UNORM			 = 60
+		kBC1_UNORM			 = 43,
+		kBC1_UNORM_SRGB		 = 44,
+		kBC2_UNORM			 = 45,
+		kBC2_UNORM_SRGB		 = 46,
+		kBC3_UNORM			 = 47,
+		kBC3_UNORM_SRGB		 = 48,
+		kBC4_UNORM			 = 49,
+		kBC4_SNORM			 = 50,
+		kBC5_UNORM			 = 51,
+		kBC5_SNORM			 = 52,
+		kBC6H_UF16			 = 53,
+		kBC6H_SF16			 = 54,
+		kBC7_UNORM			 = 55,
+		kBC7_UNORM_SRGB		 = 56,
+		kD32_FLOAT			 = 57,
+		kD24_UNORM_S8_UINT	 = 58,
+		kD16_UNORM			 = 59
 
 	}; // enum class DataFormat
 
@@ -76,7 +75,7 @@ namespace ee
 	// (e.g. if you pass in kUnknown or a block-compressed format here)
 	uint32_t GetBytesPerPixel( const DataFormat format );
 
-	inline constexpr uint32_t GetBitsPerPixel( const DataFormat format )
+	inline uint32_t GetBitsPerPixel( const DataFormat format )
 	{
 		return GetBytesPerPixel( format ) * 8;
 	}
