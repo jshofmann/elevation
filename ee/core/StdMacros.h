@@ -4,12 +4,14 @@
 
 #pragma once
 
-#define STRINGIFY_NO_EXPANSION( x ) # x
-#define STRINGIFY( x ) STRINGIFY_NO_EXPANSION( x )
-#define GLUE_2_NO_EXPANSION( first, second ) first ## second
-#define GLUE_3_NO_EXPANSION( first, second, third ) first ## second ## third
-#define GLUE_2( first, second ) GLUE_2_NO_EXPANSION( first, second )
-#define GLUE_3( first, second, third ) GLUE_3_NO_EXPANSION( first, second, third )
+#define STRINGIFY_IMPL( x ) # x
+#define STRINGIFY( x ) STRINGIFY_IMPL( x )
+
+#define CONCAT_2_IMPL( first, second ) first ## second
+#define CONCAT_2( first, second ) CONCAT_2_NO_EXPANSION( first, second )
+
+#define CONCAT_3_IMPL( first, second, third ) first ## second ## third
+#define CONCAT_3( first, second, third ) CONCAT_3_NO_EXPANSION( first, second, third )
 
 #define MEM_KB( s ) ( uintptr_t( s ) << 10 )
 #define MEM_MB( s ) ( MEM_KB( s ) << 10 )
