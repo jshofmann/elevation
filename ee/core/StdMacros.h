@@ -16,6 +16,11 @@
 #define MEM_KB( s ) ( uintptr_t( s ) << 10 )
 #define MEM_MB( s ) ( MEM_KB( s ) << 10 )
 
+// Note: This works for enum values but not #define tokens; if you feed it
+// a #defined token (e.g. E_INVALIDARG) it will perform macro substitution first
+// resulting in the string "((HRESULT)0x887A0001L)" instead of E_INVALIDARG.
+#define TOKEN_TO_STRING( t ) case (t): return #t;
+
 namespace ee
 {
 
