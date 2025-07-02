@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\..\ee\core\StdIncludes.h" />
     <ClInclude Include="..\..\..\ee\core\StdMacros.h" />
     <ClInclude Include="..\..\..\ee\core\System.h" />
+    <ClInclude Include="..\..\..\ee\core\Window.h" />
     <ClInclude Include="..\..\..\ee\graphics\DataFormat.h" />
     <ClInclude Include="..\..\..\ee\graphics\Device.h" />
     <ClInclude Include="..\..\..\ee\graphics\Display.h" />
@@ -130,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\ee\core\Assert.cpp" />
+    <ClCompile Include="..\..\..\ee\core\Window.cpp" />
     <ClCompile Include="..\..\..\ee\graphics\DataFormat.cpp" />
     <ClCompile Include="..\..\..\ee\graphics\ProfilerSupport.cpp" />
     <ClCompile Include="..\..\..\ee\image\BMPReader.cpp" />

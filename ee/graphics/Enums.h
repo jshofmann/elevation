@@ -30,4 +30,12 @@ namespace ee
 		kCount
 	};
 
+	enum class CommandListType
+	{
+		kGraphics = 0,
+		kCompute  = 1,
+		kCopy	  = 2,
+		kCount
+	};
+
 } // namespace ee

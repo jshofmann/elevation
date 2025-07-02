@@ -15,7 +15,9 @@ bool LinuxCheck::check( int result, const char* function, const char* caller, co
 {
 	if( result == -1 )
 	{
-		eeDebug( "%s: %s returned error %d at %s line %d: %s", caller, function, errno, file, line, strerror( errno ) );
+		// Format the message so that double-clicking on it in Visual Studio's
+		// Output pane will navigate to the location of the failure report.
+		eeDebug( "%d(%s): %s: %s returned error %d: %s", file, line, caller, function, errno, strerror( errno ) );
 
 		return false;
 	}

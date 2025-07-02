@@ -8,8 +8,9 @@ namespace ee
 {
 	class Config;
 
-	/*
-	*/
+	// Application is a class intended to represent the application process-
+	// it manages process start and stop and the main loop running on the
+	// application thread started by the operating system.
 	class Application
 	{
 	public:

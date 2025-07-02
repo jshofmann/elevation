@@ -69,9 +69,9 @@ bool dx12Device::Initialize( void )
 	// Note: Enabling the debug layer slows down every D3D call!
 	if( gGraphicsEnableDebugLayer > 0 )
 	{
-		eeDebug( "************************************************************************************" );
-		eeDebug( "Note: The D3D debug layer is enabled, performance will be severely compromised!" );
-		eeDebug( "************************************************************************************" );
+		eeDebug( "************************************************************************************\n" );
+		eeDebug( "Note: The D3D debug layer is enabled, performance will be severely compromised!\n" );
+		eeDebug( "************************************************************************************\n" );
 
 		// Use of the D3D debug layer automatically enables use of DRED
 		SET_CONFIG_PROPERTY( gGraphicsEnableDRED, true );
@@ -116,7 +116,7 @@ bool dx12Device::CreateDevice( void )
 
 #if defined( EE_BUILD_WINDOWS )
 
-	#if defined( EE_BUILD_PROFILE )
+#if defined( EE_BUILD_PROFILE )
 
 	// Enable connections to PIX if there isn't already a GPU debugger attached
 	// and we haven't enabled the debug layers (a documented restriction).
@@ -127,7 +127,7 @@ bool dx12Device::CreateDevice( void )
 		LoadPIXDLL();
 	}
 
-	#endif // #if defined( EE_BUILD_PROFILE )
+#endif // #if defined( EE_BUILD_PROFILE )
 
 	if( !eeCheck( CreateDeviceFactory() ) )
 	{
@@ -139,7 +139,7 @@ bool dx12Device::CreateDevice( void )
 	// (i.e. for debugging use only, pretty much, since the order is something
 	//	that's considered to be a video driver implementation detail.)
 	// 4294967295 == kInvalidGPUIndex (~0u aka 0xffffffff aka -1)
-	// !!! TODO: does this logic belong here or at an application level?
+	// !!! TODO: move this to the application level
 	Config*	 config = Application::GetInstance().GetConfig();
 	uint32_t gpuIndex =
 		config != nullptr ? ToUInt( config->GetValue( "Device", "GPUIndex", "4294967295" ) ) : kInvalidGPUIndex;
@@ -157,13 +157,18 @@ bool dx12Device::CreateDevice( void )
 		if( result == D3D12_ERROR_INVALID_REDIST )
 		{
 			eeDebug( "dx12Device::CreateDevice: D3D12Core.dll is missing "
-					 "or an unexpected version" ); // !!! should log this
+					 "or an unexpected version\n" ); // !!! should log this
 		}
 		else
 		{
+			static constexpr size_t kDescLength = 255;
+			char description[ kDescLength ];
+
+			DXGetErrorDescription( result, description, kDescLength );
+
 			eeDebug( "dx12Device::CreateDevice: IDXGIFactory::EnumAdapterByGpuPreference() "
-					 "failed with error 0x%08x: %s",
-					 result, DXGetErrorString( result ) ); // !!! should log this
+					 "failed with error %s (0x%08x): %s\n",
+					 DXGetErrorString( result ), result, description ); // !!! should log this
 		}
 
 		return false;
@@ -208,7 +213,7 @@ bool dx12Device::CreateDevice( void )
 
 	if( mAdapter == nullptr )
 	{
-		eeDebug( "dx12Device::CreateDevice: Unable to find a IDXGIAdapter supporting %s",
+		eeDebug( "dx12Device::CreateDevice: Unable to find a IDXGIAdapter supporting %s\n",
 				 GetD3DFeatureLevelString( mFeatureLevel ) ); // !!! should log this
 		return false;
 	}
@@ -242,7 +247,7 @@ bool dx12Device::CreateDevice( void )
 	}
 
 	eeDebugIf( !developerModeEnabled,
-			   "dx12Device::CreateDevice: Enable Developer Mode on Windows 10 to get consistent profiling results" );
+			   "dx12Device::CreateDevice: Enable Developer Mode on Windows 10 to get consistent profiling results\n" );
 
 	// Prevent the GPU from overclocking or underclocking to get consistent timings
 	if( developerModeEnabled )
@@ -284,8 +289,9 @@ HRESULT dx12Device::EnableDebugLayer( void )
 		}
 		else
 		{
-			eeDebug( "dx12Device::EnableDebugLayer: D3D12GetDebugInterface( ID3D12Debug ) failed with error 0x%08x: %s",
-					 result, DXGetErrorString( result ) ); // !!! should log this
+			// !!! should log this
+			eeDebug( "dx12Device::EnableDebugLayer: D3D12GetDebugInterface( ID3D12Debug ) "
+					 "failed with error 0x%08x: %s\n", result, DXGetErrorString( result ) );
 			return result;
 		}
 
@@ -397,7 +403,7 @@ HRESULT dx12Device::VerifyMinimumFeatureLevel( IDXGIAdapter1* adapter, D3D_FEATU
 		return DXGI_ERROR_UNSUPPORTED;
 	}
 
-	// D3D12CreateDevice() may return S_FALSE because we're passing NULL for ppDevice
+	// D3D12CreateDevice() may return S_FALSE because we're passing nullptr for ppDevice
 	HRESULT result = D3D12CreateDevice( adapter, level, __uuidof( ID3D12Device ), nullptr );
 	if( ( result != S_OK ) && ( result != S_FALSE ) )
 	{

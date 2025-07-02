@@ -46,14 +46,39 @@ LRESULT CALLBACK WinWindow::WindowProc( HWND hwnd, UINT message, WPARAM wparam, 
 //*****************************************************************************
 //*****************************************************************************
 
-void WinWindow::SetWindowClassName( const char* windowClass )
+// Pass the client rect dimensions in pixels to this function
+void WinWindow::SetSize( uint16_t width, uint16_t height )
 {
-	mWindowClassName = windowClass;
+	// mWidth/mHeight define the client region dimensions
+	mWidth = width;
+	mHeight = height;
+
+	// If we didn't create the window, don't mess with its dimensions
+	if( mOwnWindow )
+	{
+		AdjustWindowDimensions( width, height );
+	}
+
+	// mWindowWidth/mWindowHeight store the window dimensions,
+	// including any elements like a title bar or borders
+	mWindowWidth = width;
+	mWindowHeight = height;
+
+	if( mOwnWindow )
+	{
+		SetWindowPos( mHwnd, HWND_NOTOPMOST, 0, 0, mWindowWidth, mWindowHeight, SWP_NOMOVE );
+	}
 }
 
 void WinWindow::SetWindowTitle( const char* windowTitle )
 {
+	// This will make a copy of windowTitle
 	mWindowTitle = windowTitle;
+}
+
+void WinWindow::SetWindowClassName( const char* windowClass )
+{
+	mWindowClassName = windowClass;
 }
 
 void WinWindow::SetWindowProc( WNDPROC proc )
@@ -77,8 +102,8 @@ bool WinWindow::RegisterWindowClass( void )
 	wcex.hIcon			= LoadIcon( hinstance, LPCTSTR( IDI_APPLICATION ) );
 	wcex.hCursor		= NULL;
 	wcex.hbrBackground	= NULL;
-	wcex.lpszMenuName	= mWindowTitle;
-	wcex.lpszClassName	= mWindowClassName;
+	wcex.lpszMenuName	= mWindowTitle.c_str();
+	wcex.lpszClassName	= mWindowClassName.c_str();
 	wcex.hIconSm		= LoadIcon( hinstance, LPCTSTR( IDI_APPLICATION ) );
 
 	if( RegisterClassEx( &wcex ) == 0 )
@@ -132,8 +157,8 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 		}
 
 		// The client dimensions matches the window dimensions here
-		mClientWidth = width;
-		mClientHeight = height;
+		mWidth = width;
+		mHeight = height;
 	}
 	else if( mode == DisplayMode::kWindowed )
 	{
@@ -156,8 +181,8 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 		}
 
 		// width/height define the client dimensions in this case
-		mClientWidth = width;
-		mClientHeight = height;
+		mWidth = width;
+		mHeight = height;
 
 		// Adjust the window dimensions to account for the title bar and borders
 		AdjustWindowDimensions( width, height );
@@ -166,8 +191,8 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 	{
 		// Initialize the client dimensions to the selected resolution
 		// The window dimensions will be identical in this case
-		mClientWidth = width;
-		mClientWidth = height;
+		mWidth = width;
+		mWidth = height;
 	}
 
 	// Note: A width or height of 0 is valid, used by the tools to create
@@ -175,7 +200,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 	// like shader compilation or mesh compression.
 
 	mHwnd = CreateWindowEx(
-		mWindowExStyle, mWindowClassName, mWindowTitle,
+		mWindowExStyle, mWindowClassName.c_str(), mWindowTitle.c_str(),
 		mWindowStyle, 0, 0, width, height, NULL, NULL, hinstance, windowdata );
 	if( mHwnd == NULL )
 	{
@@ -196,34 +221,10 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 	mOwnWindow = true;
 	mWindowWidth = width;
 	mWindowHeight = height;
-	mAspectRatio = mClientWidth / (float) mClientHeight;
 
 	application.SetParentWindow( mHwnd );
 
 	return true;
-}
-
-void WinWindow::SetWindowSize( uint16_t width, uint16_t height )
-{
-	// width/height define the client region dimensions
-	mClientWidth = width;
-	mClientHeight = height;
-
-	// If we didn't create the window, don't mess with its dimensions
-	if( mOwnWindow )
-	{
-		AdjustWindowDimensions( width, height );
-	}
-
-	mWindowWidth = width;
-	mWindowHeight = height;
-
-	mAspectRatio = mClientWidth / float( mClientHeight );
-
-	if( mOwnWindow )
-	{
-		SetWindowPos( mHwnd, HWND_NOTOPMOST, 0, 0, mWindowWidth, mWindowHeight, SWP_NOMOVE );
-	}
 }
 
 void WinWindow::SetHWND( HWND hwnd, DisplayMode mode )
@@ -250,11 +251,9 @@ void WinWindow::SetHWND( HWND hwnd, DisplayMode mode )
 
 		if( eeCheckBool( GetClientRect( hwnd, &rect ) ) )
 		{
-			mClientWidth = static_cast< uint16_t >( rect.right - rect.left );
-			mClientHeight = static_cast< uint16_t >( rect.bottom - rect.top );
+			mWidth = static_cast< uint16_t >( rect.right - rect.left );
+			mHeight = static_cast< uint16_t >( rect.bottom - rect.top );
 		}
-
-		mAspectRatio = mClientWidth / static_cast< float >( mClientHeight );
 	}
 }
 
