@@ -4,9 +4,13 @@
 
 #pragma once
 
+#include <ee/graphics/DataFormat.h>
+
 namespace ee
 {
+	class Window;
 	class Device;
+	class CommandList;
 
 	// The Display controls the output to a display device (e.g. monitor);
 	// it manages the swap chain and output configuration. On Windows, this
@@ -15,7 +19,9 @@ namespace ee
 	class Display
 	{
 	public:
-		// Setup/teardown is very driver-specific and not done here
+		// commandlist is required by the DX12 driver; it can be nullptr otherwise
+		virtual bool Initialize( DataFormat format, Window* window, Device* device, CommandList* commandlist ) = 0;
+		virtual void Release( void ) = 0;
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) = 0; // in pixels
 

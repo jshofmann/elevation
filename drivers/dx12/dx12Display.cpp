@@ -6,13 +6,34 @@
 
 #include "dx12Display.h"
 
+#include <ee/core/Window.h>
 #include <drivers/dx12/dx12Device.h>
+#include <drivers/dx12/dx12CommandList.h>
+#include <drivers/dx12/dx12Utils.h>
 #include <drivers/windows/core/WinCheck.h>
+#include <drivers/windows/core/WinWindow.h>
 
 using namespace ee;
 
-bool dx12Display::Initialize( uint32_t width, uint32_t height, DXGI_FORMAT format, HWND hwnd, Device* device )
+bool dx12Display::Initialize( DataFormat format, Window* window, Device* device, CommandList* commandlist )
 {
+	// We can assume that window is a WinWindow here.
+	// A HWND is required to create a swap chain.
+	if( window == nullptr )
+	{
+		eeDebug( "dx12Display::Initialize: A Window is required\n" );
+		return false;
+	}
+
+	uint16_t width, height;
+	window->GetSize( width, height );
+	
+	if( ( width == 0 ) || ( height == 0 ) )
+	{
+		eeDebug( "dx12Display::Initialize: The Window has invalid dimensions: %d x %d\n", width, height );
+		return false;
+	}
+
 	// We can assume that device is a dx12Device here.
 	// It is required to create a swap chain.
 	if( device == nullptr )
@@ -27,7 +48,16 @@ bool dx12Display::Initialize( uint32_t width, uint32_t height, DXGI_FORMAT forma
 		return false;
 	}
 
+	// We can assume that commandlist is a dx12CommandList here.
+	if( commandlist == nullptr )
+	{
+		eeDebug( "dx12Display::Initialize: A CommandList is required\n" );
+		return false;
+	}
+
 	dx12Device* dxDevice = static_cast< dx12Device* >( device );
+	dx12CommandList* dxCommandList = static_cast< dx12CommandList* >( commandlist );
+	WinWindow* winWindow = static_cast< WinWindow* >( window );
 
 	IDXGIFactory6* dxgiFactory = dxDevice->GetDXGIFactory();
 	if( dxgiFactory == nullptr )
@@ -36,23 +66,20 @@ bool dx12Display::Initialize( uint32_t width, uint32_t height, DXGI_FORMAT forma
 		return false;
 	}
 
-	ID3D12Device* d3d12Device = dxDevice->GetD3D12Device();
-	// dx12Device::IsInitialized() tests that the ID3D12Device is not nullptr,
-	// so a separate nullptr check here would be redundant
 
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-	swapChainDesc.Width					= width;
-	swapChainDesc.Height				= height;
-	swapChainDesc.Format				= format;
-	swapChainDesc.Stereo				= FALSE;
-	swapChainDesc.SampleDesc.Count		= 1;
-	swapChainDesc.SampleDesc.Quality	= 0;
-	swapChainDesc.BufferUsage			= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.BufferCount			= kSwapChainBufferCount;
-	swapChainDesc.Scaling				= DXGI_SCALING_NONE;
-	swapChainDesc.SwapEffect			= DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	swapChainDesc.AlphaMode				= DXGI_ALPHA_MODE_IGNORE;
-	swapChainDesc.Flags					= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {
+		.Width		 = width,
+		.Height		 = height,
+		.Format		 = DataFormatToDXGI_FORMAT( format ),
+		.Stereo		 = FALSE,
+		.SampleDesc	 = { .Count = 1, .Quality = 0 },
+		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
+		.BufferCount = kSwapChainBufferCount,
+		.Scaling	 = DXGI_SCALING_NONE,
+		.SwapEffect	 = DXGI_SWAP_EFFECT_FLIP_DISCARD,
+		.AlphaMode	 = DXGI_ALPHA_MODE_IGNORE,
+		.Flags		 = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
+	  };
 
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC fsSwapChainDesc = {
 		.RefreshRate	  = { 0, 0 },
@@ -61,7 +88,10 @@ bool dx12Display::Initialize( uint32_t width, uint32_t height, DXGI_FORMAT forma
 		.Windowed		  = TRUE
 	 };
 
-	if( !eeCheck( dxgiFactory->CreateSwapChainForHwnd( d3d12Device, hwnd, &swapChainDesc, &fsSwapChainDesc, nullptr,
+	// While IDXGIFactory::CreateSwapChain[For...] calls its first argument pDevice,
+	// it actually requires an ID3D12CommandList.
+	if( !eeCheck( dxgiFactory->CreateSwapChainForHwnd( dxCommandList->GetD3D12CommandList(), winWindow->GetHWND(),
+													   &swapChainDesc, &fsSwapChainDesc, nullptr,
 													   mSwapChain.ReleaseAndGetAddressOf() ) ) )
 	{
 		return false;
@@ -83,6 +113,10 @@ bool dx12Display::Initialize( uint32_t width, uint32_t height, DXGI_FORMAT forma
 							( colorSpaceSupport & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT ) &&
 							eeCheck( swapchain4->SetColorSpace1( DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 ) );
 	}
+
+	ID3D12Device* d3d12Device = dxDevice->GetD3D12Device();
+	// dx12Device::IsInitialized() tests that the ID3D12Device is not nullptr,
+	// so a separate nullptr check here would be redundant
 
 	for( uint32_t i = 0; i < kSwapChainBufferCount; ++i )
 	{

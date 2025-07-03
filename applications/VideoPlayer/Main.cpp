@@ -9,6 +9,8 @@
 #include <ee/core/Debug.h>
 #include <ee/io/File.h>
 #include <ee/utility/Config.h>
+#include <ee/graphics/DataFormat.h>
+#include <ee/graphics/CommandList.h>
 
 #include <drivers/Windows/core/WinApplication.h>
 #include <drivers/Windows/core/WinWindow.h>
@@ -51,7 +53,7 @@ public:
 	}
 
 private:
-	static constexpr const char* sConfigName = "VideoPlayer.cfg";
+	static constexpr const char* sConfigName = "VideoPlayer.ini";
 
 	VideoPlayer mPlayer;
 	Config		mConfig;
@@ -214,8 +216,12 @@ bool VideoPlayerApplication::Initialize( void )
 	if( display == nullptr )
 		return false;
 
-	if( !static_cast< dx12Display* >( display.get() )->Initialize( width, height, DXGI_FORMAT_UNKNOWN, mApplicationWindow.GetHWND(), device.get() ) )
+	CommandList* commandlist = new CommandList;
+
+	if( !static_cast< dx12Display* >( display.get() )->Initialize( DataFormat::kR8G8B8A8_UNORM_SRGB, &mApplicationWindow, device.get(), commandlist ) )
 		return false;
+
+	delete commandlist;
 
 	return mPlayer.Initialize( std::move( device ), std::move( display ) );
 }
