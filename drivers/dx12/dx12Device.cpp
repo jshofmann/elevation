@@ -257,6 +257,22 @@ bool dx12Device::CreateDevice( void )
 
 #endif // #if defined( EE_BUILD_WINDOWS )
 
+	// Create the direct graphics command queue. In the basic configuration,
+	// this is the queue that command lists will be submitted to.
+	D3D12_COMMAND_QUEUE_DESC queueDesc = {
+		.Type = D3D12_COMMAND_LIST_TYPE_DIRECT,
+		.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL,
+		.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE,
+		.NodeMask = 0
+	};
+
+	if( !eeCheck( mDevice->CreateCommandQueue( &queueDesc, IID_PPV_ARGS( &mDirectQueue ) ) ) )
+	{
+		return false;
+	}
+
+	dxDebug::SetObjectName( mDirectQueue.Get(), "dx12Device::mDirectQueue" );
+
 	// Shader reflection requires access to the IDxcUtils interface;
 	// this is unrelated to the D3D12 device, but dx12Device is not a bad place
 	// to stash this pointer, at least for now....

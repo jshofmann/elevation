@@ -19,11 +19,6 @@ WinApplication& WinApplication::GetInstance( void )
 //*****************************************************************************
 //*****************************************************************************
 
-void WinApplication::Exit( void )
-{
-	mRunning = false;
-}
-
 bool WinApplication::Update( void )
 {
 	HWND hwnd = mApplicationWindow.GetHWND();

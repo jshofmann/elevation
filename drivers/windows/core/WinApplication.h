@@ -15,8 +15,6 @@ namespace ee
 	public:
 		// Application interface implementation
 
-		virtual void Exit( void ) override;
-
 		virtual bool Update( void ) override;
 
 		// WinApplication member functions
@@ -41,7 +39,6 @@ namespace ee
 		HINSTANCE mHInstance	= NULL;
 		HWND	  mParentWindow = NULL;
 		HACCEL	  mAccelTable	= NULL;
-		bool	  mRunning		= false;
 
 		WinWindow mApplicationWindow;
 

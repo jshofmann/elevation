@@ -13,10 +13,13 @@
 
 namespace ee
 {
+	class Window;
+	class Device;
+
 	class dx12Display : public Display
 	{
 	public:
-		virtual bool Initialize( DataFormat format, Window* window, Device* device, CommandList* commandlist ) override final;
+		virtual bool Initialize( DataFormat format, Window* window, Device* device ) override final;
 		virtual void Release( void ) override final;
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) override final; // in pixels

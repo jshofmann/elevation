@@ -130,6 +130,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\ee\core\Application.cpp" />
     <ClCompile Include="..\..\..\ee\core\Assert.cpp" />
     <ClCompile Include="..\..\..\ee\core\Window.cpp" />
     <ClCompile Include="..\..\..\ee\graphics\DataFormat.cpp" />

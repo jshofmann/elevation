@@ -8,16 +8,6 @@
 
 using namespace ee;
 
-VideoPlayer::VideoPlayer()
-	: mWidth( 0 )
-	, mHeight( 0 )
-{
-}
-
-VideoPlayer::~VideoPlayer()
-{
-}
-
 bool VideoPlayer::Initialize( std::unique_ptr< ee::Device > device, std::unique_ptr< ee::Display > display )
 {
 	mDevice = std::move( device );
@@ -28,5 +18,15 @@ bool VideoPlayer::Initialize( std::unique_ptr< ee::Device > device, std::unique_
 
 void VideoPlayer::Shutdown( void )
 {
-	mDevice->Release();
+	if( mDisplay )
+	{
+		mDisplay->Release();
+		mDisplay.reset();
+	}
+
+	if( mDevice )
+	{
+		mDevice->Release();
+		mDevice.reset();
+	}
 }

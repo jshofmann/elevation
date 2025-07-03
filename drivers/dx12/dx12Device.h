@@ -35,6 +35,8 @@ namespace ee
 
 		ID3D12Device* GetD3D12Device( void ) const;
 
+		ID3D12CommandQueue* GetDirectCommandQueue( void ) const;
+
 		// For lack of a better place to store this....
 		IDxcUtils* GetDxcUtils( void ) const;
 
@@ -61,9 +63,11 @@ namespace ee
 		Microsoft::WRL::ComPtr< ID3D12Debug > mD3D12Debug;
 
 		Microsoft::WRL::ComPtr< ID3D12Device > mDevice;
-		ThreadID							   mDeviceThreadID = kInvalidThreadID;
+		ThreadID mDeviceThreadID = kInvalidThreadID;
 
-		bool	mAllowPIXAttach = true;
+		Microsoft::WRL::ComPtr< ID3D12CommandQueue > mDirectQueue;
+
+		bool	mAllowPIXAttach	   = true;
 		HMODULE mPIXCapturerModule = NULL;
 
 		D3D_FEATURE_LEVEL mFeatureLevel = D3D_FEATURE_LEVEL_12_0;
@@ -86,6 +90,11 @@ namespace ee
 	inline ID3D12Device* dx12Device::GetD3D12Device( void ) const
 	{
 		return mDevice.Get();
+	}
+
+	inline ID3D12CommandQueue* dx12Device::GetDirectCommandQueue( void ) const
+	{
+		return mDirectQueue.Get();
 	}
 
 	inline IDxcUtils* dx12Device::GetDxcUtils( void ) const

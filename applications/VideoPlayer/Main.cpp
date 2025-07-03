@@ -10,7 +10,6 @@
 #include <ee/io/File.h>
 #include <ee/utility/Config.h>
 #include <ee/graphics/DataFormat.h>
-#include <ee/graphics/CommandList.h>
 
 #include <drivers/Windows/core/WinApplication.h>
 #include <drivers/Windows/core/WinWindow.h>
@@ -30,8 +29,6 @@ public:
 
 	virtual const char* GetName( void ) const override final { return "VideoPlayer"; }
 
-	virtual int Main( int argCount, const char* args[] ) override final;
-
 	virtual bool Initialize( void ) override final;
 	virtual void Shutdown( void ) override final;
 
@@ -39,6 +36,9 @@ public:
 	{
 		return &mConfig;
 	}
+
+	virtual bool OnStart( void ) override final;
+	virtual void OnStop( void ) override final;
 
 	// VideoPlayerApplication member functions
 
@@ -111,8 +111,8 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 		CREATESTRUCT* create = reinterpret_cast< CREATESTRUCT* >( lParam );
 		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( create->lpCreateParams );
 
-		// Store the pointer in the instance data of the window so it can
-		// be retrieved by using GetWindowLongPtr( hWnd, GWLP_USERDATA )
+		// Store the application pointer in the instance data of the window
+		// so it can be retrieved using GetWindowLongPtr( hWnd, GWLP_USERDATA )
         SetWindowLongPtr( hWnd, GWLP_USERDATA, LONG_PTR( application ) );
 	}
 	break;
@@ -196,13 +196,57 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 bool VideoPlayerApplication::Initialize( void )
 {
-	mRunning = true;
 	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.LoadConfig( configFile );
 
-	uint32_t width = 1280;
-	uint32_t height = 720;
+	HACCEL table = LoadAccelerators( mHInstance, MAKEINTRESOURCE( IDC_VIDEOPLAYER ) );
+	if( table != nullptr )
+	{
+		SetAccelTable( table );
+	}
 
+	static constexpr size_t MAX_LOADSTRING = 100;
+
+	CHAR szTitle[ MAX_LOADSTRING ];			// The title bar text
+	CHAR szWindowClass[ MAX_LOADSTRING ];	// the main window class name
+	LoadString( mHInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING );
+	LoadString( mHInstance, IDC_VIDEOPLAYER, szWindowClass, MAX_LOADSTRING );
+
+	WNDCLASSEX wcex;
+
+	wcex.cbSize			= sizeof( WNDCLASSEX );
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS;
+	wcex.lpfnWndProc	= WndProc;
+	wcex.cbClsExtra		= 0;
+	wcex.cbWndExtra		= 0;
+	wcex.hInstance		= mHInstance;
+	wcex.hIcon			= LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_VIDEOPLAYER ) );
+	wcex.hCursor		= LoadCursor( nullptr, IDC_ARROW );
+	wcex.hbrBackground	= HBRUSH( COLOR_WINDOW + 1 );
+	wcex.lpszMenuName	= MAKEINTRESOURCE( IDC_VIDEOPLAYER );
+	wcex.lpszClassName	= szWindowClass;
+	wcex.hIconSm		= LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_SMALL ) );
+
+	ATOM wndclass = RegisterClassEx( &wcex );
+
+	uint16_t width, height;
+	mPlayer.GetDimensions( width, height );
+
+	mApplicationWindow.SetWindowClassName( szWindowClass );
+	mApplicationWindow.SetWindowTitle( szTitle );
+	mApplicationWindow.SetWindowProc( WndProc );
+
+	return mApplicationWindow.CreateHWND( width, height, DisplayMode::kWindowed, this );
+}
+
+void VideoPlayerApplication::Shutdown( void )
+{
+//	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
+//	mConfig.SaveConfig( configFile );
+}
+
+bool VideoPlayerApplication::OnStart( void )
+{
 	std::unique_ptr< dx12Device > device = std::make_unique< dx12Device >();
 	if( device == nullptr )
 		return false;
@@ -216,38 +260,15 @@ bool VideoPlayerApplication::Initialize( void )
 	if( display == nullptr )
 		return false;
 
-	CommandList* commandlist = new CommandList;
-
-	if( !static_cast< dx12Display* >( display.get() )->Initialize( DataFormat::kR8G8B8A8_UNORM_SRGB, &mApplicationWindow, device.get(), commandlist ) )
+	if( !static_cast< dx12Display* >( display.get() )->Initialize( DataFormat::kR8G8B8A8_UNORM, &mApplicationWindow, device.get() ) )
 		return false;
-
-	delete commandlist;
 
 	return mPlayer.Initialize( std::move( device ), std::move( display ) );
 }
 
-void VideoPlayerApplication::Shutdown( void )
+void VideoPlayerApplication::OnStop( void )
 {
-	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
-	mConfig.SaveConfig( configFile );
-
 	mPlayer.Shutdown();
-}
-
-int VideoPlayerApplication::Main( int argCount, const char* args[] )
-{
-	while( mRunning )
-	{
-		if( !Update() )
-		{
-			break;
-		}
-
-	} // while( mRunning )
-
-	Shutdown();
-
-	return 0;
 }
 
 int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
@@ -258,58 +279,14 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER( hPrevInstance );
 	UNREFERENCED_PARAMETER( lpCmdLine );
 
-	static constexpr size_t MAX_LOADSTRING = 100;
-
-	CHAR szTitle[ MAX_LOADSTRING ];			// The title bar text
-	CHAR szWindowClass[ MAX_LOADSTRING ];	// the main window class name
-	LoadString( hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING );
-	LoadString( hInstance, IDC_VIDEOPLAYER, szWindowClass, MAX_LOADSTRING );
-
-	WNDCLASSEX wcex;
-
-	wcex.cbSize			= sizeof( WNDCLASSEX );
-	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS;
-	wcex.lpfnWndProc	= WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon( hInstance, MAKEINTRESOURCE( IDI_VIDEOPLAYER ) );
-	wcex.hCursor		= LoadCursor( nullptr, IDC_ARROW );
-	wcex.hbrBackground	= HBRUSH( COLOR_WINDOW + 1 );
-	wcex.lpszMenuName	= MAKEINTRESOURCE( IDC_VIDEOPLAYER );
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon( hInstance, MAKEINTRESOURCE( IDI_SMALL ) );
-
-	ATOM wndclass = RegisterClassEx( &wcex );
-
 	// Trigger the instantiation of the VideoPlayerApplication object
 	VideoPlayerApplication& application = static_cast< VideoPlayerApplication& >( Application::GetInstance() );
 	application.SetHInstance( hInstance );
 
-	HACCEL table = LoadAccelerators( hInstance, MAKEINTRESOURCE( IDC_VIDEOPLAYER ) );
-	if( table != nullptr )
+	if( application.Initialize() )
 	{
-		application.SetAccelTable( table );
+		return application.Main( 0, nullptr );
 	}
 
-	if( !application.Initialize() )
-	{
-		return -1;
-	}
-
-	uint16_t width, height;
-	application.GetPlayer().GetDimensions( width, height );
-
-	WinWindow& window = application.GetApplicationWindow();
-
-	window.SetWindowClassName( szWindowClass );
-	window.SetWindowTitle( szTitle );
-	window.SetWindowProc( WndProc );
-
-	if( !window.CreateHWND( width, height, DisplayMode::kWindowed, &application ) )
-	{
-		return -1;
-	}
-
-	return application.Main( 0, nullptr );
+	return -1;
 }

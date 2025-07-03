@@ -13,16 +13,13 @@
 class VideoPlayer
 {
 public:
-	VideoPlayer();
-	~VideoPlayer();
-
 	bool Initialize( std::unique_ptr< ee::Device > device, std::unique_ptr< ee::Display > display );
 	void Shutdown( void );
 
 	inline void GetDimensions( uint16_t& width, uint16_t& height ) const;
 
 private:
-	uint16_t mWidth, mHeight; // in pixels
+	uint16_t mWidth = 1920, mHeight = 1080; // in pixels
 
 	std::unique_ptr< ee::Device > mDevice;
 	std::unique_ptr< ee::Display > mDisplay;

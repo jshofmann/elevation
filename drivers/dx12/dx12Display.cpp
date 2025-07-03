@@ -8,14 +8,13 @@
 
 #include <ee/core/Window.h>
 #include <drivers/dx12/dx12Device.h>
-#include <drivers/dx12/dx12CommandList.h>
 #include <drivers/dx12/dx12Utils.h>
 #include <drivers/windows/core/WinCheck.h>
 #include <drivers/windows/core/WinWindow.h>
 
 using namespace ee;
 
-bool dx12Display::Initialize( DataFormat format, Window* window, Device* device, CommandList* commandlist )
+bool dx12Display::Initialize( DataFormat format, Window* window, Device* device )
 {
 	// We can assume that window is a WinWindow here.
 	// A HWND is required to create a swap chain.
@@ -48,15 +47,7 @@ bool dx12Display::Initialize( DataFormat format, Window* window, Device* device,
 		return false;
 	}
 
-	// We can assume that commandlist is a dx12CommandList here.
-	if( commandlist == nullptr )
-	{
-		eeDebug( "dx12Display::Initialize: A CommandList is required\n" );
-		return false;
-	}
-
 	dx12Device* dxDevice = static_cast< dx12Device* >( device );
-	dx12CommandList* dxCommandList = static_cast< dx12CommandList* >( commandlist );
 	WinWindow* winWindow = static_cast< WinWindow* >( window );
 
 	IDXGIFactory6* dxgiFactory = dxDevice->GetDXGIFactory();
@@ -66,6 +57,12 @@ bool dx12Display::Initialize( DataFormat format, Window* window, Device* device,
 		return false;
 	}
 
+	ID3D12CommandQueue* queue = dxDevice->GetDirectCommandQueue();
+	if( dxgiFactory == nullptr )
+	{
+		eeDebug( "dx12Display::Initialize: The dx12Device is missing its ID3D12CommandQueue\n" );
+		return false;
+	}
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {
 		.Width		 = width,
@@ -89,8 +86,8 @@ bool dx12Display::Initialize( DataFormat format, Window* window, Device* device,
 	 };
 
 	// While IDXGIFactory::CreateSwapChain[For...] calls its first argument pDevice,
-	// it actually requires an ID3D12CommandList.
-	if( !eeCheck( dxgiFactory->CreateSwapChainForHwnd( dxCommandList->GetD3D12CommandList(), winWindow->GetHWND(),
+	// it actually requires an ID3D12CommandQueue.
+	if( !eeCheck( dxgiFactory->CreateSwapChainForHwnd( queue, winWindow->GetHWND(),
 													   &swapChainDesc, &fsSwapChainDesc, nullptr,
 													   mSwapChain.ReleaseAndGetAddressOf() ) ) )
 	{
