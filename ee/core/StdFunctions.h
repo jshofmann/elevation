@@ -62,13 +62,21 @@ namespace ee
 		return x;
 	}
 
+	constexpr uint32_t eeMakeFourCC( char ch0, char ch1, char ch2, char ch3 )
+	{
+		return ( ( static_cast< uint32_t >( ch0 )       ) |
+				 ( static_cast< uint32_t >( ch1 ) << 8  ) |
+				 ( static_cast< uint32_t >( ch2 ) << 16 ) |
+				 ( static_cast< uint32_t >( ch3 ) << 24 ) );
+	}
+
 	// Mark a variable as "used" without actually using it
 	// Useful to suppress "unused variable" warnings resulting from assert tests-
-	// e.g. int bytesRead = stream->read( ... ); assert( bytesRead == ... ) will
-	// cause an "unused variable 'bytesRead'" warning in builds without assert().
+	// e.g. int count = stream->read( ... ); assert( count == ... ) will
+	// cause an "unused variable 'count'" warning in builds without assert().
 	// See https://herbsutter.com/2009/10/18/mailbag-shutting-up-compiler-warnings/
 	// for more information on this technique.
-	// This will eventually be obsoleted by std::optional.
+	// std::optional doesn't fully obsolete this, it's still necessary at times.
 	template< class T >
 	inline void eeUnusedVariable( const T& ) {}
 

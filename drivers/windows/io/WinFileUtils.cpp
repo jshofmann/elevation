@@ -50,7 +50,7 @@ namespace ee
 				DWORD error = GetLastError();
 				if( ( error != ERROR_FILE_NOT_FOUND ) && ( error != ERROR_PATH_NOT_FOUND ) )
 				{
-					eeDebug( "WinFileUtils::BuildFileStatus: GetFileAttributesEx( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
+					eeDebug( "WinFileUtils::BuildFileStatus: GetFileAttributesEx( %s ) returned error 0x%08x\n", status.GetAbsolutePath().c_str(), GetLastError() );
 				}
 
 				status.SetType( FileStatus::Type::kNone );
@@ -88,7 +88,7 @@ namespace ee
 				}
 				else
 				{
-					eeDebug( "WinFileUtils::BuildFileStatus: FileTimeToLocalFileTime( %s ) returned error 0x%08x", status.GetAbsolutePath().c_str(), GetLastError() );
+					eeDebug( "WinFileUtils::BuildFileStatus: FileTimeToLocalFileTime( %s ) returned error 0x%08x\n", status.GetAbsolutePath().c_str(), GetLastError() );
 					status.SetLastModified( FileTimeToUnixTime( &attributes.ftLastWriteTime ) );
 				}
 
