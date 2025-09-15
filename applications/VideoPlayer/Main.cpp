@@ -278,6 +278,7 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER( hPrevInstance );
 	UNREFERENCED_PARAMETER( lpCmdLine );
+	UNREFERENCED_PARAMETER( nCmdShow );
 
 	// Trigger the instantiation of the VideoPlayerApplication object
 	VideoPlayerApplication& application = static_cast< VideoPlayerApplication& >( Application::GetInstance() );
