@@ -206,7 +206,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		application->Exit();
-		PostQuitMessage( 0 );
+		PostQuitMessage( 1 );
 	}
 	break;
 

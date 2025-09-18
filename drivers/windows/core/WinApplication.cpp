@@ -45,11 +45,10 @@ bool WinApplication::Update( void )
 			{
 				TranslateMessage( &msg );
 				DispatchMessage( &msg );
-				
 			}
 		}
 
-		if( mAccelTable == NULL || !TranslateAccelerator( msg.hwnd, mAccelTable, &msg ) )
+		if( mAccelTable == NULL || TranslateAccelerator( msg.hwnd, mAccelTable, &msg ) == 0 )
 		{
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );

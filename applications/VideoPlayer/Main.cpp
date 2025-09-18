@@ -181,7 +181,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		application->Exit();
-		PostQuitMessage( 0 );
+		PostQuitMessage( 1 );
 	}
 	break;
 
