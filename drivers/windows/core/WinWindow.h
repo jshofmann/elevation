@@ -35,6 +35,11 @@ namespace ee
 		void	SetWindowProc( WNDPROC proc );
 		WNDPROC GetWindowProc( void ) const;
 
+		// command must be one of the SW_* values accepted by
+		// ShowWindow()'s nCmdShow parameter.
+		void	SetShowCommand( int command );
+		int		GetShowCommand( void ) const;
+
 		// Use RegisterWindowClass if you haven't called RegisterClassEx()
 		// yourself. If you don't call SetWindowClassName(), SetWindowTitle(),
 		// and/or SetWindowProc() first then it will use "Elevation" and
@@ -70,6 +75,7 @@ namespace ee
 		DWORD	 mWindowStyle	= WS_VISIBLE | WS_POPUP; // assume fullscreen display
 		DWORD	 mWindowExStyle = 0;
 		WNDPROC	 mWindowProc	= WinWindow::WindowProc;
+		int		 mShowCommand	= SW_SHOW;
 		HWND	 mHwnd			= nullptr;
 		bool	 mOwnWindow		= false;
 

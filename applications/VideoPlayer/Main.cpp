@@ -27,9 +27,16 @@ class VideoPlayerApplication : public WinApplication
 public:
 	// Application interface implementation
 
-	virtual const char* GetName( void ) const override final { return "VideoPlayer"; }
+	virtual const char* GetName( void ) const override final
+	{
+		return "VideoPlayer";
+	}
 
-	virtual bool Initialize( void ) override final;
+	virtual bool Initialize( void ) override final
+	{
+		return Initialize( SW_SHOW );
+	}
+
 	virtual void Shutdown( void ) override final;
 
 	virtual Config* GetConfig( void ) noexcept override final
@@ -42,6 +49,8 @@ public:
 
 	// VideoPlayerApplication member functions
 
+	virtual bool Initialize( int nCmdShow );
+
 	VideoPlayer& GetPlayer( void )
 	{
 		return mPlayer;
@@ -52,11 +61,22 @@ public:
 		return mPlayer;
 	}
 
+	int GetExitCode( void ) const
+	{
+		return mExitCode;
+	}
+		
+	void SetExitCode( int code )
+	{
+		mExitCode = code;
+	}
+
 private:
 	static constexpr const char* sConfigName = "VideoPlayer.ini";
 
 	VideoPlayer mPlayer;
 	Config		mConfig;
+	int			mExitCode;
 
 }; // class VideoPlayerApplication
 
@@ -113,13 +133,14 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 		// Store the application pointer in the instance data of the window
 		// so it can be retrieved using GetWindowLongPtr( hWnd, GWLP_USERDATA )
-        SetWindowLongPtr( hWnd, GWLP_USERDATA, LONG_PTR( application ) );
+		SetWindowLongPtr( hWnd, GWLP_USERDATA, LONG_PTR( application ) );
 	}
 	break;
 
 	case WM_COMMAND:
 	{
-		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+		VideoPlayerApplication* application =
+			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		int wmId = LOWORD( wParam );
 		int wmEvent = HIWORD( wParam );
@@ -140,15 +161,14 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 		}
 		break;
 
-		default: return DefWindowProc( hWnd, message, wParam, lParam );
-
 		} // switch( wmId )
 	}
 	break;
 
 	case WM_CLOSE:
 	{
-		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+		VideoPlayerApplication* application =
+			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		application->Exit();
 		DestroyWindow( hWnd );
@@ -157,7 +177,8 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_DESTROY:
 	{
-		VideoPlayerApplication* application = reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+		VideoPlayerApplication* application =
+			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		application->Exit();
 		PostQuitMessage( 0 );
@@ -187,14 +208,24 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	}
 	break;
 
-	default: return DefWindowProc( hWnd, message, wParam, lParam );
+	case WM_QUIT:
+	{
+		VideoPlayerApplication* application =
+			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+		// WM_QUIT's wParam should be returned from WinMain as an int:
+		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-winmain
+		application->SetExitCode( int( wParam ) );
+	}
+	break;
 
 	} // switch( message )
 
-	return 0;
+	// default:
+	return DefWindowProc( hWnd, message, wParam, lParam );
 }
 
-bool VideoPlayerApplication::Initialize( void )
+bool VideoPlayerApplication::Initialize( int nCmdShow )
 {
 	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.LoadConfig( configFile );
@@ -205,27 +236,27 @@ bool VideoPlayerApplication::Initialize( void )
 		SetAccelTable( table );
 	}
 
-	static constexpr size_t MAX_LOADSTRING = 100;
+	static constexpr size_t MAX_LOADSTRING = 100; // characters
 
-	CHAR szTitle[ MAX_LOADSTRING ];			// The title bar text
-	CHAR szWindowClass[ MAX_LOADSTRING ];	// the main window class name
+	CHAR szTitle[ MAX_LOADSTRING ];		  // The title bar text
+	CHAR szWindowClass[ MAX_LOADSTRING ]; // the main window class name
 	LoadString( mHInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING );
 	LoadString( mHInstance, IDC_VIDEOPLAYER, szWindowClass, MAX_LOADSTRING );
 
 	WNDCLASSEX wcex;
 
-	wcex.cbSize			= sizeof( WNDCLASSEX );
-	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS;
-	wcex.lpfnWndProc	= WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= mHInstance;
-	wcex.hIcon			= LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_VIDEOPLAYER ) );
-	wcex.hCursor		= LoadCursor( nullptr, IDC_ARROW );
-	wcex.hbrBackground	= HBRUSH( COLOR_WINDOW + 1 );
-	wcex.lpszMenuName	= MAKEINTRESOURCE( IDC_VIDEOPLAYER );
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_SMALL ) );
+	wcex.cbSize		   = sizeof( WNDCLASSEX );
+	wcex.style		   = CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS;
+	wcex.lpfnWndProc   = WndProc;
+	wcex.cbClsExtra	   = 0;
+	wcex.cbWndExtra	   = 0;
+	wcex.hInstance	   = mHInstance;
+	wcex.hIcon		   = LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_VIDEOPLAYER ) );
+	wcex.hCursor	   = LoadCursor( nullptr, IDC_ARROW );
+	wcex.hbrBackground = HBRUSH( COLOR_WINDOW + 1 );
+	wcex.lpszMenuName  = MAKEINTRESOURCE( IDC_VIDEOPLAYER );
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm	   = LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_SMALL ) );
 
 	ATOM wndclass = RegisterClassEx( &wcex );
 
@@ -235,6 +266,7 @@ bool VideoPlayerApplication::Initialize( void )
 	mApplicationWindow.SetWindowClassName( szWindowClass );
 	mApplicationWindow.SetWindowTitle( szTitle );
 	mApplicationWindow.SetWindowProc( WndProc );
+	mApplicationWindow.SetShowCommand( nCmdShow );
 
 	return mApplicationWindow.CreateHWND( width, height, DisplayMode::kWindowed, this );
 }
@@ -249,7 +281,9 @@ bool VideoPlayerApplication::OnStart( void )
 {
 	std::unique_ptr< dx12Device > device = std::make_unique< dx12Device >();
 	if( device == nullptr )
+	{
 		return false;
+	}
 
 	if( !device->Initialize() )
 	{
@@ -258,10 +292,15 @@ bool VideoPlayerApplication::OnStart( void )
 
 	std::unique_ptr< Display > display = device->MakeDisplay();
 	if( display == nullptr )
+	{
 		return false;
+	}
 
-	if( !static_cast< dx12Display* >( display.get() )->Initialize( DataFormat::kR8G8B8A8_UNORM, &mApplicationWindow, device.get() ) )
+	if( !static_cast< dx12Display* >( display.get() )->Initialize(
+			DataFormat::kR8G8B8A8_UNORM, &mApplicationWindow, device.get() ) )
+	{
 		return false;
+	}
 
 	return mPlayer.Initialize( std::move( device ), std::move( display ) );
 }
@@ -271,23 +310,22 @@ void VideoPlayerApplication::OnStop( void )
 	mPlayer.Shutdown();
 }
 
-int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
+int APIENTRY wWinMain( _In_ HINSTANCE	  hInstance,
 					   _In_opt_ HINSTANCE hPrevInstance,
-					   _In_ LPWSTR lpCmdLine,
-					   _In_ int nCmdShow )
+					   _In_ LPWSTR		  lpCmdLine,
+					   _In_ int			  nCmdShow )
 {
 	UNREFERENCED_PARAMETER( hPrevInstance );
 	UNREFERENCED_PARAMETER( lpCmdLine );
-	UNREFERENCED_PARAMETER( nCmdShow );
 
 	// Trigger the instantiation of the VideoPlayerApplication object
 	VideoPlayerApplication& application = static_cast< VideoPlayerApplication& >( Application::GetInstance() );
 	application.SetHInstance( hInstance );
 
-	if( application.Initialize() )
+	if( application.Initialize( nCmdShow ) )
 	{
-		return application.Main( 0, nullptr );
+		application.Main( 0, nullptr );
 	}
 
-	return -1;
+	return application.GetExitCode();
 }

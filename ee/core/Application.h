@@ -21,7 +21,7 @@ namespace ee
 
 		virtual const char* GetName( void ) const = 0;
 
-		virtual int Main( int argCount, const char* args[] );
+		virtual void Main( int argCount, const char* args[] );
 
 		// Optional application-specific initialize and teardown hooks
 		virtual bool Initialize( void ) { return true; }

@@ -24,7 +24,7 @@ public:
 
 	virtual const char* GetName( void ) const override final { return "PathTracer"; }
 
-	virtual int Main( int argCount, const char* args[] ) override final;
+	virtual void Main( int argCount, const char* args[] ) override final;
 
 	virtual bool Initialize( void ) override final
 	{
@@ -60,10 +60,21 @@ public:
 		mBitmap = bitmap;
 	}
 
+	int GetExitCode( void ) const
+	{
+		return mExitCode;
+	}
+		
+	void SetExitCode( int code )
+	{
+		mExitCode = code;
+	}
+
 private:
 	PathTracer mTracer;
 	ProgressBar mProgressBar;
 	HBITMAP mBitmap = NULL;
+	int mExitCode;
 
 }; // class PathTracerApplication
 
@@ -153,8 +164,6 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 		}
 		break;
 
-		default: return DefWindowProc( hWnd, message, wParam, lParam );
-
 		} // switch( wmId )
 	}
 	break;
@@ -201,11 +210,19 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	}
 	break;
 
-	default: return DefWindowProc( hWnd, message, wParam, lParam );
+	case WM_QUIT:
+	{
+		PathTracerApplication* application = reinterpret_cast< PathTracerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
+
+		// WM_QUIT's wParam should be returned from WinMain as an int:
+		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-winmain
+		application->SetExitCode( int( wParam ) );
+	}
+	break;
 
 	} // switch( message )
 
-	return 0;
+	return DefWindowProc( hWnd, message, wParam, lParam );
 }
 
 static void CopyBitmap( PathTracerApplication& application )
@@ -284,7 +301,7 @@ static void TracerProgressCallback( uint16_t step, const void* data )
 	}
 }
 
-int PathTracerApplication::Main( int argCount, const char* args[] )
+void PathTracerApplication::Main( int argCount, const char* args[] )
 {
 	mProgressBar.Open( mApplicationWindow.GetHWND(), 100, 1, "PathTracer progress" );
 
@@ -305,8 +322,6 @@ int PathTracerApplication::Main( int argCount, const char* args[] )
 		}
 
 	} // while( mRunning )
-
-	return 0;
 }
 
 int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
@@ -360,7 +375,7 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 
 	if( !application.Initialize() )
 	{
-		return -1;
+		return 0;
 	}
 
 	uint16_t width, height;
@@ -371,11 +386,14 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 	window.SetWindowClassName( szWindowClass );
 	window.SetWindowTitle( szTitle );
 	window.SetWindowProc( WndProc );
+	window.SetShowCommand( nCmdShow );
 
 	if( !window.CreateHWND( width, height, DisplayMode::kWindowed, &application ) )
 	{
-		return -1;
+		return 0;
 	}
 
-	return application.Main( 0, nullptr );
+	application.Main( 0, nullptr );
+
+	return application.GetExitCode();
 }

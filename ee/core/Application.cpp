@@ -8,7 +8,7 @@
 
 using namespace ee;
 
-int Application::Main( int argCount, const char* args[] )
+void Application::Main( int argCount, const char* args[] )
 {
 	mRunning = OnStart();
 
@@ -24,8 +24,6 @@ int Application::Main( int argCount, const char* args[] )
 	OnStop();
 
 	Shutdown();
-
-	return 0;
 }
 
 void Application::Exit( void )

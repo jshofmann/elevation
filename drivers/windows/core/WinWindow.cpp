@@ -86,6 +86,13 @@ void WinWindow::SetWindowProc( WNDPROC proc )
 	mWindowProc = ( proc != nullptr ) ? proc : WinWindow::WindowProc;
 }
 
+// command must be one of the SW_* values accepted by
+// ShowWindow()'s nCmdShow parameter.
+void WinWindow::SetShowCommand( int command )
+{
+	mShowCommand = command;
+}
+
 bool WinWindow::RegisterWindowClass( void )
 {
 	WinApplication& application = WinApplication::GetInstance();
@@ -215,7 +222,7 @@ bool WinWindow::CreateHWND( uint16_t width, uint16_t height, DisplayMode mode, v
 		SetWindowPos( mHwnd, NULL, 0, 0, width, height, SWP_NOACTIVATE | SWP_FRAMECHANGED );
 	}
 
-	ShowWindow( mHwnd, SW_SHOW );
+	ShowWindow( mHwnd, mShowCommand );
 	UpdateWindow( mHwnd );
 
 	mOwnWindow = true;
@@ -238,7 +245,7 @@ void WinWindow::SetHWND( HWND hwnd, DisplayMode mode )
 	mWindowStyle = GetWindowStyle( mode );
 
 	SetWindowLong( mHwnd, GWL_STYLE, mWindowStyle );
-	ShowWindow( mHwnd, SW_SHOW );
+	ShowWindow( mHwnd, mShowCommand );
 
 	if( mode != DisplayMode::kFullscreen )
 	{
