@@ -89,6 +89,20 @@
 #  endif
 #elif defined( __EMSCRIPTEN__ )
 #  define EE_BUILD_EMSCRIPTEN		1
+#elif defined( __ANDROID__ )
+#  define EE_BUILD_ANDROID			1
+#  if defined( __aarch64__ )
+#    define EE_BUILD_ARM			1
+#    define EE_BUILD_ARM64			1
+#  else
+#    define EE_BUILD_ARM			1
+#    define EE_BUILD_ARM32			1
+#  endif
+#  if defined( __x86_64__ )
+#    define EE_BUILD_X64			1
+#  else
+#    define EE_BUILD_X86			1
+#  endif
 #else
 #  error Unknown platform
 #endif
