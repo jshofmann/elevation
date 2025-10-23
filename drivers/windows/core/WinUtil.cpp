@@ -58,19 +58,47 @@ size_t WinUtil::ToSize( const LARGE_INTEGER li )
 	return size_t( li.QuadPart );
 }
 
-// You will usually want to pass in the results of GetLastError()
+// adapted from https://learn.microsoft.com/en-us/windows/win32/netmgmt/looking-up-text-for-error-code-numbers
+
+// Copied out of <lmerr.h>, don't want to drag that whole file in for two #defines
+#define NERR_BASE       2100
+#define MAX_NERR        (NERR_BASE+899) // This is the last error in NERR range
+
+// You will usually want to pass in the results of GetLastError() here
 std::string WinUtil::GetErrorString( DWORD error )
 {
+	HMODULE netmsgModule = nullptr;
+
+	DWORD formatFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+
+    // If error is in the network range load the message source
+    if( error >= NERR_BASE && error <= MAX_NERR )
+	{
+        netmsgModule = LoadLibraryEx(
+			TEXT( "netmsg.dll" ), nullptr, LOAD_LIBRARY_AS_DATAFILE );
+
+        if( netmsgModule != nullptr )
+		{
+            formatFlags |= FORMAT_MESSAGE_FROM_HMODULE;
+		}
+    }
+
+	std::string errorString;
+
     LPVOID message;
-    FormatMessage (
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-        FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error,
-        MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), // Default language
-        (LPTSTR) &message, 0, NULL);
+    DWORD length = FormatMessage( formatFlags, netmsgModule, error,
+								  MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
+								  reinterpret_cast< LPSTR >( &message ), 0, nullptr );
+	if( length > 0 )
+	{
+		errorString = std::format( "{}", reinterpret_cast< LPTSTR >( message ) );
+		LocalFree( message );
+	}
 
-	std::string errorString = std::format( "{}", (LPTSTR) message );
-
-    LocalFree( message );
+	if( netmsgModule != nullptr )
+	{
+		FreeLibrary( netmsgModule );
+	}
 
     return errorString;
 }
