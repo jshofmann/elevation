@@ -27,11 +27,11 @@
 #endif
 
 // Scarlett and Durango also define WIN32 and WIN64 so test for them first
-#if defined( _GAMING_XBOX_SCARLETT ) // Xbox Series X (Anaconda) or Xbox Series S (Lockhart)
+#if defined( _GAMING_XBOX_SCARLETT )	// Xbox Series X (Anaconda) or Xbox Series S (Lockhart)
 #  define EE_BUILD_XSX				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
-#elif defined( _XBOX_ONE )		// aka Durango
+#elif defined( _XBOX_ONE )				// aka Durango
 #  define EE_BUILD_XB1				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
@@ -62,12 +62,6 @@
 #  define EE_BUILD_PS5				1
 #  define EE_BUILD_X64				1
 #  define EE_BUILD_LITTLE_ENDIAN	1
-#elif defined( __linux__ )      // Includes Stadia and SteamOS
-#  define EE_BUILD_LINUX			1
-#  if defined( _X86_64_ ) || defined( __amd64__ )
-#    define EE_BUILD_X64			1
-#  endif
-#  define EE_BUILD_LITTLE_ENDIAN	1
 #elif defined( __NX__ )			// Nintendo Switch
 #  define EE_BUILD_NX				1
 #  define EE_BUILD_ARM				1
@@ -89,7 +83,7 @@
 #  endif
 #elif defined( __EMSCRIPTEN__ )
 #  define EE_BUILD_EMSCRIPTEN		1
-#elif defined( __ANDROID__ )
+#elif defined( __ANDROID__ )	// Android also defines __linux__
 #  define EE_BUILD_ANDROID			1
 #  if defined( __aarch64__ )
 #    define EE_BUILD_ARM			1
@@ -103,6 +97,12 @@
 #  else
 #    define EE_BUILD_X86			1
 #  endif
+#elif defined( __linux__ )      // Includes Stadia and SteamOS
+#  define EE_BUILD_LINUX			1
+#  if defined( _X86_64_ ) || defined( __amd64__ )
+#    define EE_BUILD_X64			1
+#  endif
+#  define EE_BUILD_LITTLE_ENDIAN	1
 #else
 #  error Unknown platform
 #endif

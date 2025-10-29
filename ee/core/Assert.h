@@ -28,7 +28,7 @@
 
 #define eeSilentFatal( condition, ... ) 									\
 	{																		\
-		if( !(condition) ) {												\
+		if( !( condition ) ) [[unlikely]] {									\
 			ee::_SilentFatalError();										\
 		}																	\
 	}
@@ -36,7 +36,7 @@
 #if defined( EE_BUILD_HAS_FATAL )
 	#define eeFatal( condition, ... )										\
 		{																	\
-			if( !(condition) )												\
+			if( !( condition ) ) [[unlikely]]								\
 			{																\
 				ee::_FatalError( __FUNCTION__, __FILE__, __LINE__, "Expression: " STRINGIFY( condition ) "\n\nDescription: " __VA_ARGS__ ); \
 			}																\
@@ -54,7 +54,7 @@
 	#define eeAssert( condition, ... )										\
 		do {																\
 			static bool _IgnoreAssert = false;								\
-			if( !_IgnoreAssert && !(condition) )							\
+			if( !_IgnoreAssert && !( condition ) ) [[unlikely]]				\
 			{																\
 				switch( ee::_Assert( __FUNCTION__, __FILE__, __LINE__, "Expression: " STRINGIFY( condition ) "\n\nDescription: " __VA_ARGS__ ) ) \
 				{															\
@@ -70,7 +70,7 @@
 			static bool _IgnoreAssert = false;								\
 			if( !_IgnoreAssert )											\
 			{																\
-				switch( ee::_Assert( __FUNCTION__, __FILE__, __LINE__, "Description: " __VA_ARGS__ )) \
+				switch( ee::_Assert( __FUNCTION__, __FILE__, __LINE__, "Description: " __VA_ARGS__ ) ) \
 				{															\
 				case ee::ErrorResult::kIgnore:		_IgnoreAssert = true;	break;	\
 				case ee::ErrorResult::kBreak:		BreakPoint;				break;	\
@@ -90,7 +90,7 @@
 
 	#define eeAssert( condition, ... )	( ( void )( 0 ) )
 	#define eeAssertAlways( ... )		( ( void )( 0 ) )
-	#define eeVerify( condition, ... )  do { (condition); } while( 0 )
+	#define eeVerify( condition, ... )  do { ( condition ); } while( 0 )
 
 #endif // EE_BUILD_HAS_ASSERT
 
@@ -131,7 +131,7 @@
 
 #elif defined( EE_BUILD_EMSCRIPTEN )
 
-	#define BreakPoint abort()
+	#define BreakPoint EM_ASM( debugger; )
 
 #else
 
