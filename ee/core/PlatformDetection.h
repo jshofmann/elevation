@@ -88,14 +88,11 @@
 #  if defined( __aarch64__ )
 #    define EE_BUILD_ARM			1
 #    define EE_BUILD_ARM64			1
-#  else
+#  elif defined( _M_ARM )
 #    define EE_BUILD_ARM			1
 #    define EE_BUILD_ARM32			1
-#  endif
-#  if defined( __x86_64__ )
+#  elif defined( __x86_64__ )
 #    define EE_BUILD_X64			1
-#  else
-#    define EE_BUILD_X86			1
 #  endif
 #elif defined( __linux__ )      // Includes Stadia and SteamOS
 #  define EE_BUILD_LINUX			1
