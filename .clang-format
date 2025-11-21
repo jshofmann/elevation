@@ -4,12 +4,32 @@ Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
-AlignArrayOfStructures: Right
-AlignConsecutiveMacros: None
-AlignConsecutiveAssignments: Consecutive
-AlignConsecutiveBitFields: None
-AlignConsecutiveDeclarations: Consecutive
-AlignEscapedNewlines: LeftWithLastLine
+AlignArrayOfStructures: None
+AlignConsecutiveAssignments:
+  Enabled:         false
+  AcrossEmptyLines: false
+  AcrossComments:  false
+  AlignCompound:   false
+  PadOperators:    false
+AlignConsecutiveBitFields:
+  Enabled:         false
+  AcrossEmptyLines: false
+  AcrossComments:  false
+  AlignCompound:   false
+  PadOperators:    false
+AlignConsecutiveDeclarations:
+  Enabled:         false
+  AcrossEmptyLines: false
+  AcrossComments:  false
+  AlignCompound:   false
+  PadOperators:    false
+AlignConsecutiveMacros:
+  Enabled:         false
+  AcrossEmptyLines: false
+  AcrossComments:  false
+  AlignCompound:   false
+  PadOperators:    false
+AlignEscapedNewlines: DontAlign
 AlignOperands:   Align
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
@@ -21,6 +41,7 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortLambdasOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: MultiLine
@@ -58,7 +79,7 @@ BreakConstructorInitializers: BeforeComma
 BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: true
 ColumnLimit: 120
-CommentPragmas:  '^\\t*gfcDebug*'
+CommentPragmas:  '^\\t*eeDebug*'
 QualifierAlignment: Leave
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
@@ -118,13 +139,13 @@ LambdaBodyIndentation: Signature
 MacroBlockBegin: '(BEGIN_CLASS.*|BEGIN_SCHEMA.*|SCHEMA_ATTRIBUTE_UI_GROUP_BEGIN|BEGIN_IMGUI|MSM_BeginTable|MSM_BeginState|BEGIN_MESSAGE_MAP|BEGIN_INTERFACE_MAP|DEFINE_TASKS_CLASS|DEFINE_GENERIC_TASKS_CLASS|START_TASK_DEFINES|BEGIN_PACKER_TASKS_SET)'
 MacroBlockEnd:   '(END_CLASS.*|END_SCHEMA.*|SCHEMA_ATTRIBUTE_UI_GROUP_END|END_IMGUI|MSM_EndTable|MSM_EndState|END_MESSAGE_MAP|END_INTERFACE_MAP|END_TASKS_CLASS|END_TASK_DEFINES|END_PACKER_TASKS_SET)'
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: All
+NamespaceIndentation: None
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 2
 ObjCBreakBeforeNestedBlockParam: true
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
-#OneLineFormatOffRegex: ^(//$) # clang-format 21
+OneLineFormatOffRegex: ^(//$)
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 300
