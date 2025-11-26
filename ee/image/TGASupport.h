@@ -16,7 +16,8 @@
 
 namespace ee
 {
-	// as defined by http://en.wikipedia.org/wiki/Truevision_TGA
+	// as defined by http://en.wikipedia.org/wiki/Truevision_TGA and
+	// http://www.paulbourke.net/dataformats/tga
 	// All values are specified in little-endian format
 	class TGAHeader
 	{
@@ -46,7 +47,9 @@ namespace ee
 			, ImageWidth( 0 )
 			, ImageHeight( 0 )
 			, BitsPerPixel( 0 )
-			, ImageDescriptor( 0x20 )
+			// ImageDescriptor: 0x20 defines a top-left origin,
+			// 0x08 defines an 8-bit alpha channel
+			, ImageDescriptor( 0x28 )
 		{
 		}
 

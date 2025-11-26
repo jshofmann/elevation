@@ -5,7 +5,6 @@
 #include "pch.h"
 
 #include <memory>
-#include <string_view>
 
 #include "TGAWriter.h"
 #include "TGASupport.h"
@@ -29,6 +28,10 @@ bool TGAWriter::Write( const uint8_t* pixels, uint16_t width, uint16_t height, u
 		return false;
 	}
 
+	// ImageDescriptor: 0x20 defines a top-left origin,
+	// 0x08 defines an 8-bit alpha channel
+	uint8_t imageDescriptor = 0x20 | ( bytesPerPixel == 4 ? 0x8 : 0x0 );
+
 	stream->WriteUInt8( 0 );					// TGAHeader::IDLength
 	stream->WriteUInt8( 0 );					// TGAHeader::ColormapType
 	stream->WriteUInt8( TGAHeader::IMAGE_TYPE_UNCOMPRESSED_RGB );	// TGAHeader::ImageType
@@ -40,11 +43,12 @@ bool TGAWriter::Write( const uint8_t* pixels, uint16_t width, uint16_t height, u
 	stream->WriteUInt16( width );				// TGAHeader::ImageWidth
 	stream->WriteUInt16( height );				// TGAHeader::ImageHeight
 	stream->WriteUInt8( bytesPerPixel * 8 );	// TGAHeader::BitsPerPixel
-//	stream->WriteUInt8( 0x20 );					// TGAHeader::ImageDescriptor (top left)
-	stream->WriteUInt8( 0 );					// TGAHeader::ImageDescriptor (bottom left)
+	stream->WriteUInt8( imageDescriptor );		// TGAHeader::ImageDescriptor
 
 	int size = width * height * bytesPerPixel;
 	stream->Write( pixels, size );
+
+	eeDebug( "TGAWriter::write: Wrote %s\n", filename );
 
 	return true;
 }
