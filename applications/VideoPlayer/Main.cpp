@@ -143,7 +143,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 			reinterpret_cast< VideoPlayerApplication* >( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 
 		int wmId = LOWORD( wParam );
-		int wmEvent = HIWORD( wParam );
+		// int wmEvent = HIWORD( wParam ); // uncomment if needed
 
 		// Parse the menu selections:
 		switch( wmId )
@@ -258,7 +258,7 @@ bool VideoPlayerApplication::Initialize( int nCmdShow )
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm	   = LoadIcon( mHInstance, MAKEINTRESOURCE( IDI_SMALL ) );
 
-	ATOM wndclass = RegisterClassEx( &wcex );
+	/* ATOM wndclass = */ RegisterClassEx( &wcex );
 
 	uint16_t width, height;
 	mPlayer.GetDimensions( width, height );

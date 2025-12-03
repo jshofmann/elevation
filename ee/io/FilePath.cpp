@@ -365,9 +365,9 @@ std::string_view FilePath::GetPathRoot( const std::string_view& path ) const
 
 		if( volume.size() == 3 )
 		{
-			char u = std::toupper( volume[ 0 ] );
-			char n = std::toupper( volume[ 1 ] );
-			char c = std::toupper( volume[ 2 ] );
+			char u = char( std::toupper( volume[ 0 ] ) );
+			char n = char( std::toupper( volume[ 1 ] ) );
+			char c = char( std::toupper( volume[ 2 ] ) );
 
 			if( u == 'U' && n == 'N' && c == 'C' )
 			{

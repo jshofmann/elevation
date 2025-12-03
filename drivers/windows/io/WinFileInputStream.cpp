@@ -113,13 +113,13 @@ bool WinFileInputStream::Seek( size_t offset, SeekOrigin origin )
 size_t WinFileInputStream::GetCurrentOffset( void ) const
 {
 	if( !Valid() )
-		return -1;
+		return kInvalidOffset;
 
 	// The Windows SDK equivalent of ftell() is SetFilePointerEx()'s lpNewFilePointer out parameter
 	LARGE_INTEGER pointer;
 	if( !eeCheckBool( SetFilePointerEx( mHandle, { 0, 0 }, &pointer, FILE_CURRENT ) ) )
 	{
-		return -1;
+		return kInvalidOffset;
 	}
 
 	return WinUtil::ToSize( pointer );

@@ -18,6 +18,10 @@ namespace ee
 	class Display
 	{
 	public:
+		// Fix 'delete of an abstract class that has a non-virtual destructor
+		// results in undefined behavior' build warning
+		virtual ~Display() {}
+
 		virtual bool Initialize( DataFormat format, Window* window, Device* device ) = 0;
 		virtual void Release( void ) = 0;
 

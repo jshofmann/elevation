@@ -56,7 +56,6 @@ ErrorResult ee::_Assert( const char* function, const char* file, int line, const
 		char title[ 256 ];
 		snprintf( title, sizeof( title ), "ASSERT %s pid %u", processFilename, processID );
 
-		char buffer[ 512 ];
 		snprintf( buffer, sizeof( buffer ),
 				  "Function: %s\n\nFile: %s\nLine: %d\n\n%s\n\n"
 				  "\"Yes\" to break, \"No\" to continue, or \"Cancel\" to ignore for the rest of the run.",

@@ -17,6 +17,10 @@ namespace ee
 	class Device
 	{
 	public:
+		// Fix 'delete of an abstract class that has a non-virtual destructor
+		// results in undefined behavior' build warning
+		virtual ~Device() {}
+
 		virtual bool Initialize( void ) = 0;
 		virtual void Release( void ) = 0;
 
