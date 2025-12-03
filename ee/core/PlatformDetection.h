@@ -126,18 +126,16 @@ static_assert( sizeof( sizeof( char ) ) == 4, "Expected sizeof( size_t ) == 4" )
 ///////////////////////////////////////////////////////////////////////////////
 // Compiler configuration
 
-// Turn off all deprecated CRT / Windows SDK function warnings
+// Turn off some deprecated CRT / Windows SDK function warnings
 #if defined( EE_BUILD_WINDOWS ) || defined( EE_BUILD_XB1 ) || defined( EE_BUILD_XSX )
-#  if !defined( _CRT_SECURE_NO_DEPRECATE )
-#    define _CRT_SECURE_NO_DEPRECATE 1
-#  endif
 #  if !defined( _CRT_SECURE_NO_WARNINGS )
 #    define _CRT_SECURE_NO_WARNINGS 1
 #  endif
-#  define _CRT_RAND_S // Define the rand_s function in the CRT
 #  if !defined( _WINSOCK_DEPRECATED_NO_WARNINGS )
 #    define _WINSOCK_DEPRECATED_NO_WARNINGS 1
 #  endif
+#  define _USE_MATH_DEFINES // Define M_PI, etc in <math.h>
+#  define _CRT_RAND_S // Define the rand_s function in the CRT
 #endif
 
 #if defined( EE_COMPILER_MSVC )
@@ -221,6 +219,7 @@ static_assert( sizeof( sizeof( char ) ) == 4, "Expected sizeof( size_t ) == 4" )
 
 #if defined( EE_COMPILER_MSVC )
 
+#  pragma warning( disable : 4100 )	// We don't always use all function parameters
 #  pragma warning( disable : 4201 )	// Nameless unions are not ansi but generally well supported
 #  pragma warning( disable : 4324 ) // structure was padded due to __declspec(align())
 #  pragma warning( disable : 4786 ) // Many symbols resulting from the use of template parameters exceed 255 characters
