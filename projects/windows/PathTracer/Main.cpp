@@ -24,12 +24,12 @@ public:
 
 	virtual const char* GetName( void ) const override final { return "PathTracer"; }
 
-	virtual void Main( int argCount, const char* args[] ) override final;
+	virtual int Main( int argCount, const char* args[] ) override final;
 
 	virtual bool Initialize( void ) override final
 	{
 		mRunning = true;
-//		return mTracer.Initialize( 1280,720 );
+//		return mTracer.Initialize( 1280, 720 );
 		return mTracer.Initialize( 400, 200 );
 	}
 
@@ -60,11 +60,6 @@ public:
 		mBitmap = bitmap;
 	}
 
-	int GetExitCode( void ) const
-	{
-		return mExitCode;
-	}
-		
 	void SetExitCode( int code )
 	{
 		mExitCode = code;
@@ -74,7 +69,6 @@ private:
 	PathTracer mTracer;
 	ProgressBar mProgressBar;
 	HBITMAP mBitmap = NULL;
-	int mExitCode;
 
 }; // class PathTracerApplication
 
@@ -301,7 +295,7 @@ static void TracerProgressCallback( uint16_t step, const void* data )
 	}
 }
 
-void PathTracerApplication::Main( int argCount, const char* args[] )
+int PathTracerApplication::Main( int argCount, const char* args[] )
 {
 	mProgressBar.Open( mApplicationWindow.GetHWND(), 100, 1, "PathTracer progress" );
 
@@ -322,6 +316,8 @@ void PathTracerApplication::Main( int argCount, const char* args[] )
 		}
 
 	} // while( mRunning )
+
+	return mExitCode;
 }
 
 int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
@@ -393,7 +389,5 @@ int APIENTRY wWinMain( _In_ HINSTANCE hInstance,
 		return 0;
 	}
 
-	application.Main( 0, nullptr );
-
-	return application.GetExitCode();
+	return application.Main( 0, nullptr );
 }

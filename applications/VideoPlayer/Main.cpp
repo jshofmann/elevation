@@ -61,11 +61,6 @@ public:
 		return mPlayer;
 	}
 
-	int GetExitCode( void ) const
-	{
-		return mExitCode;
-	}
-		
 	void SetExitCode( int code )
 	{
 		mExitCode = code;
@@ -76,7 +71,6 @@ private:
 
 	VideoPlayer mPlayer;
 	Config		mConfig;
-	int			mExitCode;
 
 }; // class VideoPlayerApplication
 
@@ -324,8 +318,8 @@ int APIENTRY wWinMain( _In_ HINSTANCE	  hInstance,
 
 	if( application.Initialize( nCmdShow ) )
 	{
-		application.Main( 0, nullptr );
+		return application.Main( 0, nullptr );
 	}
 
-	return application.GetExitCode();
+	return 0;
 }

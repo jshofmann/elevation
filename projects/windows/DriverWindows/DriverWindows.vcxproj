@@ -101,7 +101,6 @@
     <ClCompile Include="..\..\..\drivers\windows\core\WinApplication.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinCheck.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinDebug.cpp" />
-    <ClCompile Include="..\..\..\drivers\windows\core\WinDevice.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinSystem.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinUtil.cpp" />
     <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp" />

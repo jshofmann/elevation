@@ -20,7 +20,7 @@ namespace ee
 			return std::make_unique< vulDevice >();
 		}*/
 
-		// DirectX12 is the default driver for the WIndows platform
+		// DirectX12 is the default driver for the Windows platform
 		return std::make_unique< dx12Device >();
 	}
 

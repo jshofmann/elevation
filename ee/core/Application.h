@@ -21,7 +21,11 @@ namespace ee
 
 		virtual const char* GetName( void ) const = 0;
 
-		virtual void Main( int argCount, const char* args[] );
+		// The default implementation of Main() implements a frame loop;
+		// console applications can provide their own implementations,
+		// but note that it becomes the console application's responsibility to
+		// call OnStart(), OnStop(), and Shutdown() if necessary in that case.
+		virtual int Main( int argCount, const char* args[] );
 
 		// Optional application-specific initialize and teardown hooks
 		virtual bool Initialize( void ) { return true; }
@@ -45,7 +49,8 @@ namespace ee
 
 		// It's expected that Application::Update() will be called once per
 		// simulation frame - by default, one simulation frame == one render
-		// frame, but some applications may decouple those loops
+		// frame, but some applications may decouple those loops. This function
+		// may not be used by console applications.
 		virtual bool Update( void ) { return false; }
 
 		// If your application supports use of config files,
@@ -55,6 +60,14 @@ namespace ee
 
 	protected:
 		bool mRunning = false;
+
+		// The exit value that Application::Main() should return. On Windows
+		// the WPARAM sent with the WM_QUIT message should be assigned to this
+		// variable; see https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-winmain
+		// Initialized to 0 as that's the 'normal exit' code defined by the C
+		// standard (EXIT_SUCCESS in <stdlib.h>) and the value that Microsoft
+		// wants applications to return if the message loop is never entered.
+		int mExitCode = 0;
 
 	}; // class Application
 

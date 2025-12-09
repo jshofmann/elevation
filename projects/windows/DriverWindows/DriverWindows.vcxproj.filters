@@ -88,8 +88,5 @@
     <ClCompile Include="..\..\..\drivers\windows\core\WinWindow.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\drivers\windows\core\WinDevice.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
