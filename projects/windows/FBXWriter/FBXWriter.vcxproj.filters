@@ -20,6 +20,9 @@
     <ClInclude Include="..\..\..\Applications\FBXWriter\FBXWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\external\ufbx\ufbx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Applications\FBXWriter\pch.cpp">
@@ -29,6 +32,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Applications\FBXWriter\FBXWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\external\ufbx\ufbx.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
