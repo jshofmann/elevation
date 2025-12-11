@@ -8,11 +8,9 @@
 
 using namespace ee;
 
-bool FBXWriter::Initialize( void )
+bool FBXWriter::Write( const char* filename )
 {
 	return true;
 }
 
-void FBXWriter::Shutdown( void )
-{
-}
+

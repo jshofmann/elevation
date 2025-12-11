@@ -4,12 +4,9 @@
 
 #pragma once
 
-#include <stdint.h>
-
 class FBXWriter
 {
 public:
-	bool Initialize( void );
-	void Shutdown( void );
+	bool Write( const char* filename );
 
 }; // class FBXWriter
