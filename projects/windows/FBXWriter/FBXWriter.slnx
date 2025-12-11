@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="../../../external/dxerr/dxerr.vcxproj" />
+  <Project Path="../DriverWindows/DriverWindows.vcxproj" />
+  <Project Path="../eeCore/eeCore.vcxproj" />
+  <Project Path="FBXWriter.vcxproj" />
+</Solution>

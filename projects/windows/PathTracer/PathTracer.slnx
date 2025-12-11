@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="../../../external/dxerr/dxerr.vcxproj" Id="5975f91b-fec5-4a3c-a534-a5226cec3e44" />
+  <Project Path="../DriverWindows/DriverWindows.vcxproj" Id="07d321d6-9abf-4b46-8042-78ec4228e770" />
+  <Project Path="../eeCore/eeCore.vcxproj" Id="0ae1aefb-b58f-433f-9bd9-d9ab5d056f2a" />
+  <Project Path="PathTracer.vcxproj" Id="9095fc7d-a498-4b72-acee-9aa5b4344c52" />
+</Solution>
