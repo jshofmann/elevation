@@ -55,7 +55,7 @@ int FBXWriterApplication::Main( int argCount, const char* args[] )
 	// this will read in the given file and write it out to test.fbx
 
 	// On Windows we aren't guaranteed that args[ 0 ] is the exe name; see
-	// https://learn.microsoft.com/en-us/cpp/cpp/main-function-command-line-arsg
+	// https://learn.microsoft.com/en-us/cpp/cpp/main-function-command-line-args
 	// "Note: By convention, argv[0] is the filename of the program. However,
 	// on Windows it's possible to spawn a process by using CreateProcess.
 	// If you use both the first and second arguments (lpApplicationName and

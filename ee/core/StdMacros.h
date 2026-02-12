@@ -8,10 +8,10 @@
 #define STRINGIFY( x ) STRINGIFY_IMPL( x )
 
 #define CONCAT_2_IMPL( first, second ) first ## second
-#define CONCAT_2( first, second ) CONCAT_2_NO_EXPANSION( first, second )
+#define CONCAT_2( first, second ) CONCAT_2_IMPL( first, second )
 
 #define CONCAT_3_IMPL( first, second, third ) first ## second ## third
-#define CONCAT_3( first, second, third ) CONCAT_3_NO_EXPANSION( first, second, third )
+#define CONCAT_3( first, second, third ) CONCAT_3_IMPL( first, second, third )
 
 #define MEM_KB( s ) ( uintptr_t( s ) << 10 )
 #define MEM_MB( s ) ( MEM_KB( s ) << 10 )
@@ -56,6 +56,10 @@ void SafeRelease( T** ppT )
 }
 
 // Return the element count from a static buffer
-#define dimof( x ) ( sizeof( x ) / sizeof( x[0] ) )
+template< typename T, size_t N >
+inline size_t constexpr dimof( T const(&)[ N ] )
+{
+    return N;
+}
 
 } // namespace ee
