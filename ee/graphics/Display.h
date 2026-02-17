@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ee/graphics/DataFormat.h>
+#include <ee/graphics/GpuFormat.h>
 
 namespace ee
 {
@@ -22,7 +22,7 @@ namespace ee
 		// results in undefined behavior' build warning
 		virtual ~Display() {}
 
-		virtual bool Initialize( DataFormat format, Window* window, Device* device ) = 0;
+		virtual bool Initialize( GpuFormat format, Window* window, Device* device ) = 0;
 		virtual void Release( void ) = 0;
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) = 0; // in pixels

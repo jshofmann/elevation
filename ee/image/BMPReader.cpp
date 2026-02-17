@@ -39,13 +39,13 @@ bool BMPReader::Set( const void* data, uint32_t dataSizeInBytes )
 	return true;
 }
 
-uint32_t BMPReader::GetImageSize( void ) const
+size_t BMPReader::GetImageSizeInBytes( void ) const
 {
 	// If BITMAPINFOHEADER::biSizeImage is negative, the sign bit is the
 	// flag indicating that the origin is in the top-left corner.
 	if( mInfoHeader.biSizeImage < 0 )
 	{
-		return uint32_t( -mInfoHeader.biSizeImage );
+		return size_t( -mInfoHeader.biSizeImage );
 	}
 
 	// If BITMAPINFOHEADER::biSizeImage is 0 (legal if biCompression == BI_RGB)
@@ -56,5 +56,5 @@ uint32_t BMPReader::GetImageSize( void ) const
 		return mFileHeader.bfSize - mFileHeader.bfOffBits;
 	}
 
-	return uint32_t( mInfoHeader.biSizeImage );
+	return size_t( mInfoHeader.biSizeImage );
 }

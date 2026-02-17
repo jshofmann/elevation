@@ -8,7 +8,7 @@
 #include <dxgi1_6.h>
 
 #include <ee/graphics/Display.h>
-#include <ee/graphics/DataFormat.h>
+#include <ee/graphics/GpuFormat.h>
 #include <drivers/dx12/dx12ColorBuffer.h>
 
 namespace ee
@@ -19,7 +19,7 @@ namespace ee
 	class dx12Display : public Display
 	{
 	public:
-		virtual bool Initialize( DataFormat format, Window* window, Device* device ) override final;
+		virtual bool Initialize( GpuFormat format, Window* window, Device* device ) override final;
 		virtual void Release( void ) override final;
 
 		virtual void GetResolution( uint32_t& width, uint32_t& height ) override final; // in pixels

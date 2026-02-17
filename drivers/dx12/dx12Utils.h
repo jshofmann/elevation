@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <ee/graphics/DataFormat.h>
+#include <ee/graphics/GpuFormat.h>
 
 namespace ee
 {
-	DXGI_FORMAT DataFormatToDXGI_FORMAT( const DataFormat format );
+	DXGI_FORMAT GpuFormatToDXGI_FORMAT( const GpuFormat format );
 
 } // namespace ee

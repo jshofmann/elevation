@@ -14,7 +14,7 @@
 
 using namespace ee;
 
-bool dx12Display::Initialize( DataFormat format, Window* window, Device* device )
+bool dx12Display::Initialize( GpuFormat format, Window* window, Device* device )
 {
 	// We can assume that window is a WinWindow here.
 	// A HWND is required to create a swap chain.
@@ -67,7 +67,7 @@ bool dx12Display::Initialize( DataFormat format, Window* window, Device* device 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {
 		.Width		 = width,
 		.Height		 = height,
-		.Format		 = DataFormatToDXGI_FORMAT( format ),
+		.Format		 = GpuFormatToDXGI_FORMAT( format ),
 		.Stereo		 = FALSE,
 		.SampleDesc	 = { .Count = 1, .Quality = 0 },
 		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,

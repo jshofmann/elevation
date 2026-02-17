@@ -52,7 +52,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\ee</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -72,7 +72,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\ee</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\ee\core\Assert.h" />
     <ClInclude Include="..\..\..\ee\core\Debug.h" />
+    <ClInclude Include="..\..\..\ee\core\Handle.h" />
     <ClInclude Include="..\..\..\ee\core\Platform.h" />
     <ClInclude Include="..\..\..\ee\core\PlatformConfig.h" />
     <ClInclude Include="..\..\..\ee\core\PlatformDetection.h" />
@@ -97,10 +98,12 @@
     <ClInclude Include="..\..\..\ee\core\StdMacros.h" />
     <ClInclude Include="..\..\..\ee\core\System.h" />
     <ClInclude Include="..\..\..\ee\core\Window.h" />
-    <ClInclude Include="..\..\..\ee\graphics\DataFormat.h" />
     <ClInclude Include="..\..\..\ee\graphics\Device.h" />
     <ClInclude Include="..\..\..\ee\graphics\Display.h" />
     <ClInclude Include="..\..\..\ee\graphics\Enums.h" />
+    <ClInclude Include="..\..\..\ee\graphics\GpuEvent.h" />
+    <ClInclude Include="..\..\..\ee\graphics\GpuFormat.h" />
+    <ClInclude Include="..\..\..\ee\graphics\Image.h" />
     <ClInclude Include="..\..\..\ee\graphics\ProfilerSupport.h" />
     <ClInclude Include="..\..\..\ee\image\BMPReader.h" />
     <ClInclude Include="..\..\..\ee\image\BMPSupport.h" />
@@ -135,7 +138,9 @@
     <ClCompile Include="..\..\..\ee\core\Application.cpp" />
     <ClCompile Include="..\..\..\ee\core\Assert.cpp" />
     <ClCompile Include="..\..\..\ee\core\Window.cpp" />
-    <ClCompile Include="..\..\..\ee\graphics\DataFormat.cpp" />
+    <ClCompile Include="..\..\..\ee\graphics\GpuEvent.cpp" />
+    <ClCompile Include="..\..\..\ee\graphics\GpuFormat.cpp" />
+    <ClCompile Include="..\..\..\ee\graphics\Image.cpp" />
     <ClCompile Include="..\..\..\ee\graphics\ProfilerSupport.cpp" />
     <ClCompile Include="..\..\..\ee\image\BMPReader.cpp" />
     <ClCompile Include="..\..\..\ee\image\PNGWriter.cpp" />

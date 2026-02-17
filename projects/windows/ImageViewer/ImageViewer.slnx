@@ -1,0 +1,22 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../../external/dxerr/dxerr.vcxproj" Id="5975f91b-fec5-4a3c-a534-a5226cec3e44">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="../DriverDX12/DriverDX12.vcxproj" Id="1fc23efe-0e70-4e93-b862-39e317d0cc16">
+    <Platform Project="x64" />
+    <Build Solution="*|x86" Project="false" />
+  </Project>
+  <Project Path="../DriverWindows/DriverWindows.vcxproj" Id="07d321d6-9abf-4b46-8042-78ec4228e770" />
+  <Project Path="../eeCore/eeCore.vcxproj" Id="0ae1aefb-b58f-433f-9bd9-d9ab5d056f2a" />
+  <Project Path="../eeImage/eeImage.vcxproj" Id="1ee2e5e4-ec0d-42cc-95ab-437691aa95ea">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="ImageViewer.vcxproj" Id="6b790efd-ecd8-4a38-a75e-3ab765a346c7">
+    <Platform Project="x64" />
+    <Build Solution="*|x86" Project="false" />
+  </Project>
+</Solution>

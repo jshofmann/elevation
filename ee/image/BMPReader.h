@@ -20,12 +20,16 @@ namespace ee
 		// must remain valid until the BMPReader instance is destroyed.
 		bool Set( const void* data, uint32_t dataSizeInBytes );
 
-		uint32_t GetImageSize( void ) const;
+		size_t GetImageSizeInBytes( void ) const;
 
+		// Width, Height are in pixels; BitCount is bits per pixel
 		inline int GetWidth( void ) const { return mInfoHeader.biWidth; }
 		inline int GetHeight( void ) const { return mInfoHeader.biHeight; }
 		inline uint16_t GetBitCount( void ) const { return mInfoHeader.biBitCount; }
 
+		// For compressed video and YUV formats this member is a FOURCC code
+		// specified as a DWORD in little-endian order. Otherwise this is a
+		// value from the Compression enum in "BMPSupport.h".
 		inline uint32_t GetCompression( void ) const { return mInfoHeader.biCompression; }
 
 		// If false, the origin is in the bottom left corner

@@ -10,7 +10,7 @@ using namespace ee;
 
 TGAReader::TGAReader()
 	: mImageSize( 0 )
-	, mPixelData( NULL )
+	, mPixelData( nullptr )
 {
 	memset( &mHeader, 0, sizeof( TGAHeader ) );
 }
@@ -18,7 +18,7 @@ TGAReader::TGAReader()
 // Assumes that data contains the contents of a .tga format file.
 // This function will not copy the data array given to it; this data
 // must remain valid until the TGAReader instance is destroyed.
-bool TGAReader::Set( const void* data, uint32_t dataSizeInBytes )
+bool TGAReader::Set( const void* data, size_t dataSizeInBytes )
 {
 	// if data's size is smaller than the header then this cannot be a TGA file
 	if( dataSizeInBytes < sizeof( TGAHeader ) )
