@@ -64,7 +64,7 @@ namespace ee
 		// Note: This is implemented using ReadFile() so bytesToRead can't
 		// be larger than what a DWORD can hold (ie UINT32_MAX). An assert
 		// will fire if bytesToRead is larger than what ReadFile() can support.
-		virtual FileResult Read( void* buffer, size_t bytesToRead, size_t* bytesRead ) override final;
+		virtual FileResult Read( void* buffer, size_t bytesToRead, size_t* bytesRead = nullptr ) override final;
 
 	private:
 		static constexpr size_t kInvalidMarkIndex = ~0ull;

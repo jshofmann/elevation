@@ -19,20 +19,12 @@ public:
 		mImage.Release();
 	}
 
+	const ee::Image& GetImage( void ) const { return mImage; }
+
 	inline void GetDimensions( uint32_t& width, uint32_t& height ) const
 	{
 		width = mImage.GetWidth();
 		height = mImage.GetHeight();
-	}
-
-	inline ee::GpuFormat GetPixelFormat( void ) const
-	{
-		return mImage.GetFormat();
-	}
-
-	inline const uint8_t* GetPixels( void ) const
-	{
-		return mImage.GetPixels();
 	}
 
 private:

@@ -256,16 +256,16 @@ static bool CopyBitmap( ImageViewerApplication& application )
 {
 	HWND hwnd = application.GetApplicationWindow().GetHWND();
 
-	const ImageViewer& viewer = application.GetViewer();
+	const ee::Image& image = application.GetViewer().GetImage();
 
-	uint32_t width, height;
-	viewer.GetDimensions( width, height );
+	uint32_t width = image.GetWidth();
+	uint32_t height = image.GetHeight();
 
-	uint32_t bytesPerPixel = GetBytesPerPixel( viewer.GetPixelFormat() );
+	uint32_t bytesPerPixel = GetBytesPerPixel( image.GetFormat() );
 	if( ( width == 0 ) || ( height == 0 ) || ( bytesPerPixel == 0 ) )
 		return false;
 
-	const uint8_t* pixels = viewer.GetPixels();
+	const uint8_t* pixels = image.GetPixels();
 	if( pixels == nullptr )
 		return false;
 
@@ -278,7 +278,7 @@ static bool CopyBitmap( ImageViewerApplication& application )
 	info.bmiHeader.biPlanes = 1;
 	info.bmiHeader.biBitCount = static_cast< WORD >( bytesPerPixel * 8 );
 	info.bmiHeader.biCompression = BI_RGB;
-	info.bmiHeader.biSizeImage = 0;
+	info.bmiHeader.biSizeImage = static_cast< DWORD >( image.GetSizeInBytes() );
 	info.bmiHeader.biXPelsPerMeter = 10;
 	info.bmiHeader.biYPelsPerMeter = 10;
 	info.bmiHeader.biClrUsed = 0;
@@ -339,15 +339,12 @@ bool ImageViewerApplication::Initialize( int nCmdShow )
 
 	/* ATOM wndclass = */ RegisterClassEx( &wcex );
 
-	uint32_t width, height;
-	mViewer.GetDimensions( width, height );
-
 	mApplicationWindow.SetWindowClassName( szWindowClass );
 	mApplicationWindow.SetWindowTitle( szTitle );
 	mApplicationWindow.SetWindowProc( WndProc );
 	mApplicationWindow.SetShowCommand( nCmdShow );
 
-	return mApplicationWindow.CreateHWND( uint16_t( width ), uint16_t( height ), DisplayMode::kWindowed, this );
+	return true;
 }
 
 void ImageViewerApplication::Shutdown( void )
@@ -360,8 +357,14 @@ bool ImageViewerApplication::OnStart( void )
 {
 	if( mViewer.LoadImage( "testorig.jpg" ) )
 	{
-		// Copy the results to the HBITMAP
-		return CopyBitmap( *this );
+		uint32_t width, height;
+		mViewer.GetDimensions( width, height );
+
+		if( mApplicationWindow.CreateHWND( uint16_t( width ), uint16_t( height ), DisplayMode::kWindowed, this ) )
+		{
+			// Copy the results to the HBITMAP
+			return CopyBitmap( *this );
+		}
 	}
 
 	return false;
