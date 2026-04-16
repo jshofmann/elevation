@@ -18,7 +18,8 @@ namespace ee
 {
 	// as defined by http://en.wikipedia.org/wiki/Truevision_TGA and
 	// http://www.paulbourke.net/dataformats/tga
-	// All values are specified in little-endian format
+	// All values are specified in little-endian format;
+	// sizeof( TGAHeader ) == 18 bytes per the TGA spec
 	class TGAHeader
 	{
 	public:
@@ -35,36 +36,20 @@ namespace ee
 			IMAGE_TYPE_COMPRESSED_COLOR_MAPPED_4PASS = 33
 		};
 
-		TGAHeader()
-			: IDLength( 0 )
-			, ColormapType( 0 )
-			, ImageType( IMAGE_TYPE_NO_IMAGE_DATA )
-			, ColormapOrigin( 0 )
-			, ColormapLength( 0 )
-			, ColormapEntrySize( 0 )
-			, XOrigin( 0 )
-			, YOrigin( 0 )
-			, ImageWidth( 0 )
-			, ImageHeight( 0 )
-			, BitsPerPixel( 0 )
-			// ImageDescriptor: 0x20 defines a top-left origin,
-			// 0x08 defines an 8-bit alpha channel
-			, ImageDescriptor( 0x28 )
-		{
-		}
-
-		uint8_t		IDLength;			// 0
-		uint8_t		ColormapType;		// 0 (no colormap included)
-		uint8_t		ImageType;			// From the above enum
-		uint16_t	ColormapOrigin;		// 0
-		uint16_t	ColormapLength; 	// 0
-		uint8_t		ColormapEntrySize;	// bytes, 0
-		uint16_t	XOrigin;			// pixels, usually 0
-		uint16_t	YOrigin;			// pixels, usually 0
-		uint16_t	ImageWidth;			// pixels
-		uint16_t	ImageHeight;		// pixels
-		uint8_t		BitsPerPixel;
-		uint8_t		ImageDescriptor;	// 0x20 defines a top-left origin; 0 is bottom-left
+		uint8_t		IDLength = 0;
+		uint8_t		ColormapType = 0; // no colormap included
+		uint8_t		ImageType = IMAGE_TYPE_NO_IMAGE_DATA;
+		uint16_t	ColormapOrigin = 0;
+		uint16_t	ColormapLength = 0;
+		uint8_t		ColormapEntrySize = 0; // bytes
+		uint16_t	XOrigin = 0; // pixels
+		uint16_t	YOrigin = 0; // pixels
+		uint16_t	ImageWidth = 0; // pixels
+		uint16_t	ImageHeight = 0; // pixels
+		uint8_t		BitsPerPixel = 0;
+		// ImageDescriptor: 0x20 defines a top-left origin, 0x00 is bottom-left;
+		// 0x08 defines an 8-bit alpha channel
+		uint8_t		ImageDescriptor = 0x28;
 
 	}; // class TGAHeader
 

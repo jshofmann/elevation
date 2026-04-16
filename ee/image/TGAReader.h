@@ -13,7 +13,13 @@ namespace ee
 	class TGAReader
 	{
 	public:
-		TGAReader();
+		TGAReader( const void* data, size_t dataSizeInBytes )
+		{
+			Set( data, dataSizeInBytes );
+		}
+
+		// Drop all references to the data assigned in Set() above
+		void Release( void );
 
 		// Assumes that data contains the contents of a .tga format file.
 		// This function will not copy the data array given to it; this data
@@ -35,8 +41,8 @@ namespace ee
 
 	private:
 		TGAHeader		mHeader;
-		size_t			mImageSize;
-		const uint8_t*	mPixelData;
+		size_t			mImageSize = 0;
+		const uint8_t*	mPixelData = nullptr;
 
 	}; // class TGAReader
 

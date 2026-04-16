@@ -8,13 +8,6 @@
 
 using namespace ee;
 
-TGAReader::TGAReader()
-	: mImageSize( 0 )
-	, mPixelData( nullptr )
-{
-	memset( &mHeader, 0, sizeof( TGAHeader ) );
-}
-
 // Assumes that data contains the contents of a .tga format file.
 // This function will not copy the data array given to it; this data
 // must remain valid until the TGAReader instance is destroyed.
@@ -35,4 +28,11 @@ bool TGAReader::Set( const void* data, size_t dataSizeInBytes )
 	mPixelData = reinterpret_cast< const uint8_t* >( data ) + sizeof( TGAHeader );
 
 	return true;
+}
+
+void TGAReader::Release( void )
+{
+	mPixelData = nullptr;
+	mImageSize = 0;
+	mHeader = TGAHeader();
 }
