@@ -64,7 +64,22 @@ uint16_t HashUtils::CalculateCRC16( const uint8_t* const data, const size_t leng
 // <-		  -- The CRC-32 hash code for the data array
 uint32_t HashUtils::CalculateCRC32( const uint8_t* const data, const size_t length )
 {
-	uint32_t crc = CRC32InitialValue;
+	return EndCRC32( UpdateCRC32( BeginCRC32(), data, length ) );
+}
+
+
+// HashUtils::BeginCRC32() / UpdateCRC32() / EndCRC32()
+//
+// Streaming version of CalculateCRC32() for data that arrives in separate
+// pieces (eg. interleaved with other bytes as it's written out) rather than
+// as one contiguous buffer.
+uint32_t HashUtils::BeginCRC32()
+{
+	return CRC32InitialValue;
+}
+
+uint32_t HashUtils::UpdateCRC32( uint32_t crc, const uint8_t* const data, const size_t length )
+{
 	const uint8_t* current = data;
 	size_t count = length;
 
@@ -73,6 +88,11 @@ uint32_t HashUtils::CalculateCRC32( const uint8_t* const data, const size_t leng
 		crc = ( CRC32Table[ ( crc ^ *current++ ) & 0xFFL ] ^ ( crc >> 8 ) );
 	}
 
+	return crc;
+}
+
+uint32_t HashUtils::EndCRC32( uint32_t crc )
+{
 	return ( crc ^ CRC32InitialValue );
 }
 

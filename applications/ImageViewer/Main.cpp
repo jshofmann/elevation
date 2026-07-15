@@ -309,6 +309,9 @@ bool ImageViewerApplication::Initialize( int nCmdShow )
 	std::shared_ptr< File > configFile = std::make_shared< File >( sConfigName );
 	mConfig.LoadConfig( configFile );
 
+	// This window should ignore any display scale set
+	SetProcessDpiAwarenessContext( DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 );
+
 	HACCEL table = LoadAccelerators( mHInstance, MAKEINTRESOURCE( IDC_IMAGEVIEWER ) );
 	if( table != nullptr )
 	{

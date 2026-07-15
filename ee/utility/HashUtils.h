@@ -14,6 +14,12 @@ namespace ee
 		uint32_t CalculateCRC32( const uint8_t* const data, const size_t sizeInBytes );
 		uint64_t CalculateCRC64( const uint8_t* const data, const size_t sizeInBytes );
 
+		// Incremental version of CalcualteCRC32() for times where we don't
+		// have the entire data buffer available up front (e.g. streaming)
+		uint32_t BeginCRC32();
+		uint32_t UpdateCRC32( uint32_t crc, const uint8_t* const data, const size_t sizeInBytes );
+		uint32_t EndCRC32( uint32_t crc );
+
 		// I use CRC64 hashes for strings, but that should be considered an
 		// implementation detail - I may switch  to a DJB hash function,
 		// for example. DJB hashes are quicker, and they have a nice
